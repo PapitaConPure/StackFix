@@ -15,12 +15,15 @@ namespace StackFix.Items {
 		private const float VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE = 5f;
 		private const float VANILLA_MAX_CHARGE_DISTANCE_BASE = 32.3f;
 		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
-		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
+		private const float VANILLA_CHARGE_THRESHOLD_BASE_PERCENT = 25f;
+
+		public bool Enabled => Plugin.Enabled.Value && Plugin.FaradaySpurFixEnabled.Value;
 
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
 
+			Plugin.Enabled.SettingChanged                    += this.FaradaySpur_SettingChanged;
 			Plugin.FaradaySpurFixEnabled.SettingChanged      += this.FaradaySpur_SettingChanged;
 			Plugin.FaradaySpurMoveSpeedBase.SettingChanged   += this.FaradaySpur_SettingChanged;
 			Plugin.FaradaySpurMoveSpeedStack.SettingChanged  += this.FaradaySpur_SettingChanged;
@@ -33,7 +36,7 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled             = Plugin.FaradaySpurFixEnabled.Value;
+			bool enabled             = this.Enabled;
 			float moveSpeedBase      = enabled ? Plugin.FaradaySpurMoveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE_PERCENT;
 			float moveSpeedStack     = enabled ? Plugin.FaradaySpurMoveSpeedStack.Value : 0f;
 			float jumpHeightBase     = enabled ? Plugin.FaradaySpurJumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE_PERCENT;
@@ -44,7 +47,7 @@ namespace StackFix.Items {
 			float thresDistanceStack = 0f;
 			float maxDistanceBase    = VANILLA_MAX_CHARGE_DISTANCE_BASE;
 			float maxDistanceStack   = VANILLA_MAX_CHARGE_DISTANCE_STACK;
-			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE;
+			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE_PERCENT;
 			float thresStack         = 0f;
 
 			LanguageAPI.AddOverlay("ITEM_JUMPDAMAGESTRIKE_DESC",
@@ -78,7 +81,7 @@ namespace StackFix.Items {
 		}
 
 		private float ModifyMoveSpeedPerCharge(float moveSpeedPerCharge, CharacterBody body) {
-			if(!Plugin.FaradaySpurFixEnabled.Value)
+			if(!this.Enabled)
 				return moveSpeedPerCharge;
 
 			int itemCount = body.inventory?.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike) ?? 0;
@@ -94,7 +97,7 @@ namespace StackFix.Items {
 		}
 
 		private float ModifyJumpHeightPerCharge(float jumpHeightPerCharge, CharacterBody body) {
-			if(!Plugin.FaradaySpurFixEnabled.Value)
+			if(!this.Enabled)
 				return jumpHeightPerCharge;
 
 			int itemCount = body.inventory?.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike) ?? 0;
@@ -125,14 +128,14 @@ namespace StackFix.Items {
 		}
 
 		private float ModifyBaseDamage(float baseDamage) {
-			if(!Plugin.FaradaySpurFixEnabled.Value)
+			if(!this.Enabled)
 				return baseDamage;
 
 			return Plugin.FaradaySpurDamageBase.Value * 0.01f;
 		}
 
 		private float ModifyStackDamage(float stackDamage) {
-			if(!Plugin.FaradaySpurFixEnabled.Value)
+			if(!this.Enabled)
 				return stackDamage;
 
 			return Plugin.FaradaySpurDamageStack.Value * 0.01f;

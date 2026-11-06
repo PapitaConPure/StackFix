@@ -17,11 +17,14 @@ namespace StackFix.Items {
 
 		private ILHook currentMaxHook;
 
+		public bool Enabled => Plugin.Enabled.Value && Plugin.NetworkedSufferingFixEnabled.Value;
+
 		public void ApplyFix() {
 			this.InstallCurrentMaxHook();
 
 			IL.RoR2.SharedSufferingManager.SendToDamagePool += this.SharedSufferingManager_SendToDamagePool;
 
+			Plugin.Enabled.SettingChanged                       += this.NetworkedSuffering_SettingChanged;
 			Plugin.NetworkedSufferingFixEnabled.SettingChanged  += this.NetworkedSuffering_SettingChanged;
 			Plugin.NetworkedSufferingSpreadBase.SettingChanged  += this.NetworkedSuffering_SettingChanged;
 			Plugin.NetworkedSufferingSpreadStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
@@ -32,7 +35,7 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled           = Plugin.NetworkedSufferingFixEnabled.Value;
+			bool enabled           = this.Enabled;
 			int maxVirusCountBase  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
 			int maxVirusCountStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
 			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE_PERCENT;
@@ -68,7 +71,7 @@ namespace StackFix.Items {
 		}
 
 		private int OverwriteCurrentMax(SharedSufferingItemBehaviour self) {
-			bool enabled = Plugin.NetworkedSufferingFixEnabled.Value;
+			bool enabled = this.Enabled;
 			int initial  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
 			int perStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
 
@@ -95,7 +98,7 @@ namespace StackFix.Items {
 		}
 
 		private float ModifyDamageMultiplier(SharedSufferingManager manager, DamageReport report) {
-			if(!Plugin.NetworkedSufferingFixEnabled.Value)
+			if(!this.Enabled)
 				return manager._damageSentToPool;
 
 			CharacterBody victimBody = report.victimBody;
