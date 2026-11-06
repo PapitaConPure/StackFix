@@ -23,6 +23,14 @@ readme = "../README.md"
 outdir = "../dist"
 
 [[build.copy]]
+source = "../src/bin/Release/netstandard2.1/ConfigEntryExt.dll"
+target = "plugins/StackFix/"
+
+[[build.copy]]
+source = "../src/bin/Release/netstandard2.1/ConfigEntryExt.pdb"
+target = "plugins/StackFix/"
+
+[[build.copy]]
 source = "../src/bin/Release/netstandard2.1/StackFix.dll"
 target = "plugins/StackFix/"
 
