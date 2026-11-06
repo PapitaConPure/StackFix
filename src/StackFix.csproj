@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>StackFix</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NoWarn>1701;1702;IDE0051;CS0436</NoWarn>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<SignAssembly>false</SignAssembly>
+
+		<RestoreAdditionalProjectSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json
+		</RestoreAdditionalProjectSources>
+
+		<EnableRiskOfOptions Condition="'$(EnableRiskOfOptions)' == ''">true</EnableRiskOfOptions>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Authors>PapitaConPuré</Authors>
+		<AssemblyName>StackFix</AssemblyName>
+		<Product>Stack Fix</Product>
+		<BepInExPluginGuid>com.papitaconpure.stackfix</BepInExPluginGuid>
+		<RepositoryUrl>https://github.com/PapitaConPure/StackFix</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>$(Version)</FileVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(EnableRiskOfOptions)' == 'true'">
+		<DefineConstants>$(DefineConstants);RISK_OF_OPTIONS</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
+		<MinVerTagPrefix>v</MinVerTagPrefix>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MinVer" Version="7.0.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="BepInEx.Core" Version="5.4.21" />
+		<PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+		<PackageReference Include="RoR2BepInExPack" Version="*" />
+		<PackageReference Include="RiskOfRain2.GameLibs" Version="*-*" />
+		<PackageReference Include="MMHOOK.RoR2" Version="*" NoWarn="NU1701" />
+		<PackageReference Include="R2API.Core" Version="5.*" />
+		<PackageReference Include="R2API.Language" Version="1.*" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(EnableRiskOfOptions)' == 'true'">
+		<PackageReference Include="Rune580.Mods.RiskOfRain2.RiskOfOptions" Version="2.8.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ConfigEntryExt\ConfigEntryExt.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\icon.png" LogicalName="StackFix.icon.png" />
+	</ItemGroup>
+
+	<Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+		<PropertyGroup>
+			<PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+			<BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="PackageThunderstoreArtifact" DependsOnTargets="SetPluginVersion" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="dotnet tcli build --config-path $(ProjectDir)../thunderstore/thunderstore.toml --package-version $(PlainVersion)" />
+
+		<ItemGroup>
+			<FilesToRename Include="$(ProjectDir)../dist/*-$(PlainVersion).zip" />
+		</ItemGroup>
+
+		<Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))" />
+	</Target>
+</Project>

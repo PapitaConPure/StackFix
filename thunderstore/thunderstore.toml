@@ -1,0 +1,41 @@
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "PapitaConPure"
+name = "StackFix"
+description = "Balances the initial/additional stack behavior of a few items. Configurable."
+websiteUrl = "https://github.com/PapitaConPure/StackFix"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2122"
+RiskofThunder-HookGenPatcher = "1.2.4"
+RiskofThunder-R2API_Core = "5.3.0"
+RiskofThunder-R2API_Language = "1.1.0"
+
+[build]
+icon = "./icon.png"
+readme = "../README.md"
+outdir = "../dist"
+
+[[build.copy]]
+source = "../src/bin/Release/netstandard2.1/StackFix.dll"
+target = "plugins/StackFix/"
+
+[[build.copy]]
+source = "../src/bin/Release/netstandard2.1/StackFix.pdb"
+target = "plugins/StackFix/"
+
+[[build.copy]]
+source = "../CHANGELOG.md"
+target = "/"
+
+[publish]
+communities = [ "riskofrain2" ]
+
+[publish.categories]
+riskofrain2 = [ "server-side", "tweaks" ]
