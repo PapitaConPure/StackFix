@@ -66,4 +66,4 @@ Read the thing on [Thunderstore](https://thunderstore.io/c/riskofrain2/p/PapitaC
 ## Additional Info
 Build info [here](https://github.com/PapitaConPure/StackFix/blob/master/wik/build.md).
 
-god i love megumin she's so cute she's so precious oooo what the fu
+in megumin i trust for she is the light ahead
