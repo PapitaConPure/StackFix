@@ -1,5 +1,5 @@
 # Stack Fix
-![masterpiece](masterpiece.png)
+![masterpiece](https://github.com/PapitaConPure/StackFix/blob/master/masterpiece.png?raw=true)
 
 Makes some items have a better initial effect + stacking behavior.
 
