@@ -25,9 +25,9 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled                      = this.Enabled;
-			float barrierBase                 = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE_PERCENT;
-			float barrierStack                = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK_PERCENT;
+			bool enabled                       = this.Enabled;
+			float barrierBase                  = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE_PERCENT;
+			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK_PERCENT;
 			ItemStacking.Type barrierStackType = enabled ? Plugin.EclipseLiteBarrierStackType.Value : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
