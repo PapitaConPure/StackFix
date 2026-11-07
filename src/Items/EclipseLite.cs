@@ -31,7 +31,7 @@ namespace StackFix.Items {
 			ItemStacking.Type barrierStackType = enabled ? Plugin.EclipseLiteBarrierStackType.Value : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
-				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "+{0:0.##}%")}")} " +
+				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%")}")} " +
 				$"of your maximum health per second of the skill's base cooldown.");
 		}
 
