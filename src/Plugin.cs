@@ -32,8 +32,6 @@ namespace StackFix {
 		internal static ConfigEntry<float> NetworkedSufferingDamageBase;
 		internal static ConfigEntry<float> NetworkedSufferingDamageStack;
 
-
-
 		internal static ConfigEntry<bool> Megumin;
 
 		private readonly IItemFix[] ItemFixes = [
