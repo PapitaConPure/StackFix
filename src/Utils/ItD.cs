@@ -22,6 +22,18 @@ namespace StackFix.Utils {
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
 				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, value)} per stack)</style>";
+		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+			=> value.AboutEquals(0f, hideThreshold)
+				? ""
+				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, value)} per stack) {StackingType(type)}</style>";
+
+		public static string StackingType(ItemStacking.Type type)
+			=> $"<style={type switch {
+				ItemStacking.Type.Hyperbolic => "cIsHealing",
+				ItemStacking.Type.Reciprocal => "cIsVoid",
+				ItemStacking.Type.Exponential => "cIsHealth",
+				_ => "cSub",
+			}}>[{type}]</style>";
 
 		public static string Mono(string desc)
 			=> $"<style=cMono>{desc}</style>";
@@ -55,6 +67,11 @@ namespace StackFix.Utils {
 			=> $"<style=cShrine>{desc}</style>";
 		public static string ItemYellow(string desc)
 			=> $"<style=cShrine>{desc}</style>";
+
+		public static string Void(string desc)
+			=> $"<style=cIsVoid>{desc}</style>";
+		public static string ItemVoid(string desc)
+			=> $"<style=cIsVoid>{desc}</style>";
 
 		public static string ItemsWGRY(float white, float green, float red, float yellow, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
 			=> string.Join("/", FilterAndFormatValues([white, green, red, yellow], format, hideThreshold));
