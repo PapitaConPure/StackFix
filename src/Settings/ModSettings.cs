@@ -43,7 +43,7 @@ namespace StackFix.Settings {
 			section: "Item: Eclipse Lite",
 			name: "Cooldown Barrier Stacking Type",
 			description: Paragraph(
-				genericStackingTypeDescription,
+				GenericStackingTypeDescription,
 				"Vanilla value: Linear"),
 			defaultValue: ItemStacking.Type.Hyperbolic,
 			constraint: new(typeof(ItemStacking.Type)));
@@ -168,10 +168,9 @@ namespace StackFix.Settings {
 		private static string Paragraph(params string[] lines)
 			=> string.Join("\n", lines);
 
-		private static string genericStackingTypeDescription = Paragraph(
+		private static string GenericStackingTypeDescription => Paragraph(
 			"Determines how the effect will scale based on the number of stacks you have of the item.",
 			"",
-			"There are multiple formulas:",
 			"* Linear: effect scales by a fixed amount per stack.",
 			"* Hyperbolic: effect scales with diminishing returns per stack, approaching a limit.",
 			"* Reciprocal: effect decreases proportionally per stack.",
