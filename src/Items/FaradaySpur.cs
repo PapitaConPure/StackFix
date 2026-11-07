@@ -5,6 +5,7 @@ using RoR2;
 using RoR2.Items;
 using StackFix.Exceptions;
 using StackFix.Utils;
+using System;
 
 namespace StackFix.Items {
 	internal sealed class FaradaySpur: IItemFix {
@@ -57,7 +58,7 @@ namespace StackFix.Items {
 				$"{ItD.Damage($"{thresDistanceBase:0.#}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to {ItD.Damage($"{maxDistanceBase:0.#}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
 		}
 
-		private void FaradaySpur_SettingChanged(object sender, System.EventArgs e) => this.RegisterItemText();
+		private void FaradaySpur_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
 
 		private void CharacterBody_RecalculateStats(ILContext il) {
 			ILCursor cursor = new(il);
