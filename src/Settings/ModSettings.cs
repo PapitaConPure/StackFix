@@ -44,7 +44,8 @@ namespace StackFix.Settings {
 			name: "Cooldown Barrier Stacking Type",
 			description: Paragraph(
 				GenericStackingTypeDescription,
-				"Vanilla value: Linear"),
+				"Vanilla value: Linear",
+				"Not recommended: Reciprocal, Exponential"),
 			defaultValue: ItemStacking.Type.Hyperbolic,
 			constraint: new(typeof(ItemStacking.Type)));
 		#endregion
