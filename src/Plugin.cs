@@ -37,6 +37,7 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Megumin;
 
 		private readonly IItemFix[] ItemFixes = [
+			new EclipseLite(),
 			new FaradaySpur(),
 			new NetworkedSuffering(),
 		];
