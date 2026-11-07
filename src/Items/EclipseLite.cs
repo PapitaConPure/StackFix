@@ -4,6 +4,7 @@ using R2API;
 using RoR2;
 using StackFix.Exceptions;
 using StackFix.Utils;
+using System;
 
 namespace StackFix.Items {
 	internal sealed class EclipseLite: IItemFix {
@@ -35,7 +36,7 @@ namespace StackFix.Items {
 				$"of your maximum health per second of the skill's base cooldown.");
 		}
 
-		private void EclipseLite_SettingChanged(object sender, System.EventArgs e) => this.RegisterItemText();
+		private void EclipseLite_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
 
 		private void CharacterBody_OnSkillCooldown(ILContext il) {
 			ILCursor cursor = new(il);
