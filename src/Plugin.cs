@@ -18,6 +18,13 @@ namespace StackFix {
 		internal static ConfigEntry<float> EclipseLiteBarrierStack;
 		internal static ConfigEntry<ItemStacking.Type> EclipseLiteBarrierStackType;
 
+		internal static ConfigEntry<bool> WarpedEchoFixEnabled;
+		internal static ConfigEntry<float> WarpedEchoDamageReductionBase;
+		internal static ConfigEntry<float> WarpedEchoDamageReductionStack;
+		internal static ConfigEntry<ItemStacking.Type> WarpedEchoDamageReductionStackType;
+		internal static ConfigEntry<int> WarpedEchoDamageSpreadBase;
+		internal static ConfigEntry<int> WarpedEchoDamageSpreadStack;
+
 		internal static ConfigEntry<bool> FaradaySpurFixEnabled;
 		internal static ConfigEntry<float> FaradaySpurMoveSpeedBase;
 		internal static ConfigEntry<float> FaradaySpurMoveSpeedStack;
@@ -58,6 +65,13 @@ namespace StackFix {
 			EclipseLiteBarrierStack     = ModSettings.EclipseLiteBarrierStack.RegisterFor(this);
 			EclipseLiteBarrierStackType = ModSettings.EclipseLiteBarrierStackType.RegisterFor(this);
 
+			WarpedEchoFixEnabled               = ModSettings.WarpedEchoFixEnabled.RegisterFor(this);
+			WarpedEchoDamageReductionBase      = ModSettings.WarpedEchoDamageReductionBase.RegisterFor(this);
+			WarpedEchoDamageReductionStack     = ModSettings.WarpedEchoDamageReductionStack.RegisterFor(this);
+			WarpedEchoDamageReductionStackType = ModSettings.WarpedEchoDamageReductionStackType.RegisterFor(this);
+			WarpedEchoDamageSpreadBase         = ModSettings.WarpedEchoDamageSpreadBase.RegisterFor(this);
+			WarpedEchoDamageSpreadStack        = ModSettings.WarpedEchoDamageSpreadStack.RegisterFor(this);
+
 			FaradaySpurFixEnabled      = ModSettings.FaradaySpurFixEnabled.RegisterFor(this);
 			FaradaySpurMoveSpeedBase   = ModSettings.FaradaySpurMoveSpeedBase.RegisterFor(this);
 			FaradaySpurMoveSpeedStack  = ModSettings.FaradaySpurMoveSpeedStack.RegisterFor(this);
@@ -90,6 +104,13 @@ namespace StackFix {
 				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(FormatString: "{0:0.##}%"));
 				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(FormatString: "{0:0.##}%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(EclipseLiteBarrierStackType);
+
+				RiskOfOptionsCompatManager.AddCheckboxOption(WarpedEchoFixEnabled);
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.##}%", Step: 0.5f));

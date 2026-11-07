@@ -34,7 +34,7 @@ namespace StackFix.Settings {
 			section: "Item: Eclipse Lite",
 			name: "Cooldown Barrier per Stack",
 			description: Paragraph(
-				"Percentage of max health gained in barrier for every second of a skill's cooldown for every subsequent stack.",
+				"Additional percentage of max health gained in barrier for every second of a skill's cooldown for every subsequent stack.",
 				"Vanilla value: 0.25"),
 			defaultValue: 0.5f,
 			constraint: new(Min: 0.1f, Max: 1f));
@@ -48,6 +48,62 @@ namespace StackFix.Settings {
 				"Not recommended: Reciprocal, Exponential"),
 			defaultValue: ItemStacking.Type.Hyperbolic,
 			constraint: new(typeof(ItemStacking.Type)));
+		#endregion
+
+		#region Warped Echo
+		public static readonly ConfigEntryExt<bool> WarpedEchoFixEnabled = new(
+			section: "General",
+			name: "Fix Warped Echo",
+			description: Paragraph(
+				"Enables Warped Echo tweaks.",
+				"Vanilla value: Off"),
+			defaultValue: true);
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoDamageReductionBase = new(
+			section: "Item: Warped Echo",
+			name: "Base Damage Reduction",
+			description: Paragraph(
+				"Percentage of damage reduction for the first stack.",
+				"Vanilla value: 10"),
+			defaultValue: 5f,
+			constraint: new(Min: 1f, Max: 10f));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoDamageReductionStack = new(
+			section: "Item: Warped Echo",
+			name: "Damage Reduction per Stack",
+			description: Paragraph(
+				"Additional percentage of damage reduction for every subsequent stack.",
+				"Vanilla value: 0"),
+			defaultValue: 5f,
+			constraint: new(Min: 0.1f, Max: 8f));
+
+		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> WarpedEchoDamageReductionStackType = new(
+			section: "Item: Warped Echo",
+			name: "Damage Reduction Stacking Type",
+			description: Paragraph(
+				GenericStackingTypeDescription,
+				"Vanilla value: N/A",
+				"Not recommended: Linear, Reciprocal"),
+			defaultValue: ItemStacking.Type.Hyperbolic,
+			constraint: new(typeof(ItemStacking.Type)));
+
+		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
+			section: "Item: Warped Echo",
+			name: "Base Damage Spread",
+			description: Paragraph(
+				"Damage spread instances for the first stack.",
+				"Vanilla value: 3"),
+			defaultValue: 3,
+			constraint: new(Min: 2, Max: 6));
+
+		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadStack = new(
+			section: "Item: Warped Echo",
+			name: "Damage Spread per Stack",
+			description: Paragraph(
+				"Additional damage spread instances for every subsequent stack.",
+				"Vanilla value: 1"),
+			defaultValue: 0,
+			constraint: new(Min: 0, Max: 3));
 		#endregion
 
 		#region Faraday Spur
