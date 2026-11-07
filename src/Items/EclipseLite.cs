@@ -64,19 +64,17 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return baseBarrierFactor;
 
-			float initial = Plugin.EclipseLiteBarrierBase.Value;
-			float perStack = Plugin.EclipseLiteBarrierStack.Value;
+			float initial = Plugin.EclipseLiteBarrierBase.Value * 0.01f;
+			float perStack = Plugin.EclipseLiteBarrierStack.Value * 0.01f;
 			ItemStacking.Type stackType = Plugin.EclipseLiteBarrierStackType.Value;
 
-			float totalPercent = stackType switch {
+			return stackType switch {
 				ItemStacking.Type.Linear => ItemStacking.Linear(initial, perStack, itemCount),
-				ItemStacking.Type.Hyperbolic => ItemStacking.Hyperbolic(initial * 0.01f, perStack * 0.01f, itemCount) * 100f,
-				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(initial, perStack * 0.01f, itemCount),
-				ItemStacking.Type.Exponential => ItemStacking.Exponential(initial, 1f + perStack * 0.01f, itemCount),
-				_ => baseBarrierFactor * 100f,
+				ItemStacking.Type.Hyperbolic => ItemStacking.Hyperbolic(initial, perStack, itemCount),
+				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(initial, perStack, itemCount),
+				ItemStacking.Type.Exponential => ItemStacking.Exponential(initial, 1f + perStack, itemCount),
+				_ => baseBarrierFactor,
 			};
-
-			return totalPercent * 0.01f;
 		}
 
 		private float NullifyVanillaStackBarrierFactor(float stackBarrierFactor) {
