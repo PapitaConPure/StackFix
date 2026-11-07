@@ -11,6 +11,7 @@ namespace StackFix.Settings {
 				"Vanilla value: Off"),
 			defaultValue: true);
 
+		#region Faraday Spur
 		public static readonly ConfigEntryExt<bool> FaradaySpurFixEnabled = new(
 			section: "General",
 			name: "Fix Faraday Spur",
@@ -72,7 +73,9 @@ namespace StackFix.Settings {
 				"Vanilla value: 280"),
 			defaultValue: 200f,
 			constraint: new(Min: 0f, Max: 400f));
+		#endregion
 
+		#region Networked Suffering
 		public static readonly ConfigEntryExt<bool> NetworkedSufferingFixEnabled = new(
 			section: "General",
 			name: "Fix Networked Suffering",
@@ -116,6 +119,7 @@ namespace StackFix.Settings {
 				"Vanilla value: 0"),
 			defaultValue: 1f,
 			constraint: new(Min: 0f, Max: 10f));
+		#endregion
 
 		public static readonly ConfigEntryExt<bool> Megumin = new(
 			section: "Megumin",
