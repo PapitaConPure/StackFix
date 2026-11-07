@@ -1,5 +1,6 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
+using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static class ModSettings {
@@ -10,6 +11,43 @@ namespace StackFix.Settings {
 				"Enables the mod.",
 				"Vanilla value: Off"),
 			defaultValue: true);
+
+		#region Eclipse Lite
+		public static readonly ConfigEntryExt<bool> EclipseLiteFixEnabled = new(
+			section: "General",
+			name: "Fix Eclipse Lite",
+			description: Paragraph(
+				"Enables Eclipse Lite tweaks.",
+				"Vanilla value: Off"),
+			defaultValue: true);
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> EclipseLiteBarrierBase = new(
+			section: "Item: Eclipse Lite",
+			name: "Base Cooldown Barrier",
+			description: Paragraph(
+				"Percentage of max health gained in barrier for every second of a skill's cooldown for the first stack.",
+				"Vanilla value: 1"),
+			defaultValue: 1f,
+			constraint: new(Min: 0.25f, Max: 2f));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> EclipseLiteBarrierStack = new(
+			section: "Item: Eclipse Lite",
+			name: "Cooldown Barrier per Stack",
+			description: Paragraph(
+				"Percentage of max health gained in barrier for every second of a skill's cooldown for every subsequent stack.",
+				"Vanilla value: 0.25"),
+			defaultValue: 1f,
+			constraint: new(Min: 0.25f, Max: 2f));
+
+		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> EclipseLiteBarrierStackType = new(
+			section: "Item: Eclipse Lite",
+			name: "Cooldown Barrier Stacking Type",
+			description: Paragraph(
+				genericStackingTypeDescription,
+				"Vanilla value: Linear"),
+			defaultValue: ItemStacking.Type.Hyperbolic,
+			constraint: new(typeof(ItemStacking.Type)));
+		#endregion
 
 		#region Faraday Spur
 		public static readonly ConfigEntryExt<bool> FaradaySpurFixEnabled = new(
@@ -129,5 +167,15 @@ namespace StackFix.Settings {
 
 		private static string Paragraph(params string[] lines)
 			=> string.Join("\n", lines);
+
+		private static string genericStackingTypeDescription = Paragraph(
+			"Determines how the effect will scale based on the number of stacks you have of the item.",
+			"",
+			"There are multiple formulas:",
+			"* Linear: effect scales by a fixed amount per stack.",
+			"* Hyperbolic: effect scales with diminishing returns per stack, approaching a limit.",
+			"* Reciprocal: effect decreases proportionally per stack.",
+			"* Exponential: effect compounds by a constant factor per stack.",
+			"");
 	}
 }
