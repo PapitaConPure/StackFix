@@ -24,6 +24,9 @@ namespace StackFix {
 		internal static ConfigEntry<ItemStacking.Type> WarpedEchoDamageReductionStackType;
 		internal static ConfigEntry<int> WarpedEchoDamageSpreadBase;
 		internal static ConfigEntry<int> WarpedEchoDamageSpreadStack;
+		internal static ConfigEntry<float> WarpedEchoCooldownBase;
+		internal static ConfigEntry<float> WarpedEchoCooldownStack;
+		internal static ConfigEntry<ItemStacking.Type> WarpedEchoCooldownStackType;
 
 		internal static ConfigEntry<bool> FaradaySpurFixEnabled;
 		internal static ConfigEntry<float> FaradaySpurMoveSpeedBase;
@@ -71,6 +74,9 @@ namespace StackFix {
 			WarpedEchoDamageReductionStackType = ModSettings.WarpedEchoDamageReductionStackType.RegisterFor(this);
 			WarpedEchoDamageSpreadBase         = ModSettings.WarpedEchoDamageSpreadBase.RegisterFor(this);
 			WarpedEchoDamageSpreadStack        = ModSettings.WarpedEchoDamageSpreadStack.RegisterFor(this);
+			WarpedEchoCooldownBase             = ModSettings.WarpedEchoCooldownBase.RegisterFor(this);
+			WarpedEchoCooldownStack            = ModSettings.WarpedEchoCooldownStack.RegisterFor(this);
+			WarpedEchoCooldownStackType        = ModSettings.WarpedEchoCooldownStackType.RegisterFor(this);
 
 			FaradaySpurFixEnabled      = ModSettings.FaradaySpurFixEnabled.RegisterFor(this);
 			FaradaySpurMoveSpeedBase   = ModSettings.FaradaySpurMoveSpeedBase.RegisterFor(this);
@@ -111,19 +117,22 @@ namespace StackFix {
 				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack);
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoCooldownStackType);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.##}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "{0:0.##}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightBase, new(FormatString: "{0:0.##}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "{0:0.##}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageBase, new(FormatString: "{0:0.##}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "{0:0.##}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(NetworkedSufferingFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadBase);
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack);
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.##}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(FormatString: "{0:0.##}%"));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Megumin);

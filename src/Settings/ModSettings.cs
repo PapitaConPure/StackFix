@@ -84,7 +84,7 @@ namespace StackFix.Settings {
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
 				"Not recommended: Linear, Reciprocal"),
-			defaultValue: ItemStacking.Type.Hyperbolic,
+			defaultValue: ItemStacking.Type.Exponential,
 			constraint: new(typeof(ItemStacking.Type)));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
@@ -104,6 +104,34 @@ namespace StackFix.Settings {
 				"Vanilla value: 1"),
 			defaultValue: 0,
 			constraint: new(Min: 0, Max: 3));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoCooldownBase = new(
+			section: "Item: Warped Echo",
+			name: "Base Cooldown",
+			description: Paragraph(
+				"Base cooldown in seconds.",
+				"Vanilla value: 15"),
+			defaultValue: 15f,
+			constraint: new(Min: 10f, Max: 20f));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoCooldownStack = new(
+			section: "Item: Warped Echo",
+			name: "Cooldown per Stack",
+			description: Paragraph(
+				"Percentage of cooldown reduction for every subsequent stack.",
+				"Vanilla value: 0"),
+			defaultValue: 5f,
+			constraint: new(Min: 0f, Max: 10f));
+
+		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> WarpedEchoCooldownStackType = new(
+			section: "Item: Warped Echo",
+			name: "Cooldown Stacking Type",
+			description: Paragraph(
+				GenericStackingTypeDescription,
+				"Vanilla value: N/A",
+				"Not recommended: Linear, Reciprocal"),
+			defaultValue: ItemStacking.Type.Exponential,
+			constraint: new(typeof(ItemStacking.Type)));
 		#endregion
 
 		#region Faraday Spur
