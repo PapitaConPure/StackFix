@@ -108,32 +108,32 @@ namespace StackFix {
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(EclipseLiteFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(FormatString: "{0:0.##}%"));
-				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(FormatString: "+{0:0.##}%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(EclipseLiteBarrierStackType);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(WarpedEchoFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(FormatString: "{0:0.##}%"));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(FormatString: "+{0:0.##}%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack);
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack, new(Prefix: "+"));
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(FormatString: "+{0:0.##}%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoCooldownStackType);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "{0:0.#}%", Step: 0.5f));
+				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(NetworkedSufferingFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadBase);
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack);
+				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack, new(Prefix: "+"));
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(FormatString: "{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(FormatString: "+{0:0.##}%"));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Megumin);
 			} catch(Exception exception) {

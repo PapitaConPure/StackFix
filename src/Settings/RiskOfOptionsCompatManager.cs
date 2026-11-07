@@ -46,7 +46,7 @@ namespace StackFix.Settings {
 #endif
 		}
 
-		public record AddIntSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0}");
+		public record AddIntSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0}", string Prefix = "", string Suffix = "");
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddSliderOption(
@@ -61,12 +61,12 @@ namespace StackFix.Settings {
 					min = min,
 					max = max,
 					restartRequired = config?.RestartRequired ?? false,
-					formatString = config?.FormatString ?? "{0}",
+					formatString = $"{config.Prefix}{config?.FormatString ?? "{0}"}{config.Suffix}",
 				}));
 #endif
 		}
 
-		public record AddFloatSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0:0.##}", float Step = 0.01f);
+		public record AddFloatSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0:0.##}", string Prefix = "", string Suffix = "", float Step = 0.01f);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddSliderOption(
@@ -82,7 +82,7 @@ namespace StackFix.Settings {
 					min = min,
 					max = max,
 					restartRequired = config.RestartRequired,
-					FormatString = config.FormatString ?? "{0:0.##}",
+					FormatString = $"{config.Prefix}{config.FormatString ?? "{0:0.##}"}{config.Suffix}",
 					increment = config.Step,
 				}));
 			else
@@ -92,7 +92,7 @@ namespace StackFix.Settings {
 						min = min,
 						max = max,
 						restartRequired = config?.RestartRequired ?? false,
-						FormatString = config?.FormatString ?? "{0:0.##}",
+						FormatString = $"{config?.Prefix ?? ""}{config?.FormatString ?? "{0:0.##}"}{config?.Suffix ?? ""}",
 					}));
 #endif
 		}
