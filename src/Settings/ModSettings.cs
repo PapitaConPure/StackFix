@@ -28,7 +28,7 @@ namespace StackFix.Settings {
 				"Percentage of max health gained in barrier for every second of a skill's cooldown for the first stack.",
 				"Vanilla value: 1"),
 			defaultValue: 0.5f,
-			constraint: new(Min: 0.25f, Max: 2f));
+			constraint: new(Min: 0.25f, Max: 1.5f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> EclipseLiteBarrierStack = new(
 			section: "Item: Eclipse Lite",
@@ -37,7 +37,7 @@ namespace StackFix.Settings {
 				"Percentage of max health gained in barrier for every second of a skill's cooldown for every subsequent stack.",
 				"Vanilla value: 0.25"),
 			defaultValue: 0.5f,
-			constraint: new(Min: 0.25f, Max: 2f));
+			constraint: new(Min: 0.1f, Max: 1f));
 
 		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> EclipseLiteBarrierStackType = new(
 			section: "Item: Eclipse Lite",
