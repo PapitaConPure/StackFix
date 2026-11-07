@@ -11,12 +11,32 @@ It's server-side, and everyone needs the mod. The default values are what I pers
 * There's more planned, but that's it for now...
 
 ## Configuration
+Some settings determine which formula is used to control how a particular effect scales per stack. These are available choices:
+* **Linear**: effect scales by a fixed amount per stack.
+* **Hyperbolic**: effect scales with diminishing returns per stack, approaching a limit.
+* **Reciprocal**: effect decreases proportionally per stack.
+* **Exponential**: effect compounds by a constant factor per stack.
+
 ### General
 | Name                    | Type    | Default | Vanilla | Description |
 |-------------------------|---------|---------|---------|-------------|
 | Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
+| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
 | Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
 | Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
+
+General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
+
+### Item: Eclipse Lite
+| Name                           | Type    | Default    | Vanilla  | Description |
+|--------------------------------|---------|------------|----------|-------------|
+| Base Cooldown Barrier          | Percent | `0.5%`     | `1%`     | Initial percentage of max health gained in barrier for each second of a skill's cooldown. |
+| Cooldown Barrier per Stack     | Percent | `+0.5%`    | `+0.25%` | Percentage of max health gained in barrier per stack (*configurable formula*) for each second of a skill's cooldown. |
+| Cooldown Barrier Stacking Type | Choice  | Hyperbolic | Linear   | Determines how "Cooldown Barrier per Stack" scales with each additional stack. |
+
+With default settings, Eclipse Lite starts a bit weaker but catches up to vanilla at 3 stacks and becomes ~1.6x as effective as vanilla at ~20 stacks.
+
+If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stacking, it still catches up at 3 stacks but becomes ~1.75x as effective as vanilla at ~20 stacks.
 
 ### Item: Faraday Spur
 | Name                     | Type    | Default | Vanilla | Description |
