@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -25,7 +26,7 @@ namespace StackFix.Utils {
 		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, value)} per stack) {StackingType(type)}</style>";
+				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack) {StackingType(type)}</style>";
 
 		public static string StackingType(ItemStacking.Type type)
 			=> $"<style={type switch {
