@@ -6,6 +6,7 @@ Makes some items have a better initial effect + stacking behavior.
 It's server-side, and everyone needs the mod. The default values are what I personally use and should be a good starting point for balancing.
 
 ## Features
+* **Eclipse Lite**: reduced initial barrier gain but increased its stacking (configurable).
 * **Faraday Spur**: reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
 * **Networked Suffering**: reduced initial maximum spread count and damage (configurable). 
 * There's more planned, but that's it for now...
