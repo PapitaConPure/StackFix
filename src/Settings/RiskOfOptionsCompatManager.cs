@@ -61,7 +61,7 @@ namespace StackFix.Settings {
 					min = min,
 					max = max,
 					restartRequired = config?.RestartRequired ?? false,
-					formatString = $"{config.Prefix}{config?.FormatString ?? "{0}"}{config.Suffix}",
+					formatString = $"{config?.Prefix}{config?.FormatString ?? "{0}"}{config?.Suffix}",
 				}));
 #endif
 		}
