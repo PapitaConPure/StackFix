@@ -27,6 +27,9 @@ namespace StackFix.Utils {
 			Exponential = 3,
 		}
 
+		public static Type FromEnum<TEnum>(TEnum other) where TEnum : struct, Enum => Enum.Parse<Type>(other.ToString());
+
+
 		/// <summary>
 		/// Calculates the result of linear stacking at the specified <paramref name="stacks"/> number.
 		/// </summary>

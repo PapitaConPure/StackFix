@@ -1,6 +1,5 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
-using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static class ModSettings {
@@ -40,8 +39,8 @@ namespace StackFix.Settings {
 			constraint: new(Min: 0.1f, Max: 1f));
 
 		public enum EclipseLiteBarrierStacking {
-			Linear = ItemStacking.Type.Linear,
-			Hyperbolic = ItemStacking.Type.Hyperbolic,
+			Linear,
+			Hyperbolic,
 		}
 		public static readonly ConstrainedConfigEntry<EclipseLiteBarrierStacking, ListEntryConstraint<EclipseLiteBarrierStacking>> EclipseLiteBarrierStackType = new(
 			section: "Item: Eclipse Lite",
@@ -81,9 +80,9 @@ namespace StackFix.Settings {
 			constraint: new(Min: 0.1f, Max: 8f));
 
 		public enum WarpedEchoDamageReductionStacking {
-			Linear = ItemStacking.Type.Linear,
-			Reciprocal = ItemStacking.Type.Reciprocal,
-			Exponential = ItemStacking.Type.Exponential,
+			Linear,
+			Reciprocal,
+			Exponential,
 		}
 		public static readonly ConstrainedConfigEntry<WarpedEchoDamageReductionStacking, ListEntryConstraint<WarpedEchoDamageReductionStacking>> WarpedEchoDamageReductionStackType = new(
 			section: "Item: Warped Echo",
@@ -132,9 +131,9 @@ namespace StackFix.Settings {
 			constraint: new(Min: 0f, Max: 10f));
 
 		public enum WarpedEchoCooldownStacking {
-			Linear = ItemStacking.Type.Linear,
-			Reciprocal = ItemStacking.Type.Reciprocal,
-			Exponential = ItemStacking.Type.Exponential,
+			Linear,
+			Reciprocal,
+			Exponential,
 		}
 		public static readonly ConstrainedConfigEntry<WarpedEchoCooldownStacking, ListEntryConstraint<WarpedEchoCooldownStacking>> WarpedEchoCooldownStackType = new(
 			section: "Item: Warped Echo",

@@ -39,12 +39,12 @@ namespace StackFix.Items {
 			bool enabled = this.Enabled;
 			float damageReductionBase                  = enabled ? Plugin.WarpedEchoDamageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE_PERCENT;
 			float damageReductionStack                 = enabled ? Plugin.WarpedEchoDamageReductionStack.Value : 0f;
-			ItemStacking.Type damageReductionStackType = enabled ? (ItemStacking.Type)Plugin.WarpedEchoDamageReductionStackType.Value : ItemStacking.Type.Linear;
+			ItemStacking.Type damageReductionStackType = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoDamageReductionStackType.Value) : ItemStacking.Type.Linear;
 			int damageSpreadBase                       = enabled ? Plugin.WarpedEchoDamageSpreadBase.Value  : VANILLA_DAMAGE_SPREAD_BASE;
 			int damageSpreadStack                      = enabled ? Plugin.WarpedEchoDamageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
 			float cooldownBase                         = enabled ? Plugin.WarpedEchoCooldownBase.Value  : VANILLA_COOLDOWN_BASE;
 			float cooldownStack                        = enabled ? Plugin.WarpedEchoCooldownStack.Value : 0f;
-			ItemStacking.Type cooldownStackType        = enabled ? (ItemStacking.Type)Plugin.WarpedEchoCooldownStackType.Value : ItemStacking.Type.Linear;
+			ItemStacking.Type cooldownStackType        = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoCooldownStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC",
 				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%{ItD.Stack(damageReductionStack, damageReductionStackType, "{0:+0.##;-0.##}%")}")} and " +
