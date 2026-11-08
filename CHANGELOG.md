@@ -1,3 +1,8 @@
+### v1.2.0
+* Added Warped Echo item fix.
+* Improved Risk of Options stack settings display.
+* "(...) Stacking Type" entries now only show choices that make sense.
+
 ### v1.1.0
 * Added Eclipse Lite item fix.
 
