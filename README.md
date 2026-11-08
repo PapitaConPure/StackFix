@@ -24,6 +24,7 @@ Some settings determine which formula is used to control how a particular effect
 |-------------------------|---------|---------|---------|-------------|
 | Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
 | Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
+| Fix Warped Echo         | Toggle  | On      | Off     | Enable Warped Echo fixes. |
 | Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
 | Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
 
@@ -46,8 +47,8 @@ If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stackin
 | Base Damage Reduction            | Percent    | `5%`        | `10%`   | Initial damage absorption percentage on trigger. |
 | Damage Reduction per Stack       | Percent    | `+5%`       | `+0%`   | Damage absorption percentage on trigger per stack (*configurable formula*). |
 | Damage Reduction Stacking Type   | Choice     | Reciprocal  | N/A     | Determines how "Damage Reduction per Stack" scales with each additional stack. |
-| Base Damage Reduction            | Integer    | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
-| Damage Reduction per Stack       | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*configurable formula*). |
+| Base Damage Spread               | Integer    | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
+| Damage Spread per Stack          | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*configurable formula*). |
 | Base Cooldown                    | Fractional | `15.0`      | `15.0`  | Initial cooldown before damage absorption can trigger again. |
 | Cooldown Reduction per Stack     | Percent    | `+2.5%`     | `+0%`   | Damage absorption cooldown reduction per stack (*configurable formula*). |
 | Cooldown Reduction Stacking Type | Choice     | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
