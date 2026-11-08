@@ -13,6 +13,8 @@ namespace StackFix {
 	public sealed class Plugin: BaseUnityPlugin {
 		internal static ConfigEntry<bool> Enabled;
 
+		internal static ConfigEntry<bool> BolsteringLanternFixEnabled;
+
 		internal static ConfigEntry<bool> EclipseLiteFixEnabled;
 		internal static ConfigEntry<float> EclipseLiteBarrierBase;
 		internal static ConfigEntry<float> EclipseLiteBarrierStack;
@@ -65,6 +67,8 @@ namespace StackFix {
 		private void RegisterSettings() {
 			Enabled                      = ModSettings.Enabled.RegisterFor(this);
 
+			BolsteringLanternFixEnabled = ModSettings.BolsteringLanternFixEnabled.RegisterFor(this);
+
 			EclipseLiteFixEnabled       = ModSettings.EclipseLiteFixEnabled.RegisterFor(this);
 			EclipseLiteBarrierBase      = ModSettings.EclipseLiteBarrierBase.RegisterFor(this);
 			EclipseLiteBarrierStack     = ModSettings.EclipseLiteBarrierStack.RegisterFor(this);
@@ -107,6 +111,8 @@ namespace StackFix {
 				RiskOfOptionsCompatManager.SetModIcon(ModIcon.Load());
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Enabled);
+
+				RiskOfOptionsCompatManager.AddCheckboxOption(BolsteringLanternFixEnabled);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(EclipseLiteFixEnabled);
 				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(FormatString: "{0:0.##}%"));

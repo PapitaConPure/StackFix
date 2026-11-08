@@ -9,7 +9,7 @@ namespace StackFix.Items {
 		private const int VANILLA_ENEMY_COUNT_BASE = 3;
 		private const int VANILLA_ENEMY_COUNT_STACK = 1;
 
-		public bool Enabled => throw new NotImplementedException();
+		public bool Enabled => Plugin.Enabled.Value && Plugin.BolsteringLanternFixEnabled.Value;
 
 		public void ApplyFix() {
 			throw new NotImplementedException();

@@ -11,6 +11,16 @@ namespace StackFix.Settings {
 				"Vanilla value: Off"),
 			defaultValue: true);
 
+		#region Bolstering Lantern
+		public static readonly ConfigEntryExt<bool> BolsteringLanternFixEnabled = new(
+			section: "General",
+			name: "Fix Bolstering Lantern",
+			description: Paragraph(
+				"Enables Bolstering Lantern tweaks.",
+				"Vanilla value: Off"),
+			defaultValue: true);
+		#endregion
+
 		#region Eclipse Lite
 		public static readonly ConfigEntryExt<bool> EclipseLiteFixEnabled = new(
 			section: "General",
