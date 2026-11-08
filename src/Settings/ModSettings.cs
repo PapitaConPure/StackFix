@@ -1,7 +1,6 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
 using StackFix.Utils;
-using System.ComponentModel;
 
 namespace StackFix.Settings {
 	internal static class ModSettings {
@@ -82,7 +81,6 @@ namespace StackFix.Settings {
 			constraint: new(Min: 0.1f, Max: 8f));
 
 		public enum WarpedEchoDamageReductionStacking {
-			[Description("Linear (Complementary)")]
 			Linear = ItemStacking.Type.Linear,
 			Reciprocal = ItemStacking.Type.Reciprocal,
 			Exponential = ItemStacking.Type.Exponential,
@@ -134,7 +132,6 @@ namespace StackFix.Settings {
 			constraint: new(Min: 0f, Max: 10f));
 
 		public enum WarpedEchoCooldownStacking {
-			[Description("Linear (Complementary)")]
 			Linear = ItemStacking.Type.Linear,
 			Reciprocal = ItemStacking.Type.Reciprocal,
 			Exponential = ItemStacking.Type.Exponential,
