@@ -69,10 +69,8 @@ namespace StackFix.Items {
 			ItemStacking.Type stackType = Plugin.EclipseLiteBarrierStackType.Value;
 
 			return stackType switch {
-				ItemStacking.Type.Linear => ItemStacking.Linear(initial, perStack, itemCount),
+				ItemStacking.Type.Linear     => ItemStacking.Linear(initial, perStack, itemCount),
 				ItemStacking.Type.Hyperbolic => ItemStacking.Hyperbolic(initial, perStack, itemCount),
-				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(initial, perStack, itemCount),
-				ItemStacking.Type.Exponential => ItemStacking.Exponential(initial, 1f + perStack, itemCount),
 				_ => baseBarrierFactor,
 			};
 		}

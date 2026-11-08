@@ -44,10 +44,11 @@ namespace StackFix.Settings {
 			name: "Cooldown Barrier Stacking Type",
 			description: Paragraph(
 				GenericStackingTypeDescription,
-				"Vanilla value: Linear",
-				"Not recommended: Reciprocal, Exponential"),
+				"Vanilla value: Linear"),
 			defaultValue: ItemStacking.Type.Hyperbolic,
-			constraint: new(typeof(ItemStacking.Type)));
+			constraint: new(
+				ItemStacking.Type.Linear,
+				ItemStacking.Type.Hyperbolic));
 		#endregion
 
 		#region Warped Echo
@@ -83,9 +84,12 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
-				"Not recommended: Linear, Reciprocal"),
-			defaultValue: ItemStacking.Type.Exponential,
-			constraint: new(typeof(ItemStacking.Type)));
+				"Not recommended: Linear"),
+			defaultValue: ItemStacking.Type.Hyperbolic,
+			constraint: new(
+				ItemStacking.Type.Linear,
+				ItemStacking.Type.Hyperbolic,
+				ItemStacking.Type.Exponential));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
 			section: "Item: Warped Echo",
@@ -129,9 +133,11 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
-				"Not recommended: Linear, Reciprocal"),
+				"Not recommended: Linear"),
 			defaultValue: ItemStacking.Type.Exponential,
-			constraint: new(typeof(ItemStacking.Type)));
+			constraint: new(
+				ItemStacking.Type.Hyperbolic,
+				ItemStacking.Type.Exponential));
 		#endregion
 
 		#region Faraday Spur
