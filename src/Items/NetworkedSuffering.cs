@@ -41,10 +41,10 @@ namespace StackFix.Items {
 			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE_PERCENT;
 			float damageStack      = enabled ? Plugin.NetworkedSufferingDamageStack.Value : 0f;
 
-			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC",
-				$"Infect up to {ItD.Utility($"{maxVirusCountBase}{ItD.Stack(maxVirusCountStack)}")} enemies with a computer virus that " +
-				$"duplicates {ItD.Damage($"{damageBase}%{ItD.Stack(damageStack, "+{0:0}%")} of all damage taken")} and sends it to a global " +
-				$"damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}.");
+			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC", new ItD(
+				$"Infect up to {ItD.Utility($"{maxVirusCountBase}{ItD.Stack(maxVirusCountStack)}")} enemies with a computer virus that ",
+				$"duplicates {ItD.Damage($"{damageBase}%{ItD.Stack(damageStack, "+{0:0}%")} of all damage taken")} and sends it to a global ",
+				$"damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}."));
 		}
 
 		private void NetworkedSuffering_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();

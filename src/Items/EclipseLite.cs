@@ -32,9 +32,9 @@ namespace StackFix.Items {
 			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK_PERCENT;
 			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(Plugin.EclipseLiteBarrierStackType.Value) : ItemStacking.Type.Linear;
 
-			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
-				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)}")} " +
-				$"of your maximum health per second of the skill's base cooldown.");
+			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC", new ItD(
+				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)}")} ",
+				$"of your maximum health per second of the skill's base cooldown."));
 		}
 
 		private void EclipseLite_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();

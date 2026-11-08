@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace StackFix.Utils {
-	internal static class ItD {
+	internal class ItD(params FormattableString[] desc) {
+		//Cute thing to avoid the current device's localization settings
+		private readonly FormattableString[] desc = desc;
+		public static implicit operator string(ItD itd) => string.Join("", itd.desc.Select(FormattableString.Invariant));
+
 		public static string Damage(string desc)
 			=> $"<style=cIsDamage>{desc}</style>";
 
@@ -22,12 +25,12 @@ namespace StackFix.Utils {
 		public static string Stack(float value, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, value)} per stack)</style>";
+				: $" <style=cStack>({string.Format(format, value)} per stack)</style>";
 
 		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
+				: $" <style=cStack>({string.Format(format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
 				  $"{(type == vanillaType ? "" : $", {type.ToString().ToLower()}")}" +
 				  $")</style>";
 

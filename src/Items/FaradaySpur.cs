@@ -51,11 +51,11 @@ namespace StackFix.Items {
 			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE_PERCENT;
 			float thresStack         = 0f;
 
-			LanguageAPI.AddOverlay("ITEM_JUMPDAMAGESTRIKE_DESC",
-				$"Moving around builds up {ItD.Utility("charge")}, granting up to {ItD.Utility($"+{moveSpeedBase:0}%{ItD.Stack(moveSpeedStack, "+{0:0}%")} movement speed")} " +
-				$"and {ItD.Utility($"+{jumpHeightBase:0}%{ItD.Stack(jumpHeightStack, "+{0:0}%")} jump height")} at 100%. At {thresBase:0}%{ItD.Stack(thresStack, "{+0;-0:0}%")} charge " +
-				$"or higher, jumping triggers an {ItD.Damage("explosive discharge")} for {ItD.Damage($"+{damageBase:0}%{ItD.Stack(damageStack, "+{0:0}%")} damage")} in a " +
-				$"{ItD.Damage($"{thresDistanceBase:0.#}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to {ItD.Damage($"{maxDistanceBase:0.#}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
+			LanguageAPI.AddOverlay("ITEM_JUMPDAMAGESTRIKE_DESC", new ItD(
+				$"Moving around builds up {ItD.Utility("charge")}, granting up to {ItD.Utility($"+{moveSpeedBase:0}%{ItD.Stack(moveSpeedStack, "+{0:0}%")} movement speed")} ",
+				$"and {ItD.Utility($"+{jumpHeightBase:0}%{ItD.Stack(jumpHeightStack, "+{0:0}%")} jump height")} at 100%. At {thresBase:0}%{ItD.Stack(thresStack, "{+0;-0:0}%")} charge ",
+				$"or higher, jumping triggers an {ItD.Damage("explosive discharge")} for {ItD.Damage($"+{damageBase:0}%{ItD.Stack(damageStack, "+{0:0}%")} damage")} in a ",
+				$"{ItD.Damage($"{thresDistanceBase:0.#}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to {ItD.Damage($"{maxDistanceBase:0.#}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area."));
 		}
 
 		private void FaradaySpur_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
