@@ -115,22 +115,23 @@ namespace StackFix.Items {
 
 			bool found = false;
 			while(cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdfld<CharacterBody>("delayedDamageRefreshTime"))) {
+				cursor.Emit(OpCodes.Ldarg_0);
 				cursor.EmitDelegate(this.ModifyCooldown);
 				found = true;
 			}
 
 			if(!found)
-				throw new ILSeekException("Failed to match delayedDamageRefreshTime in CharacterBody.UpdateDelayedDamage");
+				throw new ILSeekException("Failed to match delayedDamageRefreshTime IL in CharacterBody.UpdateDelayedDamage");
 		}
 
-		private float ModifyCooldown(CharacterBody self, float vanillaCooldown) {
+		private float ModifyCooldown(float cooldown, CharacterBody body) {
 			if(!this.Enabled)
-				return vanillaCooldown;
+				return cooldown;
 
-			int itemCount = self.inventory?.GetItemCountEffective(DLC2Content.Items.DelayedDamage) ?? 0;
+			int itemCount = body.inventory?.GetItemCountEffective(DLC2Content.Items.DelayedDamage) ?? 0;
 
 			if(itemCount <= 0)
-				return vanillaCooldown;
+				return cooldown;
 
 			float baseValue = Plugin.WarpedEchoCooldownBase.Value;
 			float perStack = Plugin.WarpedEchoCooldownStack.Value * 0.01f;
