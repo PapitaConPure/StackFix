@@ -23,6 +23,7 @@ namespace StackFix.Utils {
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
 				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, value)} per stack)</style>";
+
 		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
