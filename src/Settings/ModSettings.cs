@@ -76,7 +76,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Additional percentage of damage reduction for every subsequent stack.",
 				"Vanilla value: 0"),
-			defaultValue: 2.5f,
+			defaultValue: 5f,
 			constraint: new(Min: 0.1f, Max: 8f));
 
 		public enum WarpedEchoDamageReductionStacking {
@@ -123,11 +123,11 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoCooldownStack = new(
 			section: "Item: Warped Echo",
-			name: "Cooldown per Stack",
+			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
 				"Vanilla value: 0"),
-			defaultValue: 5f,
+			defaultValue: 2.5f,
 			constraint: new(Min: 0f, Max: 10f));
 
 		public enum WarpedEchoCooldownStacking {
