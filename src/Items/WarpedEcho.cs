@@ -57,6 +57,11 @@ namespace StackFix.Items {
 		private void HealthComponent_TakeDamageProcess(ILContext il) {
 			ILCursor cursor = new(il);
 
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.DelayedDamage)),
+				instr => instr.MatchCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
+				throw new ILSeekException("Failed to match delayed damage item count in HealthComponent.TakeDamageProcess");
+
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(0.9f)))
 				throw new ILSeekException("Failed to match damage reduction multiplier IL in HealthComponent.TakeDamageProcess");
 
