@@ -45,6 +45,7 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Megumin;
 
 		private readonly IItemFix[] ItemFixes = [
+			new BolsteringLantern(),
 			new EclipseLite(),
 			new WarpedEcho(),
 			new FaradaySpur(),
