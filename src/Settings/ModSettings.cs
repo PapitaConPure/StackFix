@@ -75,7 +75,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Additional percentage of damage reduction for every subsequent stack.",
 				"Vanilla value: 0"),
-			defaultValue: 5f,
+			defaultValue: 2.5f,
 			constraint: new(Min: 0.1f, Max: 8f));
 
 		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> WarpedEchoDamageReductionStackType = new(
@@ -89,7 +89,7 @@ namespace StackFix.Settings {
 			constraint: new(
 				ItemStacking.Type.Linear,
 				ItemStacking.Type.Hyperbolic,
-				ItemStacking.Type.Exponential));
+				ItemStacking.Type.Reciprocal));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
 			section: "Item: Warped Echo",
