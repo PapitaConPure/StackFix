@@ -19,10 +19,10 @@ namespace StackFix.Utils {
 		public static float HyperbolicPercent(float initial, float perStack, int stacks)
 			=> Hyperbolic(initial * 0.01f, perStack * 0.01f, stacks) * 100f;
 
-		public static float Reciprocal(float initial, int stacks)
-			=> DivideOrNumerator(initial, stacks);
+		public static float Reciprocal(float coefficient, int stacks)
+			=> DivideOrNumerator(1f - coefficient, stacks);
 		public static float Reciprocal(float initial, float coefficient, int stacks)
-			=> DivideOrNumerator(initial, 1f + coefficient * stacks);
+			=> DivideOrNumerator(1f - initial, 1f + (1f - coefficient) * (stacks - 1f));
 		public static float ReciprocalPercent(float initial, float coefficient, int stacks)
 			=> Reciprocal(initial, coefficient * 0.01f, stacks);
 
