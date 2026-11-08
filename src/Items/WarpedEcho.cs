@@ -87,8 +87,8 @@ namespace StackFix.Items {
 
 			float factor = Plugin.WarpedEchoDamageReductionStackType.Value switch {
 				ItemStacking.Type.Linear     => 1f - ItemStacking.Linear(initial, perStack, itemCount),
-				ItemStacking.Type.Hyperbolic => 1f - ItemStacking.Hyperbolic(initial, perStack, itemCount),
-				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(1f - initial, 1f - perStack, itemCount),
+				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(initial, perStack, itemCount),
+				ItemStacking.Type.Exponential => ItemStacking.Reciprocal(1f - initial, 1f - perStack, itemCount),
 				_ => initial,
 			};
 

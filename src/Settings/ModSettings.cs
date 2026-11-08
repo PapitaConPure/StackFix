@@ -47,8 +47,8 @@ namespace StackFix.Settings {
 				"Vanilla value: Linear"),
 			defaultValue: ItemStacking.Type.Hyperbolic,
 			constraint: new(
-				ItemStacking.Type.Linear,
-				ItemStacking.Type.Hyperbolic));
+				new(ItemStacking.Type.Linear),
+				new(ItemStacking.Type.Hyperbolic)));
 		#endregion
 
 		#region Warped Echo
@@ -84,12 +84,12 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
-				"Not recommended: Linear"),
-			defaultValue: ItemStacking.Type.Hyperbolic,
+				"Not recommended: Linear, Exponential"),
+			defaultValue: ItemStacking.Type.Reciprocal,
 			constraint: new(
-				ItemStacking.Type.Linear,
-				ItemStacking.Type.Hyperbolic,
-				ItemStacking.Type.Reciprocal));
+				new(ItemStacking.Type.Linear, "Linear (Complementary)"),
+				new(ItemStacking.Type.Reciprocal),
+				new(ItemStacking.Type.Exponential)));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
 			section: "Item: Warped Echo",
@@ -107,7 +107,7 @@ namespace StackFix.Settings {
 				"Additional damage spread instances for every subsequent stack.",
 				"Vanilla value: 1"),
 			defaultValue: 0,
-			constraint: new(Min: 0, Max: 3));
+			constraint: new(Min: 0, Max: 2));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoCooldownBase = new(
 			section: "Item: Warped Echo",
@@ -136,8 +136,9 @@ namespace StackFix.Settings {
 				"Not recommended: Linear"),
 			defaultValue: ItemStacking.Type.Exponential,
 			constraint: new(
-				ItemStacking.Type.Hyperbolic,
-				ItemStacking.Type.Exponential));
+				new(ItemStacking.Type.Linear, Name: "Linear (Complementary)"),
+				new(ItemStacking.Type.Reciprocal),
+				new(ItemStacking.Type.Exponential)));
 		#endregion
 
 		#region Faraday Spur
@@ -262,10 +263,10 @@ namespace StackFix.Settings {
 		private static string GenericStackingTypeDescription => Paragraph(
 			"Determines how the effect will scale based on the number of stacks you have of the item.",
 			"",
-			"* Linear: effect scales by a fixed amount per stack.",
-			"* Hyperbolic: effect scales with diminishing returns per stack, approaching a limit.",
-			"* Reciprocal: effect decreases proportionally per stack.",
-			"* Exponential: effect compounds by a constant factor per stack.",
+			"* Linear: effect increases by a fixed amount per stack.",
+			"* Hyperbolic: effect increases with diminishing returns per stack, approaching a limit.",
+			"* Reciprocal: effect decreases proportionally with diminishing returns per stack.",
+			"* Exponential: effect compounds by a constant factor per stack. May increase or reduce a stat based on context.",
 			"");
 	}
 }
