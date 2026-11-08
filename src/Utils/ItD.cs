@@ -26,8 +26,12 @@ namespace StackFix.Utils {
 		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack)" +
-				  $"{(type == vanillaType ? "" : $" {StackingType(type)}")}</style>";
+				: $" <style=cStack>({string.Format(CultureInfo.InvariantCulture, format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
+				  $"{(type == vanillaType ? "" : $", {type.ToString().ToLower()}")}" +
+				  $")</style>";
+
+		public static string Stack(string desc, ItemStacking.Type type, ItemStacking.Type? vanillaType = null)
+			=> $"<style=cStack>{desc}{(type == vanillaType ? "" : $" [{type}]")}</style>";
 
 		public static string StackingType(ItemStacking.Type type)
 			=> $"<style={type switch {
