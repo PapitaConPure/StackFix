@@ -6,9 +6,10 @@ Makes some items have a better initial effect + stacking behavior.
 It's server-side, and everyone needs the mod. The default values are what I personally use and should be a good starting point for balancing.
 
 ## Features
-* **Eclipse Lite**: reduced initial barrier gain (configurable) but increased barrier gain per stack (configurable).
+* **Eclipse Lite**: reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
+* **Warped Echo**: reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
 * **Faraday Spur**: reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
-* **Networked Suffering**: reduced initial maximum spread count and damage (configurable). 
+* **Networked Suffering**: reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * There's more planned, but that's it for now...
 
 ## Configuration
@@ -38,6 +39,20 @@ General settings act as umbrella toggles for their respective features. Turn off
 With default settings, Eclipse Lite starts a bit weaker but catches up to vanilla at 3 stacks and becomes ~1.6x as effective as vanilla at ~20 stacks.
 
 If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stacking, it still catches up at 3 stacks but becomes ~1.75x as effective as vanilla at ~20 stacks.
+
+### Item: Warped Echo
+| Name                             | Type       | Default     | Vanilla | Description |
+|----------------------------------|------------|-------------|---------|-------------|
+| Base Damage Reduction            | Percent    | `5%`        | `10%`   | Initial damage absorption percentage on trigger. |
+| Damage Reduction per Stack       | Percent    | `+5%`       | `+0%`   | Damage absorption percentage on trigger per stack (*configurable formula*). |
+| Damage Reduction Stacking Type   | Choice     | Reciprocal  | N/A     | Determines how "Damage Reduction per Stack" scales with each additional stack. |
+| Base Damage Reduction            | Integer    | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
+| Damage Reduction per Stack       | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*configurable formula*). |
+| Base Cooldown                    | Fractional | `15.0`      | `15.0`  | Initial cooldown before damage absorption can trigger again. |
+| Cooldown Reduction per Stack     | Percent    | `+2.5%`     | `+0%`   | Damage absorption cooldown reduction per stack (*configurable formula*). |
+| Cooldown Reduction Stacking Type | Choice     | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
+
+With default settings, Warped Echo starts with a bit less damage absorption than vanilla and loses its spread count stacking in favor of stacking both damage absorption and cooldown reduction, which is quite the step up.
 
 ### Item: Faraday Spur
 | Name                     | Type    | Default | Vanilla | Description |
