@@ -35,7 +35,7 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled           = this.Enabled;
+			bool enabled = this.Enabled;
 			int maxVirusCountBase  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
 			int maxVirusCountStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
 			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE_PERCENT;

@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using R2API;
 using RoR2;
 using StackFix.Exceptions;
+using StackFix.Settings;
 using StackFix.Utils;
 using System;
 
@@ -26,10 +27,10 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled                       = this.Enabled;
+			bool enabled = this.Enabled;
 			float barrierBase                  = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE_PERCENT;
 			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK_PERCENT;
-			ItemStacking.Type barrierStackType = enabled ? Plugin.EclipseLiteBarrierStackType.Value : ItemStacking.Type.Linear;
+			ItemStacking.Type barrierStackType = enabled ? (ItemStacking.Type)Plugin.EclipseLiteBarrierStackType.Value : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
 				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%")}")} " +
@@ -66,11 +67,15 @@ namespace StackFix.Items {
 
 			float initial = Plugin.EclipseLiteBarrierBase.Value * 0.01f;
 			float perStack = Plugin.EclipseLiteBarrierStack.Value * 0.01f;
-			ItemStacking.Type stackType = Plugin.EclipseLiteBarrierStackType.Value;
+			ModSettings.EclipseLiteBarrierStacking stackType = Plugin.EclipseLiteBarrierStackType.Value;
 
 			return stackType switch {
-				ItemStacking.Type.Linear     => ItemStacking.Linear(initial, perStack, itemCount),
-				ItemStacking.Type.Hyperbolic => ItemStacking.Hyperbolic(initial, perStack, itemCount),
+				ModSettings.EclipseLiteBarrierStacking.Linear
+					=> ItemStacking.Linear(initial, perStack, itemCount),
+
+				ModSettings.EclipseLiteBarrierStacking.Hyperbolic
+					=> ItemStacking.Hyperbolic(initial, perStack, itemCount),
+
 				_ => baseBarrierFactor,
 			};
 		}

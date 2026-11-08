@@ -12,19 +12,19 @@ namespace StackFix.Utils {
 			/// <summary>
 			/// Effect scales by a fixed amount per stack.
 			/// </summary>
-			Linear,
+			Linear = 0,
 			/// <summary>
 			/// Effect scales with diminishing returns per stack, approaching a limit.
 			/// </summary>
-			Hyperbolic,
+			Hyperbolic = 1,
 			/// <summary>
 			/// Effect decreases proportionally per stack.
 			/// </summary>
-			Reciprocal,
+			Reciprocal = 2,
 			/// <summary>
 			/// Effect compounds by a constant factor per stack.
 			/// </summary>
-			Exponential,
+			Exponential = 3,
 		}
 
 		/// <summary>

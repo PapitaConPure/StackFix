@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using R2API;
 using RoR2;
 using StackFix.Exceptions;
+using StackFix.Settings;
 using StackFix.Utils;
 using System;
 using UnityEngine;
@@ -35,15 +36,15 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled                               = this.Enabled;
+			bool enabled = this.Enabled;
 			float damageReductionBase                  = enabled ? Plugin.WarpedEchoDamageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE_PERCENT;
 			float damageReductionStack                 = enabled ? Plugin.WarpedEchoDamageReductionStack.Value : 0f;
-			ItemStacking.Type damageReductionStackType = enabled ? Plugin.WarpedEchoDamageReductionStackType.Value : ItemStacking.Type.Linear;
+			ItemStacking.Type damageReductionStackType = enabled ? (ItemStacking.Type)Plugin.WarpedEchoDamageReductionStackType.Value : ItemStacking.Type.Linear;
 			int damageSpreadBase                       = enabled ? Plugin.WarpedEchoDamageSpreadBase.Value  : VANILLA_DAMAGE_SPREAD_BASE;
 			int damageSpreadStack                      = enabled ? Plugin.WarpedEchoDamageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
 			float cooldownBase                         = enabled ? Plugin.WarpedEchoCooldownBase.Value  : VANILLA_COOLDOWN_BASE;
 			float cooldownStack                        = enabled ? Plugin.WarpedEchoCooldownStack.Value : 0f;
-			ItemStacking.Type cooldownStackType        = enabled ? Plugin.WarpedEchoCooldownStackType.Value : ItemStacking.Type.Linear;
+			ItemStacking.Type cooldownStackType        = enabled ? (ItemStacking.Type)Plugin.WarpedEchoCooldownStackType.Value : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC",
 				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%{ItD.Stack(damageReductionStack, damageReductionStackType)}")} and " +
@@ -86,9 +87,15 @@ namespace StackFix.Items {
 			float perStack = Plugin.WarpedEchoDamageReductionStack.Value * 0.01f;
 
 			float factor = Plugin.WarpedEchoDamageReductionStackType.Value switch {
-				ItemStacking.Type.Linear     => 1f - ItemStacking.Linear(initial, perStack, itemCount),
-				ItemStacking.Type.Reciprocal => ItemStacking.Reciprocal(initial, perStack, itemCount),
-				ItemStacking.Type.Exponential => ItemStacking.Reciprocal(1f - initial, 1f - perStack, itemCount),
+				ModSettings.WarpedEchoDamageReductionStacking.Linear
+					=> 1f - ItemStacking.Linear(initial, perStack, itemCount),
+
+				ModSettings.WarpedEchoDamageReductionStacking.Reciprocal
+					=> ItemStacking.Reciprocal(initial, perStack, itemCount),
+
+				ModSettings.WarpedEchoDamageReductionStacking.Exponential
+					=> ItemStacking.Reciprocal(1f - initial, 1f - perStack, itemCount),
+
 				_ => initial,
 			};
 
@@ -137,9 +144,15 @@ namespace StackFix.Items {
 			float perStack = Plugin.WarpedEchoCooldownStack.Value * 0.01f;
 
 			float factor = Plugin.WarpedEchoCooldownStackType.Value switch {
-				ItemStacking.Type.Linear      => ItemStacking.Linear(1f, -perStack, itemCount),
-				ItemStacking.Type.Reciprocal  => ItemStacking.Reciprocal(0f, perStack, itemCount),
-				ItemStacking.Type.Exponential => ItemStacking.Exponential(1f - perStack, itemCount - 1),
+				ModSettings.WarpedEchoCooldownStacking.Linear
+					=> ItemStacking.Linear(1f, -perStack, itemCount),
+
+				ModSettings.WarpedEchoCooldownStacking.Reciprocal
+					=> ItemStacking.Reciprocal(0f, perStack, itemCount),
+
+				ModSettings.WarpedEchoCooldownStacking.Exponential
+					=> ItemStacking.Exponential(1f - perStack, itemCount - 1),
+
 				_ => 1f,
 			};
 

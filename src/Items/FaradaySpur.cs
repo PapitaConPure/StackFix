@@ -37,7 +37,7 @@ namespace StackFix.Items {
 		}
 
 		private void RegisterItemText() {
-			bool enabled             = this.Enabled;
+			bool enabled = this.Enabled;
 			float moveSpeedBase      = enabled ? Plugin.FaradaySpurMoveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE_PERCENT;
 			float moveSpeedStack     = enabled ? Plugin.FaradaySpurMoveSpeedStack.Value : 0f;
 			float jumpHeightBase     = enabled ? Plugin.FaradaySpurJumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE_PERCENT;

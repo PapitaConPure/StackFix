@@ -16,17 +16,17 @@ namespace StackFix {
 		internal static ConfigEntry<bool> EclipseLiteFixEnabled;
 		internal static ConfigEntry<float> EclipseLiteBarrierBase;
 		internal static ConfigEntry<float> EclipseLiteBarrierStack;
-		internal static ConfigEntry<ItemStacking.Type> EclipseLiteBarrierStackType;
+		internal static ConfigEntry<ModSettings.EclipseLiteBarrierStacking> EclipseLiteBarrierStackType;
 
 		internal static ConfigEntry<bool> WarpedEchoFixEnabled;
 		internal static ConfigEntry<float> WarpedEchoDamageReductionBase;
 		internal static ConfigEntry<float> WarpedEchoDamageReductionStack;
-		internal static ConfigEntry<ItemStacking.Type> WarpedEchoDamageReductionStackType;
+		internal static ConfigEntry<ModSettings.WarpedEchoDamageReductionStacking> WarpedEchoDamageReductionStackType;
 		internal static ConfigEntry<int> WarpedEchoDamageSpreadBase;
 		internal static ConfigEntry<int> WarpedEchoDamageSpreadStack;
 		internal static ConfigEntry<float> WarpedEchoCooldownBase;
 		internal static ConfigEntry<float> WarpedEchoCooldownStack;
-		internal static ConfigEntry<ItemStacking.Type> WarpedEchoCooldownStackType;
+		internal static ConfigEntry<ModSettings.WarpedEchoCooldownStacking> WarpedEchoCooldownStackType;
 
 		internal static ConfigEntry<bool> FaradaySpurFixEnabled;
 		internal static ConfigEntry<float> FaradaySpurMoveSpeedBase;
