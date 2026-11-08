@@ -46,6 +46,7 @@ namespace StackFix {
 
 		private readonly IItemFix[] ItemFixes = [
 			new EclipseLite(),
+			new WarpedEcho(),
 			new FaradaySpur(),
 			new NetworkedSuffering(),
 		];
