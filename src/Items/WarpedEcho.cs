@@ -9,7 +9,7 @@ using System;
 using UnityEngine;
 
 namespace StackFix.Items {
-	internal class WarpedEcho: IItemFix {
+	internal sealed class WarpedEcho: IItemFix {
 		private const float VANILLA_DAMAGE_REDUCTION_BASE_PERCENT = 10f;
 		private const int VANILLA_DAMAGE_SPREAD_BASE = 3;
 		private const int VANILLA_DAMAGE_SPREAD_STACK = 1;
