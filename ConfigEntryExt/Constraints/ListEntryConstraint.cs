@@ -1,15 +1,11 @@
 ﻿using BepInEx.Configuration;
-using ConfigEntryExt.Patches;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using ConfigEntryExt.Patches;
+
 
 namespace ConfigEntryExt.Constraints {
-	public sealed record ListEntryConstraint<TValue>(params IReadOnlyList<AcceptableValueEnum<TValue>.NamedAcceptableValue> Values): IEntryConstraint<TValue> where TValue : struct, Enum {
-		private ListEntryConstraint(params IReadOnlyList<TValue> Values)
-			: this([..Values.Select(v => new AcceptableValueEnum<TValue>.NamedAcceptableValue(v, null))]) { }
-
-		public ListEntryConstraint(Type ValuesEnum): this(Enum.GetValues(ValuesEnum) as IReadOnlyList<TValue>) {}
+	public sealed record ListEntryConstraint<TValue>(params TValue[] Values): IEntryConstraint<TValue> where TValue : struct, Enum {
+		public ListEntryConstraint(Type ValuesEnum) : this(Enum.GetValues(ValuesEnum) as TValue[]) { }
 
 		public AcceptableValueBase AcceptableValue { get; } = new AcceptableValueEnum<TValue>(Values);
 

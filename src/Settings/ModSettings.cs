@@ -1,6 +1,7 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
 using StackFix.Utils;
+using System.ComponentModel;
 
 namespace StackFix.Settings {
 	internal static class ModSettings {
@@ -39,16 +40,18 @@ namespace StackFix.Settings {
 			defaultValue: 0.5f,
 			constraint: new(Min: 0.1f, Max: 1f));
 
-		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> EclipseLiteBarrierStackType = new(
+		public enum EclipseLiteBarrierStacking {
+			Linear = ItemStacking.Type.Linear,
+			Hyperbolic = ItemStacking.Type.Hyperbolic,
+		}
+		public static readonly ConstrainedConfigEntry<EclipseLiteBarrierStacking, ListEntryConstraint<EclipseLiteBarrierStacking>> EclipseLiteBarrierStackType = new(
 			section: "Item: Eclipse Lite",
 			name: "Cooldown Barrier Stacking Type",
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: Linear"),
-			defaultValue: ItemStacking.Type.Hyperbolic,
-			constraint: new(
-				new(ItemStacking.Type.Linear),
-				new(ItemStacking.Type.Hyperbolic)));
+			defaultValue: EclipseLiteBarrierStacking.Hyperbolic,
+			constraint: new(typeof(EclipseLiteBarrierStacking)));
 		#endregion
 
 		#region Warped Echo
@@ -78,18 +81,21 @@ namespace StackFix.Settings {
 			defaultValue: 2.5f,
 			constraint: new(Min: 0.1f, Max: 8f));
 
-		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> WarpedEchoDamageReductionStackType = new(
+		public enum WarpedEchoDamageReductionStacking {
+			[Description("Linear (Complementary)")]
+			Linear = ItemStacking.Type.Linear,
+			Reciprocal = ItemStacking.Type.Reciprocal,
+			Exponential = ItemStacking.Type.Exponential,
+		}
+		public static readonly ConstrainedConfigEntry<WarpedEchoDamageReductionStacking, ListEntryConstraint<WarpedEchoDamageReductionStacking>> WarpedEchoDamageReductionStackType = new(
 			section: "Item: Warped Echo",
 			name: "Damage Reduction Stacking Type",
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
 				"Not recommended: Linear, Exponential"),
-			defaultValue: ItemStacking.Type.Reciprocal,
-			constraint: new(
-				new(ItemStacking.Type.Linear, "Linear (Complementary)"),
-				new(ItemStacking.Type.Reciprocal),
-				new(ItemStacking.Type.Exponential)));
+			defaultValue: WarpedEchoDamageReductionStacking.Reciprocal,
+			constraint: new(typeof(WarpedEchoDamageReductionStacking)));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
 			section: "Item: Warped Echo",
@@ -127,18 +133,21 @@ namespace StackFix.Settings {
 			defaultValue: 5f,
 			constraint: new(Min: 0f, Max: 10f));
 
-		public static readonly ConstrainedConfigEntry<ItemStacking.Type, ListEntryConstraint<ItemStacking.Type>> WarpedEchoCooldownStackType = new(
+		public enum WarpedEchoCooldownStacking {
+			[Description("Linear (Complementary)")]
+			Linear = ItemStacking.Type.Linear,
+			Reciprocal = ItemStacking.Type.Reciprocal,
+			Exponential = ItemStacking.Type.Exponential,
+		}
+		public static readonly ConstrainedConfigEntry<WarpedEchoCooldownStacking, ListEntryConstraint<WarpedEchoCooldownStacking>> WarpedEchoCooldownStackType = new(
 			section: "Item: Warped Echo",
 			name: "Cooldown Stacking Type",
 			description: Paragraph(
 				GenericStackingTypeDescription,
 				"Vanilla value: N/A",
 				"Not recommended: Linear"),
-			defaultValue: ItemStacking.Type.Exponential,
-			constraint: new(
-				new(ItemStacking.Type.Linear, Name: "Linear (Complementary)"),
-				new(ItemStacking.Type.Reciprocal),
-				new(ItemStacking.Type.Exponential)));
+			defaultValue: WarpedEchoCooldownStacking.Exponential,
+			constraint: new(typeof(WarpedEchoCooldownStacking)));
 		#endregion
 
 		#region Faraday Spur
