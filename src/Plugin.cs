@@ -63,8 +63,8 @@ namespace StackFix {
 
 		public void Awake() {
 			this.RegisterSettings();
-			this.TryRegisterRiskOfOptions();
 			this.TryApplyItemFixes();
+			this.TryRegisterRiskOfOptions();
 
 #if DEBUG
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded.");
