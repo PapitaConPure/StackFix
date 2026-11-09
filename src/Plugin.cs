@@ -14,6 +14,10 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Enabled;
 
 		internal static ConfigEntry<bool> BolsteringLanternFixEnabled;
+		internal static ConfigEntry<float> BolsteringLanternAttackSpeedBase;
+		internal static ConfigEntry<float> BolsteringLanternAttackSpeedStack;
+		internal static ConfigEntry<int> BolsteringLanternCharacterCountMaxBase;
+		internal static ConfigEntry<int> BolsteringLanternCharacterCountMaxStack;
 
 		internal static ConfigEntry<bool> EclipseLiteFixEnabled;
 		internal static ConfigEntry<float> EclipseLiteBarrierBase;
@@ -67,7 +71,11 @@ namespace StackFix {
 		private void RegisterSettings() {
 			Enabled                      = ModSettings.Enabled.RegisterFor(this);
 
-			BolsteringLanternFixEnabled = ModSettings.BolsteringLanternFixEnabled.RegisterFor(this);
+			BolsteringLanternFixEnabled        = ModSettings.BolsteringLanternFixEnabled.RegisterFor(this);
+			BolsteringLanternAttackSpeedBase   = ModSettings.BolsteringLanternAttackSpeedBase.RegisterFor(this);
+			BolsteringLanternAttackSpeedStack  = ModSettings.BolsteringLanternAttackSpeedStack.RegisterFor(this);
+			BolsteringLanternCharacterCountMaxBase  = ModSettings.BolsteringLanternCharacterCountMaxBase.RegisterFor(this);
+			BolsteringLanternCharacterCountMaxStack = ModSettings.BolsteringLanternCharacterCountMaxStack.RegisterFor(this);
 
 			EclipseLiteFixEnabled       = ModSettings.EclipseLiteFixEnabled.RegisterFor(this);
 			EclipseLiteBarrierBase      = ModSettings.EclipseLiteBarrierBase.RegisterFor(this);
@@ -113,20 +121,24 @@ namespace StackFix {
 				RiskOfOptionsCompatManager.AddCheckboxOption(Enabled);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(BolsteringLanternFixEnabled);
+				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedBase, new(Suffix: "%"));
+				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedStack, new(FormatString: "+{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxBase);
+				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxStack, new(Prefix: "+"));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(EclipseLiteFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(FormatString: "{0:0.##}%"));
-				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(FormatString: "+{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(Suffix: "%"));
+				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(Prefix: "+", Suffix: "%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(EclipseLiteBarrierStackType);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(WarpedEchoFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(FormatString: "{0:0.##}%"));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(FormatString: "+{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(Suffix: "%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(Prefix: "+", Suffix: "%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack, new(Prefix: "+"));
 				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(FormatString: "+{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(Prefix: "+", Suffix: "%"));
 				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoCooldownStackType);
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
@@ -141,7 +153,7 @@ namespace StackFix {
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadBase);
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack, new(Prefix: "+"));
 				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(FormatString: "+{0:0.##}%"));
+				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(Prefix: "+", Suffix: "%"));
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Megumin);
 			} catch(Exception exception) {
