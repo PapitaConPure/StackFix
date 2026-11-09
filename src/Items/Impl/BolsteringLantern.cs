@@ -98,7 +98,7 @@ namespace StackFix.Items.Impl {
 		private void AttackSpeedPerNearbyCollider_UpdateValues(ILContext il) {
 			ILCursor cursor = new(il);
 
-			if(!cursor.TryGotoNext(
+			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchLdcI4(VANILLA_CHARACTER_COUNT_MAX_BASE - 1), //Starts at a - 1 and adds x (not x - 1)
 				instr => instr.MatchLdarg(1),
 				instr => instr.MatchAdd()))
