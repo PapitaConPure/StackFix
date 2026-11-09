@@ -19,6 +19,8 @@ namespace StackFix.Items {
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.NetworkedSufferingFixEnabled.Value;
 
+		public bool Applied { get; private set; }
+
 		public void ApplyFix() {
 			this.InstallCurrentMaxHook();
 
@@ -32,6 +34,8 @@ namespace StackFix.Items {
 			Plugin.NetworkedSufferingDamageStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
 
 			this.RegisterItemText();
+
+			this.Applied = true;
 		}
 
 		private void RegisterItemText() {
@@ -86,7 +90,7 @@ namespace StackFix.Items {
 				x => x.MatchLdarg(0),
 				x => x.MatchLdfld<SharedSufferingManager>("_damageSentToPool"),
 				x => x.MatchMul()))
-				throw new ILSeekException("Failed to match damageSentToPool IL inSharedSufferingManager.SendToDamagePool");
+				throw new ILSeekException(il, "damageSentToPool", nameof(SharedSufferingManager.SendToDamagePool));
 
 			cursor.RemoveRange(3);
 

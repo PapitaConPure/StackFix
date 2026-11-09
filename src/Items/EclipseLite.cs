@@ -14,6 +14,8 @@ namespace StackFix.Items {
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.EclipseLiteFixEnabled.Value;
 
+		public bool Applied { get; private set; }
+
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.OnSkillCooldown += this.CharacterBody_OnSkillCooldown;
 
@@ -24,6 +26,8 @@ namespace StackFix.Items {
 			Plugin.EclipseLiteBarrierStackType.SettingChanged += this.EclipseLite_SettingChanged;
 
 			this.RegisterItemText();
+
+			this.Applied = true;
 		}
 
 		private void RegisterItemText() {
@@ -44,17 +48,19 @@ namespace StackFix.Items {
 			ILCursor cursor = new(il);
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_BARRIER_BASE)))
-				throw new ILSeekException("Failed to match base barrier IL in CharacterBody.OnSkillCooldown");
+				throw new ILSeekException(il, "base barrier", nameof(CharacterBody.OnSkillCooldown));
 
-			cursor.Emit(OpCodes.Ldarg_0);
-			cursor.EmitDelegate(this.ModifyBaseBarrierFactor);
+			Instruction baseBarrierInstr = cursor.Prev;
 
 			cursor.Index = 0;
-
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_BARRIER_STACK)))
-				throw new ILSeekException("Failed to match stack barrier IL in CharacterBody.OnSkillCooldown");
+				throw new ILSeekException(il, "stack barrier", nameof(CharacterBody.OnSkillCooldown));
 
 			cursor.EmitDelegate(this.NullifyVanillaStackBarrierFactor);
+
+			cursor.Goto(baseBarrierInstr, MoveType.After);
+			cursor.Emit(OpCodes.Ldarg_0);
+			cursor.EmitDelegate(this.ModifyBaseBarrierFactor);
 		}
 
 		private float ModifyBaseBarrierFactor(float baseBarrierFactor, CharacterBody body) {

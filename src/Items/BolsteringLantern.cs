@@ -7,7 +7,7 @@ using StackFix.Utils;
 using System;
 
 namespace StackFix.Items {
-	internal sealed class BolsteringLantern: IItemFix {
+	internal sealed class BolsteringLantern(): IItemFix {
 		private const float VANILLA_ATTACK_SPEED_BASE = 0.065f;
 		private const float VANILLA_ATTACK_SPEED_STACK = 0.035f;
 		private const int VANILLA_CHARACTER_COUNT_MAX_BASE = 3;
@@ -15,8 +15,9 @@ namespace StackFix.Items {
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.BolsteringLanternFixEnabled.Value;
 
+		public bool Applied { get; private set; }
+
 		public void ApplyFix() {
-			//DLC2Content.Items.AttackSpeedPerNearbyAllyOrEnemy
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.AttackSpeedPerNearbyCollider.UpdateValues += this.AttackSpeedPerNearbyCollider_UpdateValues;
 
@@ -28,6 +29,8 @@ namespace StackFix.Items {
 			Plugin.BolsteringLanternCharacterCountMaxStack.SettingChanged += this.BolsteringLantern_SettingChanged;
 
 			this.RegisterItemText();
+
+			this.Applied = true;
 		}
 
 		private void RegisterItemText() {
@@ -50,18 +53,18 @@ namespace StackFix.Items {
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchLdsfld(typeof(DLC2Content.Buffs), nameof(DLC2Content.Buffs.AttackSpeedPerNearbyAllyOrEnemyBuff)),
 				instr => instr.MatchCallOrCallvirt<CharacterBody>(nameof(CharacterBody.GetBuffCount))))
-				throw new ILSeekException("Failed to match GetBuffCount(AttackSpeedPerNearbyAllyOrEnemyBuff) IL in CharacterBody.RecalculateStats");
+				throw new ILSeekException(il, "GetBuffCount(AttackSpeedPerNearbyAllyOrEnemyBuff)", nameof(CharacterBody.RecalculateStats));
 
 			int buffPos = cursor.Index;
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_ATTACK_SPEED_BASE)))
-				throw new ILSeekException("Failed to match initial attack speed IL in CharacterBody.RecalculateStats");
+				throw new ILSeekException(il, "initial attack speed", nameof(CharacterBody.RecalculateStats));
 
 			Instruction initialValueInstr = cursor.Prev;
 
 			cursor.Index = buffPos;
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_ATTACK_SPEED_STACK)))
-				throw new ILSeekException("Failed to match attack speed per stack IL in CharacterBody.RecalculateStats");
+				throw new ILSeekException(il, "attack speed per stack", nameof(CharacterBody.RecalculateStats));
 
 			cursor.EmitDelegate(this.ModifyStackAttackSpeed);
 
@@ -90,7 +93,7 @@ namespace StackFix.Items {
 				instr => instr.MatchLdcI4(VANILLA_CHARACTER_COUNT_MAX_BASE),
 				instr => instr.MatchLdarg(1),
 				instr => instr.MatchAdd()))
-				throw new ILSeekException("Failed to match max character count IL in AttackSpeedPerNearbyCollider.UpdateValues");
+				throw new ILSeekException(il, "max character count", nameof(AttackSpeedPerNearbyCollider.UpdateValues));
 
 			cursor.Emit(OpCodes.Ldarg_1);
 			cursor.EmitDelegate(this.ModifyCharacterCountMax);

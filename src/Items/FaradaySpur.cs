@@ -20,6 +20,8 @@ namespace StackFix.Items {
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.FaradaySpurFixEnabled.Value;
 
+		public bool Applied { get; private set; }
+
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
@@ -34,6 +36,8 @@ namespace StackFix.Items {
 			Plugin.FaradaySpurDamageStack.SettingChanged     += this.FaradaySpur_SettingChanged;
 
 			this.RegisterItemText();
+
+			this.Applied = true;
 		}
 
 		private void RegisterItemText() {
@@ -66,7 +70,7 @@ namespace StackFix.Items {
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(
 				nameof(JumpDamageStrikeBodyBehavior.MoveSpeedVelocityPerCharge)
 			)))
-				throw new ILSeekException("Failed to match MoveSpeedVelocityPerCharge IL in CharacterBody.RecalculateStats");
+				throw new ILSeekException(il, "MoveSpeedVelocityPerCharge", nameof(CharacterBody.RecalculateStats));
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyMoveSpeedPerCharge);
@@ -75,7 +79,7 @@ namespace StackFix.Items {
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(
 				nameof(JumpDamageStrikeBodyBehavior.JumpVelocityPerCharge)
 			)))
-				throw new ILSeekException("Failed to match JumpVelocityPerCharge IL in CharacterBody.RecalculateStats");
+				throw new ILSeekException(il, "JumpVelocityPerCharge", nameof(CharacterBody.RecalculateStats));
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyJumpHeightPerCharge);
@@ -117,13 +121,13 @@ namespace StackFix.Items {
 			ILCursor cursor = new(il);
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_BASE)))
-				throw new ILSeekException("Failed to match base damage IL in JumpDamageStrikeBodyBehavior.DischargeEffects");
+				throw new ILSeekException(il, "base damage", nameof(JumpDamageStrikeBodyBehavior.DischargeEffects));
 
 			cursor.EmitDelegate(this.ModifyBaseDamage);
 
 			cursor.Index = 0;
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_STACK)))
-				throw new ILSeekException("Failed to match stack damage IL in JumpDamageStrikeBodyBehavior.DischargeEffects");
+				throw new ILSeekException(il, "stack damage", nameof(JumpDamageStrikeBodyBehavior.DischargeEffects));
 
 			cursor.EmitDelegate(this.ModifyStackDamage);
 		}

@@ -17,6 +17,8 @@ namespace StackFix.Items {
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.WarpedEchoFixEnabled.Value;
 
+		public bool Applied { get; private set; }
+
 		public void ApplyFix() {
 			IL.RoR2.HealthComponent.TakeDamageProcess += this.HealthComponent_TakeDamageProcess;
 			IL.RoR2.CharacterBody.UpdateDelayedDamage += this.CharacterBody_UpdateDelayedDamage;
@@ -33,6 +35,8 @@ namespace StackFix.Items {
 			Plugin.WarpedEchoCooldownStackType.SettingChanged        += this.WarpedEcho_SettingChanged;
 
 			this.RegisterItemText();
+
+			this.Applied = true;
 		}
 
 		private void RegisterItemText() {
@@ -61,10 +65,10 @@ namespace StackFix.Items {
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.DelayedDamage)),
 				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
-				throw new ILSeekException("Failed to match delayed damage item count in HealthComponent.TakeDamageProcess");
+				throw new ILSeekException(il, "delayed damage item count", nameof(HealthComponent.TakeDamageProcess));
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(1f - VANILLA_DAMAGE_REDUCTION_BASE)))
-				throw new ILSeekException("Failed to match damage reduction multiplier IL in HealthComponent.TakeDamageProcess");
+				throw new ILSeekException(il, "damage reduction multiplier", nameof(HealthComponent.TakeDamageProcess));
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyDamageFactor);
@@ -73,7 +77,7 @@ namespace StackFix.Items {
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
 				instr => instr.MatchAdd())) {
-				throw new ILSeekException("Failed to match damage spread calculation in HealthComponent.TakeDamageProcess");
+				throw new ILSeekException(il, "damage spread calculation", nameof(HealthComponent.TakeDamageProcess));
 			}
 
 			cursor.Emit(OpCodes.Ldarg_0);
@@ -134,7 +138,7 @@ namespace StackFix.Items {
 			}
 
 			if(!found)
-				throw new ILSeekException("Failed to match delayedDamageRefreshTime IL in CharacterBody.UpdateDelayedDamage");
+				throw new ILSeekException(il, "delayedDamageRefreshTime", nameof(CharacterBody.UpdateDelayedDamage));
 		}
 
 		private float ModifyCooldown(float cooldown, CharacterBody body) {

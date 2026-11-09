@@ -6,6 +6,8 @@ using StackFix.Items;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StackFix {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -51,13 +53,13 @@ namespace StackFix {
 
 		internal static ConfigEntry<bool> Megumin;
 
-		private readonly IItemFix[] ItemFixes = [
-			new BolsteringLantern(),
-			new EclipseLite(),
-			new WarpedEcho(),
-			new FaradaySpur(),
-			new NetworkedSuffering(),
-		];
+		private readonly Dictionary<Type, IItemFix> ItemFixes = new([
+			RegisterItemFix<BolsteringLantern>(),
+			RegisterItemFix<EclipseLite>(),
+			RegisterItemFix<WarpedEcho>(),
+			RegisterItemFix<FaradaySpur>(),
+			RegisterItemFix<NetworkedSuffering>(),
+		]);
 
 		public void Awake() {
 			this.RegisterSettings();
@@ -121,40 +123,50 @@ namespace StackFix {
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Enabled);
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(BolsteringLanternFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedBase, new(Suffix: "%"));
-				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedStack, new(FormatString: "+{0:0.##}%"));
-				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxBase);
-				RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxStack, new(Prefix: "+"));
+				if(this.IsItemFixApplied<BolsteringLantern>()) {
+					RiskOfOptionsCompatManager.AddCheckboxOption(BolsteringLanternFixEnabled);
+					RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedBase, new(Suffix: "%"));
+					RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternAttackSpeedStack, new(FormatString: "+{0:0.##}%"));
+					RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxBase);
+					RiskOfOptionsCompatManager.AddSliderOption(BolsteringLanternCharacterCountMaxStack, new(Prefix: "+"));
+				}
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(EclipseLiteFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(Suffix: "%"));
-				RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(Prefix: "+", Suffix: "%"));
-				RiskOfOptionsCompatManager.AddChoiceOption(EclipseLiteBarrierStackType);
+				if(this.IsItemFixApplied<EclipseLite>()) {
+					RiskOfOptionsCompatManager.AddCheckboxOption(EclipseLiteFixEnabled);
+					RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierBase, new(Suffix: "%"));
+					RiskOfOptionsCompatManager.AddSliderOption(EclipseLiteBarrierStack, new(Prefix: "+", Suffix: "%"));
+					RiskOfOptionsCompatManager.AddChoiceOption(EclipseLiteBarrierStackType);
+				}
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(WarpedEchoFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(Suffix: "%"));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(Prefix: "+", Suffix: "%"));
-				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack, new(Prefix: "+"));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(Prefix: "+", Suffix: "%"));
-				RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoCooldownStackType);
+				if(this.IsItemFixApplied<WarpedEcho>()) {
+					RiskOfOptionsCompatManager.AddCheckboxOption(WarpedEchoFixEnabled);
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionBase, new(Suffix: "%"));
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageReductionStack, new(Prefix: "+", Suffix: "%"));
+					RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoDamageReductionStackType);
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadBase);
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoDamageSpreadStack, new(Prefix: "+"));
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(WarpedEchoCooldownStack, new(Prefix: "+", Suffix: "%"));
+					RiskOfOptionsCompatManager.AddChoiceOption(WarpedEchoCooldownStackType);
+				}
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+				if(this.IsItemFixApplied<FaradaySpur>()) {
+					RiskOfOptionsCompatManager.AddCheckboxOption(FaradaySpurFixEnabled);
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurMoveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurJumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(FaradaySpurDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+				}
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(NetworkedSufferingFixEnabled);
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadBase);
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack, new(Prefix: "+"));
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-				RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(Prefix: "+", Suffix: "%"));
+				if(this.IsItemFixApplied<NetworkedSuffering>()) {
+					RiskOfOptionsCompatManager.AddCheckboxOption(NetworkedSufferingFixEnabled);
+					RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadBase);
+					RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingSpreadStack, new(Prefix: "+"));
+					RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+					RiskOfOptionsCompatManager.AddSliderOption(NetworkedSufferingDamageStack, new(Prefix: "+", Suffix: "%"));
+				}
 
 				RiskOfOptionsCompatManager.AddCheckboxOption(Megumin);
 			} catch(Exception exception) {
@@ -162,8 +174,14 @@ namespace StackFix {
 			}
 		}
 
+		private bool IsItemFixApplied<TItemFix>() where TItemFix : IItemFix
+			=> this.ItemFixes[typeof(TItemFix)].Applied;
+
+		private static KeyValuePair<Type, IItemFix> RegisterItemFix<TItemFix>() where TItemFix : IItemFix, new()
+			=> new(typeof(TItemFix), new TItemFix());
+
 		private void TryApplyItemFixes() {
-			foreach(IItemFix itemFix in this.ItemFixes)
+			foreach(IItemFix itemFix in this.ItemFixes.Values)
 				try {
 					itemFix.ApplyFix();
 				} catch(ILSeekException ex) {
