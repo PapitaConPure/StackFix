@@ -28,6 +28,8 @@ namespace StackFix.Items {
 			foreach(ConfigEntryExt<IComparable> configEntry in this.itemFixConfigEntries)
 				configEntry.ConfigEntry.SettingChanged += this.ConfigEntry_SettingChanged;
 
+			itemFixConfigEntries.Clear();
+
 			this.Applied = true;
 		}
 
