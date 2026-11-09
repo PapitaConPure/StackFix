@@ -99,7 +99,7 @@ namespace StackFix.Items.Impl {
 			ILCursor cursor = new(il);
 
 			if(!cursor.TryGotoNext(
-				instr => instr.MatchLdcI4(VANILLA_CHARACTER_COUNT_MAX_BASE),
+				instr => instr.MatchLdcI4(VANILLA_CHARACTER_COUNT_MAX_BASE - 1), //Starts at a - 1 and adds x (not x - 1)
 				instr => instr.MatchLdarg(1),
 				instr => instr.MatchAdd()))
 				throw new ILSeekException(il, "max character count", nameof(AttackSpeedPerNearbyCollider.UpdateValues));
