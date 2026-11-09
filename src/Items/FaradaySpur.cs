@@ -1,9 +1,12 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
 using RoR2.Items;
 using StackFix.Exceptions;
+using StackFix.Settings;
 using StackFix.Utils;
 using System;
 
@@ -18,22 +21,50 @@ namespace StackFix.Items {
 		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
 		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
 
-		public bool Enabled => Plugin.Enabled.Value && Plugin.FaradaySpurFixEnabled.Value;
+		private ConfigEntry<bool> fixEnabled;
+		private ConfigEntry<float> moveSpeedBase;
+		private ConfigEntry<float> moveSpeedStack;
+		private ConfigEntry<float> jumpHeightBase;
+		private ConfigEntry<float> jumpHeightStack;
+		private ConfigEntry<float> damageBase;
+		private ConfigEntry<float> damageStack;
+
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
+
+		public void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled      = ModSettings.FaradaySpurFixEnabled.RegisterFor(plugin);
+			this.moveSpeedBase   = ModSettings.FaradaySpurMoveSpeedBase.RegisterFor(plugin);
+			this.moveSpeedStack  = ModSettings.FaradaySpurMoveSpeedStack.RegisterFor(plugin);
+			this.jumpHeightBase  = ModSettings.FaradaySpurJumpHeightBase.RegisterFor(plugin);
+			this.jumpHeightStack = ModSettings.FaradaySpurJumpHeightStack.RegisterFor(plugin);
+			this.damageBase      = ModSettings.FaradaySpurDamageBase.RegisterFor(plugin);
+			this.damageStack     = ModSettings.FaradaySpurDamageStack.RegisterFor(plugin);
+		}
+
+		public void RegisterRiskOfOptionsSettings() {
+			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.jumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+		}
 
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
 
-			Plugin.Enabled.SettingChanged                    += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurFixEnabled.SettingChanged      += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurMoveSpeedBase.SettingChanged   += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurMoveSpeedStack.SettingChanged  += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurJumpHeightBase.SettingChanged  += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurJumpHeightStack.SettingChanged += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurDamageBase.SettingChanged      += this.FaradaySpur_SettingChanged;
-			Plugin.FaradaySpurDamageStack.SettingChanged     += this.FaradaySpur_SettingChanged;
+			Plugin.Enabled.SettingChanged       += this.FaradaySpur_SettingChanged;
+			this.fixEnabled.SettingChanged      += this.FaradaySpur_SettingChanged;
+			this.moveSpeedBase.SettingChanged   += this.FaradaySpur_SettingChanged;
+			this.moveSpeedStack.SettingChanged  += this.FaradaySpur_SettingChanged;
+			this.jumpHeightBase.SettingChanged  += this.FaradaySpur_SettingChanged;
+			this.jumpHeightStack.SettingChanged += this.FaradaySpur_SettingChanged;
+			this.damageBase.SettingChanged      += this.FaradaySpur_SettingChanged;
+			this.damageStack.SettingChanged     += this.FaradaySpur_SettingChanged;
 
 			this.RegisterItemText();
 
@@ -42,12 +73,12 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float moveSpeedBase      = enabled ? Plugin.FaradaySpurMoveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE * 100f;
-			float moveSpeedStack     = enabled ? Plugin.FaradaySpurMoveSpeedStack.Value : 0f;
-			float jumpHeightBase     = enabled ? Plugin.FaradaySpurJumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE * 100f;
-			float jumpHeightStack    = enabled ? Plugin.FaradaySpurJumpHeightStack.Value : 0f;
-			float damageBase         = enabled ? Plugin.FaradaySpurDamageBase.Value : VANILLA_EXPLOSION_DAMAGE_BASE * 100f;
-			float damageStack        = enabled ? Plugin.FaradaySpurDamageStack.Value : VANILLA_EXPLOSION_DAMAGE_STACK * 100f;
+			float moveSpeedBase      = enabled ? this.moveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE * 100f;
+			float moveSpeedStack     = enabled ? this.moveSpeedStack.Value : 0f;
+			float jumpHeightBase     = enabled ? this.jumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE * 100f;
+			float jumpHeightStack    = enabled ? this.jumpHeightStack.Value : 0f;
+			float damageBase         = enabled ? this.damageBase.Value : VANILLA_EXPLOSION_DAMAGE_BASE * 100f;
+			float damageStack        = enabled ? this.damageStack.Value : VANILLA_EXPLOSION_DAMAGE_STACK * 100f;
 			float thresDistanceBase  = VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE;
 			float thresDistanceStack = 0f;
 			float maxDistanceBase    = VANILLA_MAX_CHARGE_DISTANCE_BASE;
@@ -94,8 +125,8 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return moveSpeedPerCharge;
 
-			float baseMaxChargeBuff = Plugin.FaradaySpurMoveSpeedBase.Value;
-			float stackMaxChargeBuff = Plugin.FaradaySpurMoveSpeedStack.Value;
+			float baseMaxChargeBuff = this.moveSpeedBase.Value;
+			float stackMaxChargeBuff = this.moveSpeedStack.Value;
 			float targetMaxChargeBuff = ItemStacking.Linear(baseMaxChargeBuff, stackMaxChargeBuff, itemCount);
 
 			return targetMaxChargeBuff * 0.0001f; //charge is 0-100 too i guess, so divide by 100^2
@@ -110,8 +141,8 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return jumpHeightPerCharge;
 
-			float baseMaxChargeBuff = Plugin.FaradaySpurJumpHeightBase.Value;
-			float stackMaxChargeBuff = Plugin.FaradaySpurJumpHeightStack.Value;
+			float baseMaxChargeBuff = this.jumpHeightBase.Value;
+			float stackMaxChargeBuff = this.jumpHeightStack.Value;
 			float targetMaxChargeBuff = ItemStacking.Linear(baseMaxChargeBuff, stackMaxChargeBuff, itemCount);
 
 			return targetMaxChargeBuff * 0.0001f; //charge is 0-100 too i guess, so divide by 100^2
@@ -136,14 +167,14 @@ namespace StackFix.Items {
 			if(!this.Enabled)
 				return baseDamage;
 
-			return Plugin.FaradaySpurDamageBase.Value * 0.01f;
+			return this.damageBase.Value * 0.01f;
 		}
 
 		private float ModifyStackDamage(float stackDamage) {
 			if(!this.Enabled)
 				return stackDamage;
 
-			return Plugin.FaradaySpurDamageStack.Value * 0.01f;
+			return this.damageStack.Value * 0.01f;
 		}
 	}
 }

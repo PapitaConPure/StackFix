@@ -1,8 +1,11 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
 using StackFix.Exceptions;
+using StackFix.Settings;
 using StackFix.Utils;
 using System;
 
@@ -13,20 +16,42 @@ namespace StackFix.Items {
 		private const int VANILLA_CHARACTER_COUNT_MAX_BASE = 3;
 		private const int VANILLA_CHARACTER_COUNT_MAX_STACK = 1;
 
-		public bool Enabled => Plugin.Enabled.Value && Plugin.BolsteringLanternFixEnabled.Value;
+		private ConfigEntry<bool> fixEnabled;
+		private ConfigEntry<float> attackSpeedBase;
+		private ConfigEntry<float> attackSpeedStack;
+		private ConfigEntry<int> characterCountMaxBase;
+		private ConfigEntry<int> characterCountMaxStack;
+
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
+
+		public void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled             = ModSettings.BolsteringLanternFixEnabled.RegisterFor(plugin);
+			this.attackSpeedBase        = ModSettings.BolsteringLanternAttackSpeedBase.RegisterFor(plugin);
+			this.attackSpeedStack       = ModSettings.BolsteringLanternAttackSpeedStack.RegisterFor(plugin);
+			this.characterCountMaxBase  = ModSettings.BolsteringLanternCharacterCountMaxBase.RegisterFor(plugin);
+			this.characterCountMaxStack = ModSettings.BolsteringLanternCharacterCountMaxStack.RegisterFor(plugin);
+		}
+
+		public void RegisterRiskOfOptionsSettings() {
+			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedBase, new(Suffix: "%"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedStack, new(FormatString: "+{0:0.##}%"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.characterCountMaxBase);
+			RiskOfOptionsCompatManager.AddSliderOption(this.characterCountMaxStack, new(Prefix: "+"));
+		}
 
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.AttackSpeedPerNearbyCollider.UpdateValues += this.AttackSpeedPerNearbyCollider_UpdateValues;
 
-			Plugin.Enabled.SettingChanged                                 += this.BolsteringLantern_SettingChanged;
-			Plugin.BolsteringLanternFixEnabled.SettingChanged             += this.BolsteringLantern_SettingChanged;
-			Plugin.BolsteringLanternAttackSpeedBase.SettingChanged        += this.BolsteringLantern_SettingChanged;
-			Plugin.BolsteringLanternAttackSpeedStack.SettingChanged       += this.BolsteringLantern_SettingChanged;
-			Plugin.BolsteringLanternCharacterCountMaxBase.SettingChanged  += this.BolsteringLantern_SettingChanged;
-			Plugin.BolsteringLanternCharacterCountMaxStack.SettingChanged += this.BolsteringLantern_SettingChanged;
+			Plugin.Enabled.SettingChanged              += this.BolsteringLantern_SettingChanged;
+			this.fixEnabled.SettingChanged             += this.BolsteringLantern_SettingChanged;
+			this.attackSpeedBase.SettingChanged        += this.BolsteringLantern_SettingChanged;
+			this.attackSpeedStack.SettingChanged       += this.BolsteringLantern_SettingChanged;
+			this.characterCountMaxBase.SettingChanged  += this.BolsteringLantern_SettingChanged;
+			this.characterCountMaxStack.SettingChanged += this.BolsteringLantern_SettingChanged;
 
 			this.RegisterItemText();
 
@@ -35,10 +60,10 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float attackSpeedBase  = enabled ? Plugin.BolsteringLanternAttackSpeedBase.Value : VANILLA_ATTACK_SPEED_BASE * 100f;
-			float attackSpeedStack = enabled ? Plugin.BolsteringLanternAttackSpeedStack.Value : VANILLA_ATTACK_SPEED_STACK * 100f;
-			int charaCountMaxBase  = enabled ? Plugin.BolsteringLanternCharacterCountMaxBase.Value : VANILLA_CHARACTER_COUNT_MAX_BASE;
-			int charaCountMaxStack = enabled ? Plugin.BolsteringLanternCharacterCountMaxStack.Value : VANILLA_CHARACTER_COUNT_MAX_STACK;
+			float attackSpeedBase  = enabled ? this.attackSpeedBase.Value : VANILLA_ATTACK_SPEED_BASE * 100f;
+			float attackSpeedStack = enabled ? this.attackSpeedStack.Value : VANILLA_ATTACK_SPEED_STACK * 100f;
+			int charaCountMaxBase  = enabled ? this.characterCountMaxBase.Value : VANILLA_CHARACTER_COUNT_MAX_BASE;
+			int charaCountMaxStack = enabled ? this.characterCountMaxStack.Value : VANILLA_CHARACTER_COUNT_MAX_STACK;
 
 			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC", new ItD(
 				$"Increase your {ItD.Damage("attack speed")} by {ItD.Damage($"{attackSpeedBase:0.##}%")}{ItD.Stack(attackSpeedStack, "+{0:0.##}%")} ",
@@ -76,14 +101,14 @@ namespace StackFix.Items {
 			if(!this.Enabled)
 				return baseAttackSpeed;
 
-			return Plugin.BolsteringLanternAttackSpeedBase.Value * 0.01f;
+			return this.attackSpeedBase.Value * 0.01f;
 		}
 
 		private float ModifyStackAttackSpeed(float stackAttackSpeed) {
 			if(!this.Enabled)
 				return stackAttackSpeed;
 
-			return Plugin.BolsteringLanternAttackSpeedStack.Value * 0.01f;
+			return this.attackSpeedStack.Value * 0.01f;
 		}
 
 		private void AttackSpeedPerNearbyCollider_UpdateValues(ILContext il) {
@@ -103,7 +128,7 @@ namespace StackFix.Items {
 			if(!this.Enabled)
 				return characterCountMax;
 
-			return Plugin.BolsteringLanternCharacterCountMaxBase.Value + itemCount * Plugin.BolsteringLanternCharacterCountMaxStack.Value;
+			return this.characterCountMaxBase.Value + itemCount * this.characterCountMaxStack.Value;
 		}
 	}
 }

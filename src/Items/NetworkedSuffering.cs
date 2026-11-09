@@ -1,10 +1,13 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using R2API;
 using RoR2;
 using RoR2.Items;
 using StackFix.Exceptions;
+using StackFix.Settings;
 using StackFix.Utils;
 using System;
 using System.Reflection;
@@ -15,23 +18,45 @@ namespace StackFix.Items {
 		private const int VANILLA_VIRUS_SPREAD_COUNT_STACK = 2;
 		private const float VANILLA_VIRUS_DAMAGE_BASE = 0.45f;
 
+		private ConfigEntry<bool> fixEnabled;
+		private ConfigEntry<int> spreadBase;
+		private ConfigEntry<int> spreadStack;
+		private ConfigEntry<float> damageBase;
+		private ConfigEntry<float> damageStack;
+
 		private ILHook currentMaxHook;
 
-		public bool Enabled => Plugin.Enabled.Value && Plugin.NetworkedSufferingFixEnabled.Value;
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
+
+		public void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled  = ModSettings.NetworkedSufferingFixEnabled.RegisterFor(plugin);
+			this.spreadBase  = ModSettings.NetworkedSufferingSpreadBase.RegisterFor(plugin);
+			this.spreadStack = ModSettings.NetworkedSufferingSpreadStack.RegisterFor(plugin);
+			this.damageBase  = ModSettings.NetworkedSufferingDamageBase.RegisterFor(plugin);
+			this.damageStack = ModSettings.NetworkedSufferingDamageStack.RegisterFor(plugin);
+		}
+
+		public void RegisterRiskOfOptionsSettings() {
+			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompatManager.AddSliderOption(this.spreadBase);
+			RiskOfOptionsCompatManager.AddSliderOption(this.spreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageStack, new(Prefix: "+", Suffix: "%"));
+		}
 
 		public void ApplyFix() {
 			this.InstallCurrentMaxHook();
 
 			IL.RoR2.SharedSufferingManager.SendToDamagePool += this.SharedSufferingManager_SendToDamagePool;
 
-			Plugin.Enabled.SettingChanged                       += this.NetworkedSuffering_SettingChanged;
-			Plugin.NetworkedSufferingFixEnabled.SettingChanged  += this.NetworkedSuffering_SettingChanged;
-			Plugin.NetworkedSufferingSpreadBase.SettingChanged  += this.NetworkedSuffering_SettingChanged;
-			Plugin.NetworkedSufferingSpreadStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
-			Plugin.NetworkedSufferingDamageBase.SettingChanged  += this.NetworkedSuffering_SettingChanged;
-			Plugin.NetworkedSufferingDamageStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
+			Plugin.Enabled.SettingChanged   += this.NetworkedSuffering_SettingChanged;
+			this.fixEnabled.SettingChanged  += this.NetworkedSuffering_SettingChanged;
+			this.spreadBase.SettingChanged  += this.NetworkedSuffering_SettingChanged;
+			this.spreadStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
+			this.damageBase.SettingChanged  += this.NetworkedSuffering_SettingChanged;
+			this.damageStack.SettingChanged += this.NetworkedSuffering_SettingChanged;
 
 			this.RegisterItemText();
 
@@ -40,10 +65,10 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			int maxVirusCountBase  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
-			int maxVirusCountStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
-			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE * 100f;
-			float damageStack      = enabled ? Plugin.NetworkedSufferingDamageStack.Value : 0f;
+			int maxVirusCountBase  = enabled ? this.spreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
+			int maxVirusCountStack = enabled ? this.spreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
+			float damageBase       = enabled ? this.damageBase.Value : VANILLA_VIRUS_DAMAGE_BASE * 100f;
+			float damageStack      = enabled ? this.damageStack.Value : 0f;
 
 			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC", new ItD(
 				$"Infect up to {ItD.Utility($"{maxVirusCountBase}")}{ItD.Stack(maxVirusCountStack)} enemies with a computer virus that ",
@@ -76,8 +101,8 @@ namespace StackFix.Items {
 
 		private int OverwriteCurrentMax(SharedSufferingItemBehaviour self) {
 			bool enabled = this.Enabled;
-			int initial  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
-			int perStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
+			int initial = enabled ? this.spreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
+			int perStack = enabled ? this.spreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
 
 			return ItemStacking.Linear(initial, perStack, self.stack);
 		}
@@ -119,8 +144,8 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return manager._damageSentToPool;
 
-			float initial = Plugin.NetworkedSufferingDamageBase.Value;
-			float perStack = Plugin.NetworkedSufferingDamageStack.Value;
+			float initial = this.damageBase.Value;
+			float perStack = this.damageStack.Value;
 			float totalPercent = ItemStacking.Linear(initial, perStack, itemCount);
 
 			return totalPercent * 0.01f;

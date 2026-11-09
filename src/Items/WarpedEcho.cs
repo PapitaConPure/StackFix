@@ -1,4 +1,6 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -15,24 +17,58 @@ namespace StackFix.Items {
 		private const int VANILLA_DAMAGE_SPREAD_STACK = 1;
 		private const float VANILLA_COOLDOWN_BASE = 15f;
 
-		public bool Enabled => Plugin.Enabled.Value && Plugin.WarpedEchoFixEnabled.Value;
+		private ConfigEntry<bool> fixEnabled;
+		private ConfigEntry<float> damageReductionBase;
+		private ConfigEntry<float> damageReductionStack;
+		private ConfigEntry<ModSettings.WarpedEchoDamageReductionStacking> damageReductionStackType;
+		private ConfigEntry<int> damageSpreadBase;
+		private ConfigEntry<int> damageSpreadStack;
+		private ConfigEntry<float> cooldownBase;
+		private ConfigEntry<float> cooldownStack;
+		private ConfigEntry<ModSettings.WarpedEchoCooldownStacking> cooldownStackType;
+
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
+
+		public void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled               = ModSettings.WarpedEchoFixEnabled.RegisterFor(plugin);
+			this.damageReductionBase      = ModSettings.WarpedEchoDamageReductionBase.RegisterFor(plugin);
+			this.damageReductionStack     = ModSettings.WarpedEchoDamageReductionStack.RegisterFor(plugin);
+			this.damageReductionStackType = ModSettings.WarpedEchoDamageReductionStackType.RegisterFor(plugin);
+			this.damageSpreadBase         = ModSettings.WarpedEchoDamageSpreadBase.RegisterFor(plugin);
+			this.damageSpreadStack        = ModSettings.WarpedEchoDamageSpreadStack.RegisterFor(plugin);
+			this.cooldownBase             = ModSettings.WarpedEchoCooldownBase.RegisterFor(plugin);
+			this.cooldownStack            = ModSettings.WarpedEchoCooldownStack.RegisterFor(plugin);
+			this.cooldownStackType        = ModSettings.WarpedEchoCooldownStackType.RegisterFor(plugin);
+		}
+
+		public void RegisterRiskOfOptionsSettings() {
+			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionBase, new(Suffix: "%"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompatManager.AddChoiceOption(this.damageReductionStackType);
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageSpreadBase);
+			RiskOfOptionsCompatManager.AddSliderOption(this.damageSpreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
+			RiskOfOptionsCompatManager.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompatManager.AddChoiceOption(this.cooldownStackType);
+		}
 
 		public void ApplyFix() {
 			IL.RoR2.HealthComponent.TakeDamageProcess += this.HealthComponent_TakeDamageProcess;
 			IL.RoR2.CharacterBody.UpdateDelayedDamage += this.CharacterBody_UpdateDelayedDamage;
 
-			Plugin.Enabled.SettingChanged                            += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoFixEnabled.SettingChanged               += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoDamageReductionBase.SettingChanged      += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoDamageReductionStack.SettingChanged     += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoDamageReductionStackType.SettingChanged += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoDamageSpreadBase.SettingChanged         += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoDamageSpreadStack.SettingChanged        += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoCooldownBase.SettingChanged             += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoCooldownStack.SettingChanged            += this.WarpedEcho_SettingChanged;
-			Plugin.WarpedEchoCooldownStackType.SettingChanged        += this.WarpedEcho_SettingChanged;
+			Plugin.Enabled.SettingChanged                += this.WarpedEcho_SettingChanged;
+			this.fixEnabled.SettingChanged               += this.WarpedEcho_SettingChanged;
+			this.damageReductionBase.SettingChanged      += this.WarpedEcho_SettingChanged;
+			this.damageReductionStack.SettingChanged     += this.WarpedEcho_SettingChanged;
+			this.damageReductionStackType.SettingChanged += this.WarpedEcho_SettingChanged;
+			this.damageSpreadBase.SettingChanged         += this.WarpedEcho_SettingChanged;
+			this.damageSpreadStack.SettingChanged        += this.WarpedEcho_SettingChanged;
+			this.cooldownBase.SettingChanged             += this.WarpedEcho_SettingChanged;
+			this.cooldownStack.SettingChanged            += this.WarpedEcho_SettingChanged;
+			this.cooldownStackType.SettingChanged        += this.WarpedEcho_SettingChanged;
 
 			this.RegisterItemText();
 
@@ -41,14 +77,14 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float damageReductionBase                  = enabled ? Plugin.WarpedEchoDamageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE * 100f;
-			float damageReductionStack                 = enabled ? Plugin.WarpedEchoDamageReductionStack.Value : 0f;
-			ItemStacking.Type damageReductionStackType = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoDamageReductionStackType.Value) : ItemStacking.Type.Linear;
-			int damageSpreadBase                       = enabled ? Plugin.WarpedEchoDamageSpreadBase.Value  : VANILLA_DAMAGE_SPREAD_BASE;
-			int damageSpreadStack                      = enabled ? Plugin.WarpedEchoDamageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
-			float cooldownBase                         = enabled ? Plugin.WarpedEchoCooldownBase.Value  : VANILLA_COOLDOWN_BASE;
-			float cooldownStack                        = enabled ? Plugin.WarpedEchoCooldownStack.Value : 0f;
-			ItemStacking.Type cooldownStackType        = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoCooldownStackType.Value) : ItemStacking.Type.Linear;
+			float damageReductionBase                  = enabled ? this.damageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE * 100f;
+			float damageReductionStack                 = enabled ? this.damageReductionStack.Value : 0f;
+			ItemStacking.Type damageReductionStackType = enabled ? ItemStacking.FromEnum(this.damageReductionStackType.Value) : ItemStacking.Type.Linear;
+			int damageSpreadBase                       = enabled ? this.damageSpreadBase.Value  : VANILLA_DAMAGE_SPREAD_BASE;
+			int damageSpreadStack                      = enabled ? this.damageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
+			float cooldownBase                         = enabled ? this.cooldownBase.Value  : VANILLA_COOLDOWN_BASE;
+			float cooldownStack                        = enabled ? this.cooldownStack.Value : 0f;
+			ItemStacking.Type cooldownStackType        = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC", new ItD(
 				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%")}",
@@ -93,10 +129,10 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return vanillaFactor;
 
-			float initial = Plugin.WarpedEchoDamageReductionBase.Value * 0.01f;
-			float perStack = Plugin.WarpedEchoDamageReductionStack.Value * 0.01f;
+			float initial = this.damageReductionBase.Value * 0.01f;
+			float perStack = this.damageReductionStack.Value * 0.01f;
 
-			float factor = Plugin.WarpedEchoDamageReductionStackType.Value switch {
+			float factor = this.damageReductionStackType.Value switch {
 				ModSettings.WarpedEchoDamageReductionStacking.Linear
 					=> 1f - ItemStacking.Linear(initial, perStack, itemCount),
 
@@ -121,8 +157,8 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return vanillaSpread;
 
-			int initial = Plugin.WarpedEchoDamageSpreadBase.Value;
-			int perStack = Plugin.WarpedEchoDamageSpreadStack.Value;
+			int initial = this.damageSpreadBase.Value;
+			int perStack = this.damageSpreadStack.Value;
 
 			return ItemStacking.Linear(initial, perStack, itemCount);
 		}
@@ -150,10 +186,10 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return cooldown;
 
-			float baseValue = Plugin.WarpedEchoCooldownBase.Value;
-			float perStack = Plugin.WarpedEchoCooldownStack.Value * 0.01f;
+			float baseValue = this.cooldownBase.Value;
+			float perStack = this.cooldownStack.Value * 0.01f;
 
-			float factor = Plugin.WarpedEchoCooldownStackType.Value switch {
+			float factor = this.cooldownStackType.Value switch {
 				ModSettings.WarpedEchoCooldownStacking.Linear
 					=> ItemStacking.Linear(1f, -perStack, itemCount),
 

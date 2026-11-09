@@ -1,4 +1,6 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -12,18 +14,37 @@ namespace StackFix.Items {
 		private const float VANILLA_BARRIER_BASE = 0.01f;
 		private const float VANILLA_BARRIER_STACK = 0.0025f;
 
-		public bool Enabled => Plugin.Enabled.Value && Plugin.EclipseLiteFixEnabled.Value;
+		private ConfigEntry<bool> fixEnabled;
+		private ConfigEntry<float> barrierBase;
+		private ConfigEntry<float> barrierStack;
+		private ConfigEntry<ModSettings.EclipseLiteBarrierStacking> barrierStackType;
+
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
+
+		public void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled       = ModSettings.EclipseLiteFixEnabled.RegisterFor(plugin);
+			this.barrierBase      = ModSettings.EclipseLiteBarrierBase.RegisterFor(plugin);
+			this.barrierStack     = ModSettings.EclipseLiteBarrierStack.RegisterFor(plugin);
+			this.barrierStackType = ModSettings.EclipseLiteBarrierStackType.RegisterFor(plugin);
+		}
+
+		public void RegisterRiskOfOptionsSettings() {
+			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompatManager.AddSliderOption(this.barrierBase, new(Suffix: "%"));
+			RiskOfOptionsCompatManager.AddSliderOption(this.barrierStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompatManager.AddChoiceOption(this.barrierStackType);
+		}
 
 		public void ApplyFix() {
 			IL.RoR2.CharacterBody.OnSkillCooldown += this.CharacterBody_OnSkillCooldown;
 
-			Plugin.Enabled.SettingChanged                     += this.EclipseLite_SettingChanged;
-			Plugin.EclipseLiteFixEnabled.SettingChanged       += this.EclipseLite_SettingChanged;
-			Plugin.EclipseLiteBarrierBase.SettingChanged      += this.EclipseLite_SettingChanged;
-			Plugin.EclipseLiteBarrierStack.SettingChanged     += this.EclipseLite_SettingChanged;
-			Plugin.EclipseLiteBarrierStackType.SettingChanged += this.EclipseLite_SettingChanged;
+			Plugin.Enabled.SettingChanged        += this.EclipseLite_SettingChanged;
+			this.fixEnabled.SettingChanged       += this.EclipseLite_SettingChanged;
+			this.barrierBase.SettingChanged      += this.EclipseLite_SettingChanged;
+			this.barrierStack.SettingChanged     += this.EclipseLite_SettingChanged;
+			this.barrierStackType.SettingChanged += this.EclipseLite_SettingChanged;
 
 			this.RegisterItemText();
 
@@ -32,9 +53,9 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float barrierBase                  = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE * 100f;
-			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK * 100f;
-			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(Plugin.EclipseLiteBarrierStackType.Value) : ItemStacking.Type.Linear;
+			float barrierBase                  = enabled ? this.barrierBase.Value : VANILLA_BARRIER_BASE * 100f;
+			float barrierStack                 = enabled ? this.barrierStack.Value : VANILLA_BARRIER_STACK * 100f;
+			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(this.barrierStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC", new ItD(
 				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%")}",
@@ -72,11 +93,10 @@ namespace StackFix.Items {
 			if(itemCount <= 0)
 				return baseBarrierFactor;
 
-			float initial = Plugin.EclipseLiteBarrierBase.Value * 0.01f;
-			float perStack = Plugin.EclipseLiteBarrierStack.Value * 0.01f;
-			ModSettings.EclipseLiteBarrierStacking stackType = Plugin.EclipseLiteBarrierStackType.Value;
+			float initial = this.barrierBase.Value * 0.01f;
+			float perStack = this.barrierStack.Value * 0.01f;
 
-			return stackType switch {
+			return this.barrierStackType.Value switch {
 				ModSettings.EclipseLiteBarrierStacking.Linear
 					=> ItemStacking.Linear(initial, perStack, itemCount),
 
