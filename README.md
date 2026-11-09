@@ -6,10 +6,11 @@ Makes some items have a better initial effect + stacking behavior.
 It's server-side, and everyone needs the mod. The default values are what I personally use and should be a good starting point for balancing.
 
 ## Features
-* **Eclipse Lite**: reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
-* **Warped Echo**: reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
-* **Faraday Spur**: reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
-* **Networked Suffering**: reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
+* **Bolstering Lantern**: Lesser change. Very small reduction of initial attack speed per close character with slightly more scaling (configurable). Maximum character count for the buff is the same as vanilla, but was made configurable as well.
+* **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
+* **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
+* **Faraday Spur**: Great initial nerf, great stacking buff. Reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
+* **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * There's more planned, but that's it for now...
 
 ## Configuration
@@ -23,12 +24,23 @@ Some settings determine which formula is used to control how a particular effect
 | Name                    | Type    | Default | Vanilla | Description |
 |-------------------------|---------|---------|---------|-------------|
 | Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
-| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
-| Fix Warped Echo         | Toggle  | On      | Off     | Enable Warped Echo fixes. |
-| Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
-| Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
+| Fix Bolstering Lantern  | Toggle  | On      | Off     | Enable [Bolstering Lantern fixes](#item-bolstering-lantern). |
+| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable [Eclipse Lite fixes](#item-eclipse-lite). |
+| Fix Warped Echo         | Toggle  | On      | Off     | Enable [Warped Echo fixes](#item-warped-echo). |
+| Fix Faraday Spur        | Toggle  | On      | Off     | Enable [Faraday Spur fixes](#item-faraday-spur). |
+| Fix Networked Suffering | Toggle  | On      | Off     | Enable [Networked Suffering fixes](#item-networked-suffering). |
 
 General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
+
+### Item: Bolstering Lantern
+| Name                          | Type    | Default | Vanilla | Description |
+|-------------------------------|---------|---------|---------|-------------|
+| Base Attack Speed             | Percent | `6%`    | `6.5%`  | Initial percentage of attack speed gained per character in close proximity. |
+| Attack Speed per Stack        | Percent | `+4%`   | `+3.5%` | Percentage of attack speed gained per character in close proximity per stack (*linear*). |
+| Base Max Character Count      | Integer | `3`     | `3`     | Initial maximum number of characters in close range that count towards the effect. |
+| Max Character Count per Stack | Integer | `+1`    | `+1`    | Maximum number of characters in close range that count towards the effect per stack (*linear*). |
+
+With default settings, Bolstering Lantern is almost exactly the same as vanilla but with a slightly worse initial attack speed and slightly better attack speed stacking.
 
 ### Item: Eclipse Lite
 | Name                           | Type    | Default    | Vanilla  | Description |
@@ -48,7 +60,7 @@ If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stackin
 | Damage Reduction per Stack       | Percent    | `+5%`       | `+0%`   | Damage absorption percentage on trigger per stack (*configurable formula*). |
 | Damage Reduction Stacking Type   | Choice     | Reciprocal  | N/A     | Determines how "Damage Reduction per Stack" scales with each additional stack. |
 | Base Damage Spread               | Integer    | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
-| Damage Spread per Stack          | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*configurable formula*). |
+| Damage Spread per Stack          | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*linear*). |
 | Base Cooldown                    | Fractional | `15.0`      | `15.0`  | Initial cooldown before damage absorption can trigger again. |
 | Cooldown Reduction per Stack     | Percent    | `+2.5%`     | `+0%`   | Damage absorption cooldown reduction per stack (*configurable formula*). |
 | Cooldown Reduction Stacking Type | Choice     | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
@@ -89,10 +101,12 @@ With default settings, you can actually stack the damage duplication, but need T
 Megumin.
 
 ## Contact
-* Discord: `papitaconpure` (please be nice or I'll cry)
+If something breaks real bad, there's some incompatibility you think I should know about, or think I'm very bad at explaining shit (I am), feel free to let me know (please be nice or I'll cry).
+* Discord: `papitaconpure`
 
 ## Compatibility notes
 I don't knowwwwwwwwwwwwwwwwwwwwwwwwwww but if any single item breaks because of another mod or something, you can disable the individual fix.
+Edit as of 1.3.whatever - yes I still can't be bothered to test this extensively, but I've played a few games with QoL mods in singleplayer and things seem to work.
 
 ### Nerd
 I've never really worked with IL Hooks nor overriden any item behavior before, and as of writing this, I haven't tested the thing in multiplayer, but I can at least confirm it works perfectly in singleplayer.
