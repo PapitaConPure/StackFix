@@ -8,10 +8,9 @@ using RoR2.Items;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
-using System;
 
-namespace StackFix.Items {
-	internal sealed class FaradaySpur: IItemFix {
+namespace StackFix.Items.Impl {
+	internal sealed class FaradaySpur: ItemFix {
 		private const float VANILLA_MAX_CHARGE_MOVE_SPEED_BASE = 1.6f;
 		private const float VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE = 2f;
 		private const float VANILLA_EXPLOSION_DAMAGE_BASE = 4f;
@@ -29,21 +28,19 @@ namespace StackFix.Items {
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
 
-		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
+		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
-		public bool Applied { get; private set; }
-
-		public void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled      = ModSettings.FaradaySpurFixEnabled.RegisterFor(plugin);
-			this.moveSpeedBase   = ModSettings.FaradaySpurMoveSpeedBase.RegisterFor(plugin);
-			this.moveSpeedStack  = ModSettings.FaradaySpurMoveSpeedStack.RegisterFor(plugin);
-			this.jumpHeightBase  = ModSettings.FaradaySpurJumpHeightBase.RegisterFor(plugin);
-			this.jumpHeightStack = ModSettings.FaradaySpurJumpHeightStack.RegisterFor(plugin);
-			this.damageBase      = ModSettings.FaradaySpurDamageBase.RegisterFor(plugin);
-			this.damageStack     = ModSettings.FaradaySpurDamageStack.RegisterFor(plugin);
+		public override void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled      = this.RegisterSetting(plugin, ModSettings.FaradaySpurFixEnabled);
+			this.moveSpeedBase   = this.RegisterSetting(plugin, ModSettings.FaradaySpurMoveSpeedBase);
+			this.moveSpeedStack  = this.RegisterSetting(plugin, ModSettings.FaradaySpurMoveSpeedStack);
+			this.jumpHeightBase  = this.RegisterSetting(plugin, ModSettings.FaradaySpurJumpHeightBase);
+			this.jumpHeightStack = this.RegisterSetting(plugin, ModSettings.FaradaySpurJumpHeightStack);
+			this.damageBase      = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageBase);
+			this.damageStack     = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageStack);
 		}
 
-		public void RegisterRiskOfOptionsSettings() {
+		public override void RegisterRiskOfOptionsSettings() {
 			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
 			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
@@ -53,25 +50,7 @@ namespace StackFix.Items {
 			RiskOfOptionsCompatManager.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 		}
 
-		public void ApplyFix() {
-			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
-			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
-
-			Plugin.Enabled.SettingChanged       += this.FaradaySpur_SettingChanged;
-			this.fixEnabled.SettingChanged      += this.FaradaySpur_SettingChanged;
-			this.moveSpeedBase.SettingChanged   += this.FaradaySpur_SettingChanged;
-			this.moveSpeedStack.SettingChanged  += this.FaradaySpur_SettingChanged;
-			this.jumpHeightBase.SettingChanged  += this.FaradaySpur_SettingChanged;
-			this.jumpHeightStack.SettingChanged += this.FaradaySpur_SettingChanged;
-			this.damageBase.SettingChanged      += this.FaradaySpur_SettingChanged;
-			this.damageStack.SettingChanged     += this.FaradaySpur_SettingChanged;
-
-			this.RegisterItemText();
-
-			this.Applied = true;
-		}
-
-		private void RegisterItemText() {
+		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
 			float moveSpeedBase      = enabled ? this.moveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE * 100f;
 			float moveSpeedStack     = enabled ? this.moveSpeedStack.Value : 0f;
@@ -93,7 +72,10 @@ namespace StackFix.Items {
 				$"{ItD.Damage($"{thresDistanceBase:0.#}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to {ItD.Damage($"{maxDistanceBase:0.#}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area."));
 		}
 
-		private void FaradaySpur_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
+		protected override void ApplyHooks() {
+			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
+			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
+		}
 
 		private void CharacterBody_RecalculateStats(ILContext il) {
 			ILCursor cursor = new(il);

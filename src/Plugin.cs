@@ -3,11 +3,10 @@ using BepInEx.Configuration;
 using R2API.Utils;
 using StackFix.Exceptions;
 using StackFix.Items;
+using StackFix.Items.Impl;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StackFix {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]

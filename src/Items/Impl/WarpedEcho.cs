@@ -10,8 +10,8 @@ using StackFix.Utils;
 using System;
 using UnityEngine;
 
-namespace StackFix.Items {
-	internal sealed class WarpedEcho: IItemFix {
+namespace StackFix.Items.Impl {
+	internal sealed class WarpedEcho: ItemFix {
 		private const float VANILLA_DAMAGE_REDUCTION_BASE = 0.1f;
 		private const int VANILLA_DAMAGE_SPREAD_BASE = 3;
 		private const int VANILLA_DAMAGE_SPREAD_STACK = 1;
@@ -27,23 +27,21 @@ namespace StackFix.Items {
 		private ConfigEntry<float> cooldownStack;
 		private ConfigEntry<ModSettings.WarpedEchoCooldownStacking> cooldownStackType;
 
-		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
+		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
-		public bool Applied { get; private set; }
-
-		public void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled               = ModSettings.WarpedEchoFixEnabled.RegisterFor(plugin);
-			this.damageReductionBase      = ModSettings.WarpedEchoDamageReductionBase.RegisterFor(plugin);
-			this.damageReductionStack     = ModSettings.WarpedEchoDamageReductionStack.RegisterFor(plugin);
-			this.damageReductionStackType = ModSettings.WarpedEchoDamageReductionStackType.RegisterFor(plugin);
-			this.damageSpreadBase         = ModSettings.WarpedEchoDamageSpreadBase.RegisterFor(plugin);
-			this.damageSpreadStack        = ModSettings.WarpedEchoDamageSpreadStack.RegisterFor(plugin);
-			this.cooldownBase             = ModSettings.WarpedEchoCooldownBase.RegisterFor(plugin);
-			this.cooldownStack            = ModSettings.WarpedEchoCooldownStack.RegisterFor(plugin);
-			this.cooldownStackType        = ModSettings.WarpedEchoCooldownStackType.RegisterFor(plugin);
+		public override void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled               = this.RegisterSetting(plugin, ModSettings.WarpedEchoFixEnabled);
+			this.damageReductionBase      = this.RegisterSetting(plugin, ModSettings.WarpedEchoDamageReductionBase);
+			this.damageReductionStack     = this.RegisterSetting(plugin, ModSettings.WarpedEchoDamageReductionStack);
+			this.damageReductionStackType = this.RegisterSetting(plugin, ModSettings.WarpedEchoDamageReductionStackType);
+			this.damageSpreadBase         = this.RegisterSetting(plugin, ModSettings.WarpedEchoDamageSpreadBase);
+			this.damageSpreadStack        = this.RegisterSetting(plugin, ModSettings.WarpedEchoDamageSpreadStack);
+			this.cooldownBase             = this.RegisterSetting(plugin, ModSettings.WarpedEchoCooldownBase);
+			this.cooldownStack            = this.RegisterSetting(plugin, ModSettings.WarpedEchoCooldownStack);
+			this.cooldownStackType        = this.RegisterSetting(plugin, ModSettings.WarpedEchoCooldownStackType);
 		}
 
-		public void RegisterRiskOfOptionsSettings() {
+		public override void RegisterRiskOfOptionsSettings() {
 			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
 			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionBase, new(Suffix: "%"));
 			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionStack, new(Prefix: "+", Suffix: "%"));
@@ -55,27 +53,7 @@ namespace StackFix.Items {
 			RiskOfOptionsCompatManager.AddChoiceOption(this.cooldownStackType);
 		}
 
-		public void ApplyFix() {
-			IL.RoR2.HealthComponent.TakeDamageProcess += this.HealthComponent_TakeDamageProcess;
-			IL.RoR2.CharacterBody.UpdateDelayedDamage += this.CharacterBody_UpdateDelayedDamage;
-
-			Plugin.Enabled.SettingChanged                += this.WarpedEcho_SettingChanged;
-			this.fixEnabled.SettingChanged               += this.WarpedEcho_SettingChanged;
-			this.damageReductionBase.SettingChanged      += this.WarpedEcho_SettingChanged;
-			this.damageReductionStack.SettingChanged     += this.WarpedEcho_SettingChanged;
-			this.damageReductionStackType.SettingChanged += this.WarpedEcho_SettingChanged;
-			this.damageSpreadBase.SettingChanged         += this.WarpedEcho_SettingChanged;
-			this.damageSpreadStack.SettingChanged        += this.WarpedEcho_SettingChanged;
-			this.cooldownBase.SettingChanged             += this.WarpedEcho_SettingChanged;
-			this.cooldownStack.SettingChanged            += this.WarpedEcho_SettingChanged;
-			this.cooldownStackType.SettingChanged        += this.WarpedEcho_SettingChanged;
-
-			this.RegisterItemText();
-
-			this.Applied = true;
-		}
-
-		private void RegisterItemText() {
+		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
 			float damageReductionBase                  = enabled ? this.damageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE * 100f;
 			float damageReductionStack                 = enabled ? this.damageReductionStack.Value : 0f;
@@ -93,7 +71,10 @@ namespace StackFix.Items {
 				$"final hit. Recharges every {ItD.Utility($"{cooldownBase:0.#}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:+0.##;-0.##}%")}."));
 		}
 
-		private void WarpedEcho_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
+		protected override void ApplyHooks() {
+			IL.RoR2.HealthComponent.TakeDamageProcess += this.HealthComponent_TakeDamageProcess;
+			IL.RoR2.CharacterBody.UpdateDelayedDamage += this.CharacterBody_UpdateDelayedDamage;
+		}
 
 		private void HealthComponent_TakeDamageProcess(ILContext il) {
 			ILCursor cursor = new(il);
@@ -112,9 +93,8 @@ namespace StackFix.Items {
 			cursor.Index = 0;
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
-				instr => instr.MatchAdd())) {
+				instr => instr.MatchAdd()))
 				throw new ILSeekException(il, "damage spread calculation", nameof(HealthComponent.TakeDamageProcess));
-			}
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyDamageSpread);

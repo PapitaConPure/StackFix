@@ -7,10 +7,9 @@ using RoR2;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
-using System;
 
-namespace StackFix.Items {
-	internal sealed class BolsteringLantern(): IItemFix {
+namespace StackFix.Items.Impl {
+	internal sealed class BolsteringLantern: ItemFix {
 		private const float VANILLA_ATTACK_SPEED_BASE = 0.065f;
 		private const float VANILLA_ATTACK_SPEED_STACK = 0.035f;
 		private const int VANILLA_CHARACTER_COUNT_MAX_BASE = 3;
@@ -22,19 +21,17 @@ namespace StackFix.Items {
 		private ConfigEntry<int> characterCountMaxBase;
 		private ConfigEntry<int> characterCountMaxStack;
 
-		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
+		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
-		public bool Applied { get; private set; }
-
-		public void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled             = ModSettings.BolsteringLanternFixEnabled.RegisterFor(plugin);
-			this.attackSpeedBase        = ModSettings.BolsteringLanternAttackSpeedBase.RegisterFor(plugin);
-			this.attackSpeedStack       = ModSettings.BolsteringLanternAttackSpeedStack.RegisterFor(plugin);
-			this.characterCountMaxBase  = ModSettings.BolsteringLanternCharacterCountMaxBase.RegisterFor(plugin);
-			this.characterCountMaxStack = ModSettings.BolsteringLanternCharacterCountMaxStack.RegisterFor(plugin);
+		public override void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled             = this.RegisterSetting(plugin, ModSettings.BolsteringLanternFixEnabled);
+			this.attackSpeedBase        = this.RegisterSetting(plugin, ModSettings.BolsteringLanternAttackSpeedBase);
+			this.attackSpeedStack       = this.RegisterSetting(plugin, ModSettings.BolsteringLanternAttackSpeedStack);
+			this.characterCountMaxBase  = this.RegisterSetting(plugin, ModSettings.BolsteringLanternCharacterCountMaxBase);
+			this.characterCountMaxStack = this.RegisterSetting(plugin, ModSettings.BolsteringLanternCharacterCountMaxStack);
 		}
 
-		public void RegisterRiskOfOptionsSettings() {
+		public override void RegisterRiskOfOptionsSettings() {
 			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
 			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedBase, new(Suffix: "%"));
 			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedStack, new(FormatString: "+{0:0.##}%"));
@@ -42,23 +39,7 @@ namespace StackFix.Items {
 			RiskOfOptionsCompatManager.AddSliderOption(this.characterCountMaxStack, new(Prefix: "+"));
 		}
 
-		public void ApplyFix() {
-			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
-			IL.RoR2.AttackSpeedPerNearbyCollider.UpdateValues += this.AttackSpeedPerNearbyCollider_UpdateValues;
-
-			Plugin.Enabled.SettingChanged              += this.BolsteringLantern_SettingChanged;
-			this.fixEnabled.SettingChanged             += this.BolsteringLantern_SettingChanged;
-			this.attackSpeedBase.SettingChanged        += this.BolsteringLantern_SettingChanged;
-			this.attackSpeedStack.SettingChanged       += this.BolsteringLantern_SettingChanged;
-			this.characterCountMaxBase.SettingChanged  += this.BolsteringLantern_SettingChanged;
-			this.characterCountMaxStack.SettingChanged += this.BolsteringLantern_SettingChanged;
-
-			this.RegisterItemText();
-
-			this.Applied = true;
-		}
-
-		private void RegisterItemText() {
+		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
 			float attackSpeedBase  = enabled ? this.attackSpeedBase.Value : VANILLA_ATTACK_SPEED_BASE * 100f;
 			float attackSpeedStack = enabled ? this.attackSpeedStack.Value : VANILLA_ATTACK_SPEED_STACK * 100f;
@@ -70,7 +51,10 @@ namespace StackFix.Items {
 				$"for up to {ItD.Utility($"{charaCountMaxBase}")}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility("20")} meters."));
 		}
 
-		private void BolsteringLantern_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
+		protected override void ApplyHooks() {
+			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
+			IL.RoR2.AttackSpeedPerNearbyCollider.UpdateValues += this.AttackSpeedPerNearbyCollider_UpdateValues;
+		}
 
 		private void CharacterBody_RecalculateStats(ILContext il) {
 			ILCursor cursor = new(il);

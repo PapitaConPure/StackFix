@@ -7,10 +7,9 @@ using RoR2;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
-using System;
 
-namespace StackFix.Items {
-	internal sealed class EclipseLite: IItemFix {
+namespace StackFix.Items.Impl {
+	internal sealed class EclipseLite: ItemFix {
 		private const float VANILLA_BARRIER_BASE = 0.01f;
 		private const float VANILLA_BARRIER_STACK = 0.0025f;
 
@@ -19,39 +18,23 @@ namespace StackFix.Items {
 		private ConfigEntry<float> barrierStack;
 		private ConfigEntry<ModSettings.EclipseLiteBarrierStacking> barrierStackType;
 
-		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
+		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
-		public bool Applied { get; private set; }
-
-		public void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled       = ModSettings.EclipseLiteFixEnabled.RegisterFor(plugin);
-			this.barrierBase      = ModSettings.EclipseLiteBarrierBase.RegisterFor(plugin);
-			this.barrierStack     = ModSettings.EclipseLiteBarrierStack.RegisterFor(plugin);
-			this.barrierStackType = ModSettings.EclipseLiteBarrierStackType.RegisterFor(plugin);
+		public override void RegisterSettings(BaseUnityPlugin plugin) {
+			this.fixEnabled       = this.RegisterSetting(plugin, ModSettings.EclipseLiteFixEnabled);
+			this.barrierBase      = this.RegisterSetting(plugin, ModSettings.EclipseLiteBarrierBase);
+			this.barrierStack     = this.RegisterSetting(plugin, ModSettings.EclipseLiteBarrierStack);
+			this.barrierStackType = this.RegisterSetting(plugin, ModSettings.EclipseLiteBarrierStackType);
 		}
 
-		public void RegisterRiskOfOptionsSettings() {
+		public override void RegisterRiskOfOptionsSettings() {
 			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
 			RiskOfOptionsCompatManager.AddSliderOption(this.barrierBase, new(Suffix: "%"));
 			RiskOfOptionsCompatManager.AddSliderOption(this.barrierStack, new(Prefix: "+", Suffix: "%"));
 			RiskOfOptionsCompatManager.AddChoiceOption(this.barrierStackType);
 		}
 
-		public void ApplyFix() {
-			IL.RoR2.CharacterBody.OnSkillCooldown += this.CharacterBody_OnSkillCooldown;
-
-			Plugin.Enabled.SettingChanged        += this.EclipseLite_SettingChanged;
-			this.fixEnabled.SettingChanged       += this.EclipseLite_SettingChanged;
-			this.barrierBase.SettingChanged      += this.EclipseLite_SettingChanged;
-			this.barrierStack.SettingChanged     += this.EclipseLite_SettingChanged;
-			this.barrierStackType.SettingChanged += this.EclipseLite_SettingChanged;
-
-			this.RegisterItemText();
-
-			this.Applied = true;
-		}
-
-		private void RegisterItemText() {
+		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
 			float barrierBase                  = enabled ? this.barrierBase.Value : VANILLA_BARRIER_BASE * 100f;
 			float barrierStack                 = enabled ? this.barrierStack.Value : VANILLA_BARRIER_STACK * 100f;
@@ -63,7 +46,9 @@ namespace StackFix.Items {
 				$"of your maximum health per second of the skill's base cooldown."));
 		}
 
-		private void EclipseLite_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
+		protected override void ApplyHooks() {
+			IL.RoR2.CharacterBody.OnSkillCooldown += this.CharacterBody_OnSkillCooldown;
+		}
 
 		private void CharacterBody_OnSkillCooldown(ILContext il) {
 			ILCursor cursor = new(il);
