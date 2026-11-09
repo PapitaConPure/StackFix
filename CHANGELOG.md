@@ -1,3 +1,9 @@
+### v1.3.0
+* Added Bolstering Lantern item fix.
+* If there's a problem matching the original code of one item, only that item will fail.
+* Refactor. I really need to sleep.
+* Probably fixed a few descriptions idk i don't remember anymore man.
+
 ### v1.2.0
 * Added Warped Echo item fix.
 * Improved Risk of Options stack settings display.
