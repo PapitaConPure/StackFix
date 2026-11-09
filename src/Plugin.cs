@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Configuration;
 using R2API.Utils;
+using StackFix.Exceptions;
 using StackFix.Items;
 using StackFix.Settings;
 using StackFix.Utils;
@@ -61,7 +62,7 @@ namespace StackFix {
 		public void Awake() {
 			this.RegisterSettings();
 			this.TryRegisterRiskOfOptions();
-			this.ApplyItemFixes();
+			this.TryApplyItemFixes();
 
 #if DEBUG
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded.");
@@ -161,9 +162,14 @@ namespace StackFix {
 			}
 		}
 
-		private void ApplyItemFixes() {
+		private void TryApplyItemFixes() {
 			foreach(IItemFix itemFix in this.ItemFixes)
-				itemFix.ApplyFix();
+				try {
+					itemFix.ApplyFix();
+				} catch(ILSeekException ex) {
+					this.Logger.LogError(ex);
+					this.Logger.LogWarning($"Item fix '{itemFix}' was skipped because of an unresolved IL mismatch.");
+				}
 		}
 	}
 }
