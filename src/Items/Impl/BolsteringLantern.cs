@@ -112,7 +112,7 @@ namespace StackFix.Items.Impl {
 			if(!this.Enabled)
 				return characterCountMax;
 
-			return this.characterCountMaxBase.Value + itemCount * this.characterCountMaxStack.Value;
+			return ItemStacking.Linear(this.characterCountMaxBase.Value, this.characterCountMaxStack.Value, itemCount);
 		}
 	}
 }
