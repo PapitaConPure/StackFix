@@ -72,9 +72,9 @@ namespace StackFix {
 		private void RegisterSettings() {
 			Enabled                      = ModSettings.Enabled.RegisterFor(this);
 
-			BolsteringLanternFixEnabled        = ModSettings.BolsteringLanternFixEnabled.RegisterFor(this);
-			BolsteringLanternAttackSpeedBase   = ModSettings.BolsteringLanternAttackSpeedBase.RegisterFor(this);
-			BolsteringLanternAttackSpeedStack  = ModSettings.BolsteringLanternAttackSpeedStack.RegisterFor(this);
+			BolsteringLanternFixEnabled             = ModSettings.BolsteringLanternFixEnabled.RegisterFor(this);
+			BolsteringLanternAttackSpeedBase        = ModSettings.BolsteringLanternAttackSpeedBase.RegisterFor(this);
+			BolsteringLanternAttackSpeedStack       = ModSettings.BolsteringLanternAttackSpeedStack.RegisterFor(this);
 			BolsteringLanternCharacterCountMaxBase  = ModSettings.BolsteringLanternCharacterCountMaxBase.RegisterFor(this);
 			BolsteringLanternCharacterCountMaxStack = ModSettings.BolsteringLanternCharacterCountMaxStack.RegisterFor(this);
 
