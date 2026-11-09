@@ -17,7 +17,12 @@ namespace ConfigEntryExt {
 
 		public TValue Default { get; } = defaultValue;
 
-		public virtual ConfigEntry<TValue> RegisterFor(BaseUnityPlugin plugin)
+		public ConfigEntry<TValue> ConfigEntry { get; private set; }
+
+		public ConfigEntry<TValue> RegisterFor(BaseUnityPlugin plugin)
+			=> this.ConfigEntry = this.MaterializeAndBind(plugin);
+
+		protected virtual ConfigEntry<TValue> MaterializeAndBind(BaseUnityPlugin plugin)
 			=> plugin.Config.Bind(
 				this.Section, this.Name, this.Default,
 				new ConfigDescription(this.Description, null));

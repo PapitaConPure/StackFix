@@ -14,7 +14,7 @@ namespace ConfigEntryExt {
 		where TConstraint : IEntryConstraint<TValue> {
 		public TConstraint Constraint { get; } = constraint;
 
-		public override ConfigEntry<TValue> RegisterFor(BaseUnityPlugin plugin)
+		protected override ConfigEntry<TValue> MaterializeAndBind(BaseUnityPlugin plugin)
 			=> plugin.Config.Bind(
 				this.Section, this.Name, this.Default,
 				new ConfigDescription(this.Description, this.Constraint.AcceptableValue));
