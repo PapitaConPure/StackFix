@@ -9,14 +9,14 @@ using System;
 
 namespace StackFix.Items {
 	internal sealed class FaradaySpur: IItemFix {
-		private const float VANILLA_MAX_CHARGE_MOVE_SPEED_BASE_PERCENT = 160f;
-		private const float VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE_PERCENT = 200f;
-		private const float VANILLA_EXPLOSION_DAMAGE_BASE_PERCENT = 400f;
-		private const float VANILLA_EXPLOSION_DAMAGE_STACK_PERCENT = 280f;
+		private const float VANILLA_MAX_CHARGE_MOVE_SPEED_BASE = 1.6f;
+		private const float VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE = 2f;
+		private const float VANILLA_EXPLOSION_DAMAGE_BASE = 4f;
+		private const float VANILLA_EXPLOSION_DAMAGE_STACK = 2.8f;
 		private const float VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE = 5f;
 		private const float VANILLA_MAX_CHARGE_DISTANCE_BASE = 32.3f;
 		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
-		private const float VANILLA_CHARGE_THRESHOLD_BASE_PERCENT = 25f;
+		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.FaradaySpurFixEnabled.Value;
 
@@ -38,17 +38,17 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float moveSpeedBase      = enabled ? Plugin.FaradaySpurMoveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE_PERCENT;
+			float moveSpeedBase      = enabled ? Plugin.FaradaySpurMoveSpeedBase.Value : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE * 100f;
 			float moveSpeedStack     = enabled ? Plugin.FaradaySpurMoveSpeedStack.Value : 0f;
-			float jumpHeightBase     = enabled ? Plugin.FaradaySpurJumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE_PERCENT;
+			float jumpHeightBase     = enabled ? Plugin.FaradaySpurJumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE * 100f;
 			float jumpHeightStack    = enabled ? Plugin.FaradaySpurJumpHeightStack.Value : 0f;
-			float damageBase         = enabled ? Plugin.FaradaySpurDamageBase.Value : VANILLA_EXPLOSION_DAMAGE_BASE_PERCENT;
-			float damageStack        = enabled ? Plugin.FaradaySpurDamageStack.Value : VANILLA_EXPLOSION_DAMAGE_STACK_PERCENT;
+			float damageBase         = enabled ? Plugin.FaradaySpurDamageBase.Value : VANILLA_EXPLOSION_DAMAGE_BASE * 100f;
+			float damageStack        = enabled ? Plugin.FaradaySpurDamageStack.Value : VANILLA_EXPLOSION_DAMAGE_STACK * 100f;
 			float thresDistanceBase  = VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE;
 			float thresDistanceStack = 0f;
 			float maxDistanceBase    = VANILLA_MAX_CHARGE_DISTANCE_BASE;
 			float maxDistanceStack   = VANILLA_MAX_CHARGE_DISTANCE_STACK;
-			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE_PERCENT;
+			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE * 100f;
 			float thresStack         = 0f;
 
 			LanguageAPI.AddOverlay("ITEM_JUMPDAMAGESTRIKE_DESC", new ItD(
@@ -116,13 +116,13 @@ namespace StackFix.Items {
 		private void JumpDamageStrikeBodyBehavior_DischargeEffects(ILContext il) {
 			ILCursor cursor = new(il);
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(4f)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_BASE)))
 				throw new ILSeekException("Failed to match base damage IL in JumpDamageStrikeBodyBehavior.DischargeEffects");
 
 			cursor.EmitDelegate(this.ModifyBaseDamage);
 
 			cursor.Index = 0;
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(2.8f)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_STACK)))
 				throw new ILSeekException("Failed to match stack damage IL in JumpDamageStrikeBodyBehavior.DischargeEffects");
 
 			cursor.EmitDelegate(this.ModifyStackDamage);

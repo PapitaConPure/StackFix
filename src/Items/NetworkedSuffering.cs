@@ -13,7 +13,7 @@ namespace StackFix.Items {
 	internal sealed class NetworkedSuffering: IItemFix, IDisposable {
 		private const int VANILLA_VIRUS_SPREAD_COUNT_BASE = 4;
 		private const int VANILLA_VIRUS_SPREAD_COUNT_STACK = 2;
-		private const float VANILLA_VIRUS_DAMAGE_BASE_PERCENT = 45f;
+		private const float VANILLA_VIRUS_DAMAGE_BASE = 0.45f;
 
 		private ILHook currentMaxHook;
 
@@ -38,11 +38,11 @@ namespace StackFix.Items {
 			bool enabled = this.Enabled;
 			int maxVirusCountBase  = enabled ? Plugin.NetworkedSufferingSpreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
 			int maxVirusCountStack = enabled ? Plugin.NetworkedSufferingSpreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
-			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE_PERCENT;
+			float damageBase       = enabled ? Plugin.NetworkedSufferingDamageBase.Value : VANILLA_VIRUS_DAMAGE_BASE * 100f;
 			float damageStack      = enabled ? Plugin.NetworkedSufferingDamageStack.Value : 0f;
 
 			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC", new ItD(
-				$"Infect up to {ItD.Utility($"{maxVirusCountBase}{ItD.Stack(maxVirusCountStack)}")} enemies with a computer virus that ",
+				$"Infect up to {ItD.Utility($"{maxVirusCountBase}")}{ItD.Stack(maxVirusCountStack)} enemies with a computer virus that ",
 				$"duplicates {ItD.Damage($"{damageBase}%{ItD.Stack(damageStack, "+{0:0}%")} of all damage taken")} and sends it to a global ",
 				$"damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}."));
 		}

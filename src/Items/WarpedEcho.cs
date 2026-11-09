@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace StackFix.Items {
 	internal sealed class WarpedEcho: IItemFix {
-		private const float VANILLA_DAMAGE_REDUCTION_BASE_PERCENT = 10f;
+		private const float VANILLA_DAMAGE_REDUCTION_BASE = 0.1f;
 		private const int VANILLA_DAMAGE_SPREAD_BASE = 3;
 		private const int VANILLA_DAMAGE_SPREAD_STACK = 1;
 		private const float VANILLA_COOLDOWN_BASE = 15f;
@@ -37,7 +37,7 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float damageReductionBase                  = enabled ? Plugin.WarpedEchoDamageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE_PERCENT;
+			float damageReductionBase                  = enabled ? Plugin.WarpedEchoDamageReductionBase.Value  : VANILLA_DAMAGE_REDUCTION_BASE * 100f;
 			float damageReductionStack                 = enabled ? Plugin.WarpedEchoDamageReductionStack.Value : 0f;
 			ItemStacking.Type damageReductionStackType = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoDamageReductionStackType.Value) : ItemStacking.Type.Linear;
 			int damageSpreadBase                       = enabled ? Plugin.WarpedEchoDamageSpreadBase.Value  : VANILLA_DAMAGE_SPREAD_BASE;
@@ -47,9 +47,10 @@ namespace StackFix.Items {
 			ItemStacking.Type cooldownStackType        = enabled ? ItemStacking.FromEnum(Plugin.WarpedEchoCooldownStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC", new ItD(
-				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%{ItD.Stack(damageReductionStack, damageReductionStackType, "{0:+0.##;-0.##}%")}")} and ",
-				$"{ItD.Healing("spread")} into {ItD.Utility($"{damageSpreadBase}{ItD.Stack(damageSpreadStack)} hits")}. All echoed damage is {ItD.Utility("non-lethal")} except for the ",
-				$"final hit. Recharges every {ItD.Utility($"{cooldownBase}s{ItD.Stack(cooldownStack, cooldownStackType, "{0:+0.##;-0.##}%")}")}."));
+				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%")}",
+				$"{ItD.Stack(damageReductionStack, damageReductionStackType, "{0:+0.##;-0.##}%")} and {ItD.Healing("spread")} ",
+				$"into {ItD.Utility($"{damageSpreadBase}{ItD.Stack(damageSpreadStack)} hits")}. All echoed damage is {ItD.Utility("non-lethal")} except for the ",
+				$"final hit. Recharges every {ItD.Utility($"{cooldownBase:0.#}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:+0.##;-0.##}%")}."));
 		}
 
 		private void WarpedEcho_SettingChanged(object sender, EventArgs e) => this.RegisterItemText();
@@ -59,10 +60,10 @@ namespace StackFix.Items {
 
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.DelayedDamage)),
-				instr => instr.MatchCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
 				throw new ILSeekException("Failed to match delayed damage item count in HealthComponent.TakeDamageProcess");
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(0.9f)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(1f - VANILLA_DAMAGE_REDUCTION_BASE)))
 				throw new ILSeekException("Failed to match damage reduction multiplier IL in HealthComponent.TakeDamageProcess");
 
 			cursor.Emit(OpCodes.Ldarg_0);
@@ -70,7 +71,7 @@ namespace StackFix.Items {
 
 			cursor.Index = 0;
 			if(!cursor.TryGotoNext(MoveType.After,
-				instr => instr.MatchCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
 				instr => instr.MatchAdd())) {
 				throw new ILSeekException("Failed to match damage spread calculation in HealthComponent.TakeDamageProcess");
 			}

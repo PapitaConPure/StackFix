@@ -9,8 +9,8 @@ using System;
 
 namespace StackFix.Items {
 	internal sealed class EclipseLite: IItemFix {
-		private const float VANILLA_BARRIER_BASE_PERCENT = 1f;
-		private const float VANILLA_BARRIER_STACK_PERCENT = 0.25f;
+		private const float VANILLA_BARRIER_BASE = 0.01f;
+		private const float VANILLA_BARRIER_STACK = 0.0025f;
 
 		public bool Enabled => Plugin.Enabled.Value && Plugin.EclipseLiteFixEnabled.Value;
 
@@ -28,12 +28,13 @@ namespace StackFix.Items {
 
 		private void RegisterItemText() {
 			bool enabled = this.Enabled;
-			float barrierBase                  = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE_PERCENT;
-			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK_PERCENT;
+			float barrierBase                  = enabled ? Plugin.EclipseLiteBarrierBase.Value : VANILLA_BARRIER_BASE * 100f;
+			float barrierStack                 = enabled ? Plugin.EclipseLiteBarrierStack.Value : VANILLA_BARRIER_STACK * 100f;
 			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(Plugin.EclipseLiteBarrierStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC", new ItD(
-				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)}")} ",
+				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%")}",
+				$"{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)} ",
 				$"of your maximum health per second of the skill's base cooldown."));
 		}
 
@@ -42,7 +43,7 @@ namespace StackFix.Items {
 		private void CharacterBody_OnSkillCooldown(ILContext il) {
 			ILCursor cursor = new(il);
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(0.01f)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_BARRIER_BASE)))
 				throw new ILSeekException("Failed to match base barrier IL in CharacterBody.OnSkillCooldown");
 
 			cursor.Emit(OpCodes.Ldarg_0);
@@ -50,7 +51,7 @@ namespace StackFix.Items {
 
 			cursor.Index = 0;
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(0.0025f)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_BARRIER_STACK)))
 				throw new ILSeekException("Failed to match stack barrier IL in CharacterBody.OnSkillCooldown");
 
 			cursor.EmitDelegate(this.NullifyVanillaStackBarrierFactor);
