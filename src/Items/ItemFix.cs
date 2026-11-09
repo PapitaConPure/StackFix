@@ -11,12 +11,12 @@ namespace StackFix.Items {
 		public bool Applied { get; private set; }
 
 
-		private readonly List<ConfigEntryExt<IComparable>> itemFixConfigEntries = [];
+		private readonly List<IConfigEntryChangeObserver> itemFixConfigEntries = [];
 
 		public abstract void RegisterSettings(BaseUnityPlugin plugin);
 
 		protected ConfigEntry<T> RegisterSetting<T>(BaseUnityPlugin plugin, ConfigEntryExt<T> configEntry) where T : IComparable {
-			this.itemFixConfigEntries.Add(configEntry as ConfigEntryExt<IComparable>);
+			this.itemFixConfigEntries.Add(configEntry);
 			return configEntry.RegisterFor(plugin);
 		}
 
@@ -25,8 +25,9 @@ namespace StackFix.Items {
 			this.ApplyDescription();
 
 			Plugin.Enabled.SettingChanged += this.ConfigEntry_SettingChanged;
-			foreach(ConfigEntryExt<IComparable> configEntry in this.itemFixConfigEntries)
-				configEntry.ConfigEntry.SettingChanged += this.ConfigEntry_SettingChanged;
+
+			foreach(IConfigEntryChangeObserver configEntry in this.itemFixConfigEntries)
+				configEntry.ObserveConfigEntryChanged(this.ConfigEntry_SettingChanged);
 
 			this.itemFixConfigEntries.Clear();
 

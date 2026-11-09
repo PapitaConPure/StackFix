@@ -8,6 +8,7 @@ namespace ConfigEntryExt {
 		string name,
 		string description,
 		TValue defaultValue)
+		: IConfigEntryChangeObserver
 		where TValue : IComparable {
 		public string Section { get; } = section;
 
@@ -26,5 +27,9 @@ namespace ConfigEntryExt {
 			=> plugin.Config.Bind(
 				this.Section, this.Name, this.Default,
 				new ConfigDescription(this.Description, null));
+
+		public void ObserveConfigEntryChanged(EventHandler handler) {
+			this.ConfigEntry.SettingChanged += handler;
+		}
 	}
 }
