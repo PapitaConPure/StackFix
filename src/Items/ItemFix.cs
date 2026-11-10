@@ -10,7 +10,6 @@ namespace StackFix.Items {
 
 		public bool Applied { get; private set; }
 
-
 		private readonly List<IConfigEntryChangeObserver> itemFixConfigEntries = [];
 
 		public abstract void RegisterSettings(BaseUnityPlugin plugin);
@@ -20,10 +19,25 @@ namespace StackFix.Items {
 			return configEntry.RegisterFor(plugin);
 		}
 
+#if DEBUG
+		private static int fixCount = 0;
+#endif
+
 		public void ApplyFix() {
+#if DEBUG
+			fixCount++;
+			UnityEngine.Debug.Log($"Applying fix #{fixCount} hooks...");
+#endif
 			this.ApplyHooks();
+
+#if DEBUG
+			UnityEngine.Debug.Log($"Applying fix #{fixCount} description...");
+#endif
 			this.ApplyDescription();
 
+#if DEBUG
+			UnityEngine.Debug.Log($"Registering fix #{fixCount} config entries...");
+#endif
 			Plugin.Enabled.SettingChanged += this.ConfigEntry_SettingChanged;
 
 			foreach(IConfigEntryChangeObserver configEntry in this.itemFixConfigEntries)
@@ -31,6 +45,9 @@ namespace StackFix.Items {
 
 			this.itemFixConfigEntries.Clear();
 
+#if DEBUG
+			UnityEngine.Debug.Log($"Fix #{fixCount} has been applied.");
+#endif
 			this.Applied = true;
 		}
 
