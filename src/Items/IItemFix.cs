@@ -1,10 +1,8 @@
-﻿using BepInEx;
+﻿using StackFix.Settings;
 
 namespace StackFix.Items {
-	internal interface IItemFix {
+	internal interface IItemFix: ISettingsRegistrar {
 		public bool Applied { get; }
 		public void ApplyFix();
-		public void RegisterSettings(BaseUnityPlugin plugin);
-		public void RegisterRiskOfOptionsSettings();
 	}
 }
