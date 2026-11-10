@@ -16,13 +16,10 @@ namespace StackFix.Items.Impl {
 		private const int VANILLA_CHARACTER_COUNT_MAX_BASE = 3;
 		private const int VANILLA_CHARACTER_COUNT_MAX_STACK = 1;
 
-		private ConfigEntry<bool> fixEnabled;
 		private ConfigEntry<float> attackSpeedBase;
 		private ConfigEntry<float> attackSpeedStack;
 		private ConfigEntry<int> characterCountMaxBase;
 		private ConfigEntry<int> characterCountMaxStack;
-
-		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled             = this.RegisterSetting(plugin, ModSettings.BolsteringLanternFixEnabled);

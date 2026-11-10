@@ -6,7 +6,9 @@ using System.Collections.Generic;
 
 namespace StackFix.Items {
 	internal abstract class ItemFix: IItemFix {
-		public abstract bool Enabled { get; }
+		protected ConfigEntry<bool> fixEnabled;
+
+		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public bool Applied { get; private set; }
 

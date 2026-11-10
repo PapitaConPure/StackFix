@@ -14,12 +14,9 @@ namespace StackFix.Items.Impl {
 		private const float VANILLA_BARRIER_BASE = 0.01f;
 		private const float VANILLA_BARRIER_STACK = 0.0025f;
 
-		private ConfigEntry<bool> fixEnabled;
 		private ConfigEntry<float> barrierBase;
 		private ConfigEntry<float> barrierStack;
 		private ConfigEntry<ModSettings.EclipseLiteBarrierStacking> barrierStackType;
-
-		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled       = this.RegisterSetting(plugin, ModSettings.EclipseLiteFixEnabled);

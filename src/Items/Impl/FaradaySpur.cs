@@ -21,15 +21,12 @@ namespace StackFix.Items.Impl {
 		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
 		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
 
-		private ConfigEntry<bool> fixEnabled;
 		private ConfigEntry<float> moveSpeedBase;
 		private ConfigEntry<float> moveSpeedStack;
 		private ConfigEntry<float> jumpHeightBase;
 		private ConfigEntry<float> jumpHeightStack;
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
-
-		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled      = this.RegisterSetting(plugin, ModSettings.FaradaySpurFixEnabled);

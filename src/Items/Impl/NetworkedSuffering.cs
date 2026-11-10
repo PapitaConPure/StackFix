@@ -19,15 +19,12 @@ namespace StackFix.Items.Impl {
 		private const int VANILLA_VIRUS_SPREAD_COUNT_STACK = 2;
 		private const float VANILLA_VIRUS_DAMAGE_BASE = 0.45f;
 
-		private ConfigEntry<bool> fixEnabled;
 		private ConfigEntry<int> spreadBase;
 		private ConfigEntry<int> spreadStack;
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
 
 		private ILHook currentMaxHook;
-
-		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled  = this.RegisterSetting(plugin, ModSettings.NetworkedSufferingFixEnabled);

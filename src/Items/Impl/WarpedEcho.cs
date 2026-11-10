@@ -18,7 +18,6 @@ namespace StackFix.Items.Impl {
 		private const int VANILLA_DAMAGE_SPREAD_STACK = 1;
 		private const float VANILLA_COOLDOWN_BASE = 15f;
 
-		private ConfigEntry<bool> fixEnabled;
 		private ConfigEntry<float> damageReductionBase;
 		private ConfigEntry<float> damageReductionStack;
 		private ConfigEntry<ModSettings.WarpedEchoDamageReductionStacking> damageReductionStackType;
@@ -27,8 +26,6 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<float> cooldownBase;
 		private ConfigEntry<float> cooldownStack;
 		private ConfigEntry<ModSettings.WarpedEchoCooldownStacking> cooldownStackType;
-
-		public override bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled               = this.RegisterSetting(plugin, ModSettings.WarpedEchoFixEnabled);
