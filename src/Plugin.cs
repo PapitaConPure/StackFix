@@ -18,10 +18,13 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Megumin;
 
 		private readonly IItemFix[] ItemFixes = [
+			//White
 			new BolsteringLantern(),
 			new EclipseLite(),
 			new WarpedEcho(),
+			//Green
 			new FaradaySpur(),
+			//Red
 			new NetworkedSuffering(),
 		];
 
