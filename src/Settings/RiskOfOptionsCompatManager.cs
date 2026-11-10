@@ -1,12 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using BepInEx.Configuration;
 using System;
-
-#if RISK_OF_OPTIONS
 using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
-#endif
 
 namespace StackFix.Settings {
 	internal static class RiskOfOptionsCompatManager {
@@ -21,29 +18,23 @@ namespace StackFix.Settings {
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void SetModIcon(UnityEngine.Sprite sprite) {
-#if RISK_OF_OPTIONS
 			ModSettingsManager.SetModIcon(sprite);
-#endif
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void SetModDescription(string desc) {
-#if RISK_OF_OPTIONS
 			ModSettingsManager.SetModDescription(desc);
-#endif
 		}
 
 		public record AddCheckboxOptionConfig(bool RestartRequired = false);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddCheckboxOption(ConfigEntry<bool> entry, AddCheckboxOptionConfig config = null) {
-#if RISK_OF_OPTIONS
 			ModSettingsManager.AddOption(new CheckBoxOption(
 				entry,
 				new CheckBoxConfig() {
 					restartRequired = config?.RestartRequired ?? false,
 				}));
-#endif
 		}
 
 		public record AddIntSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0}", string Prefix = "", string Suffix = "");
@@ -52,7 +43,6 @@ namespace StackFix.Settings {
 		public static void AddSliderOption(
 			ConfigEntry<int> entry,
 			AddIntSliderOptionConfig config = null) {
-#if RISK_OF_OPTIONS
 			GetRangeFromEntry(entry, out int min, out int max);
 
 			ModSettingsManager.AddOption(new IntSliderOption(
@@ -63,7 +53,6 @@ namespace StackFix.Settings {
 					restartRequired = config?.RestartRequired ?? false,
 					formatString = $"{config?.Prefix}{config?.FormatString ?? "{0}"}{config?.Suffix}",
 				}));
-#endif
 		}
 
 		public record AddFloatSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0:0.##}", string Prefix = "", string Suffix = "", float Step = 0.01f);
@@ -72,7 +61,6 @@ namespace StackFix.Settings {
 		public static void AddSliderOption(
 			ConfigEntry<float> entry,
 			AddFloatSliderOptionConfig config = null) {
-#if RISK_OF_OPTIONS
 			GetRangeFromEntry(entry, out float min, out float max);
 
 			if(config != null && config.Step > 0)
@@ -94,19 +82,16 @@ namespace StackFix.Settings {
 						restartRequired = config?.RestartRequired ?? false,
 						FormatString = $"{config?.Prefix ?? ""}{config?.FormatString ?? "{0:0.##}"}{config?.Suffix ?? ""}",
 					}));
-#endif
 		}
 
 		public record AddChoiceOptionConfig(bool RestartRequired = false);
 
 		public static void AddChoiceOption<TEnum>(ConfigEntry<TEnum> entry, AddChoiceOptionConfig config = null) where TEnum : struct, Enum {
-#if RISK_OF_OPTIONS
 			ModSettingsManager.AddOption(new ChoiceOption(
 				entry,
 				new ChoiceConfig {
 					restartRequired = config?.RestartRequired ?? false,
 				}));
-#endif
 		}
 
 		private static void GetRangeFromEntry(ConfigEntry<int> entry, out int min, out int max) {

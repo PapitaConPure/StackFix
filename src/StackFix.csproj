@@ -12,8 +12,6 @@
 			https://api.nuget.org/v3/index.json;
 			https://nuget.bepinex.dev/v3/index.json
 		</RestoreAdditionalProjectSources>
-
-		<EnableRiskOfOptions Condition="'$(EnableRiskOfOptions)' == ''">true</EnableRiskOfOptions>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -25,10 +23,6 @@
 		<RepositoryType>git</RepositoryType>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(EnableRiskOfOptions)' == 'true'">
-		<DefineConstants>$(DefineConstants);RISK_OF_OPTIONS</DefineConstants>
 	</PropertyGroup>
 	
 	<PropertyGroup>
@@ -52,9 +46,6 @@
 		<PackageReference Include="MMHOOK.RoR2" Version="*" NoWarn="NU1701" />
 		<PackageReference Include="R2API.Core" Version="5.*" />
 		<PackageReference Include="R2API.Language" Version="1.*" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(EnableRiskOfOptions)' == 'true'">
 		<PackageReference Include="Rune580.Mods.RiskOfRain2.RiskOfOptions" Version="2.8.6" />
 	</ItemGroup>
 

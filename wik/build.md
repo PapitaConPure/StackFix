@@ -18,9 +18,4 @@ dotnet build -c Release
 ```
 ...as long as you have a .NET SDK leviosa thing installed it should work.
 
-## Risk of Options
-There's a compile flag for Risk of Options integration. It's set to `true` by default. Yay!
-
-If for some reason you don't want that, build the thing with `-p:EnableRiskOfOptions=false`.
-
 Bye!
