@@ -5,6 +5,7 @@ using MonoMod.Cil;
 using R2API;
 using RoR2;
 using RoR2.Items;
+using StackFix.Compat;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;

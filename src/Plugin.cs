@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Configuration;
 using R2API.Utils;
+using StackFix.Compat;
 using StackFix.Exceptions;
 using StackFix.Items;
 using StackFix.Items.Impl;

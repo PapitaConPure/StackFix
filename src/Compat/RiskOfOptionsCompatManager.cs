@@ -5,7 +5,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 
-namespace StackFix.Settings {
+namespace StackFix.Compat {
 	internal static class RiskOfOptionsCompatManager {
 		private static bool? enabled;
 
