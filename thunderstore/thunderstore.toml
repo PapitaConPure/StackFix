@@ -42,6 +42,10 @@ target = "plugins/StackFix/"
 source = "../CHANGELOG.md"
 target = "/"
 
+[[build.copy]]
+source = "../LICENSE"
+target = "/"
+
 [publish]
 communities = [ "riskofrain2" ]
 
