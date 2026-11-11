@@ -16,18 +16,18 @@ namespace StackFix.Settings {
 			name: "Base Chance",
 			description: Paragraph(
 				"Improved reward chance percentage for the first stack.",
-				"Vanilla value: 1"),
-			defaultValue: 0.5f,
-			constraint: new(Min: 0.25f, Max: 1.5f));
+				"Vanilla value: 40"),
+			defaultValue: 25f,
+			constraint: new(Min: 10f, Max: 40f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> ChanceDollChanceStack = new(
 			section: "Item: Chance Doll",
 			name: "Chance per Stack",
 			description: Paragraph(
 				"Improved reward additional chance percentage for every subsequent stack.",
-				"Vanilla value: 0.25"),
-			defaultValue: 0.5f,
-			constraint: new(Min: 0.1f, Max: 1f));
+				"Vanilla value: 10"),
+			defaultValue: 25f,
+			constraint: new(Min: 5f, Max: 40f));
 
 		public enum ChanceDollChanceStacking {
 			Linear,
