@@ -25,6 +25,7 @@ namespace StackFix {
 			//Green
 			new ChanceDoll(),
 			new FaradaySpur(),
+			new PrayerBeads(),
 			//Red
 			new NetworkedSuffering(),
 		];
