@@ -27,7 +27,8 @@ namespace StackFix.Utils {
 			Exponential = 3,
 		}
 
-		public static Type FromEnum<TEnum>(TEnum other) where TEnum : struct, Enum => Enum.Parse<Type>(other.ToString());
+		public static Type FromEnum<TEnum>(TEnum other) where TEnum : struct, Enum
+			=> EnumUtils.EnumToEnum<TEnum, Type>(other);
 
 
 		/// <summary>
