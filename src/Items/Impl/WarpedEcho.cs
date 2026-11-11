@@ -114,11 +114,11 @@ namespace StackFix.Items.Impl {
 				ModSettings.WarpedEchoDamageReductionStacking.Linear
 					=> 1f - ItemStacking.Linear(initial, perStack, itemCount),
 
-				ModSettings.WarpedEchoDamageReductionStacking.Reciprocal
-					=> ItemStacking.Reciprocal(initial, perStack, itemCount),
+				ModSettings.WarpedEchoDamageReductionStacking.Hyperbolic
+					=> 1f - ItemStacking.Hyperbolic(initial, perStack, itemCount),
 
 				ModSettings.WarpedEchoDamageReductionStacking.Exponential
-					=> ItemStacking.Reciprocal(1f - initial, 1f - perStack, itemCount),
+					=> ItemStacking.Exponential(1f - initial, 1f - perStack, itemCount),
 
 				_ => initial,
 			};

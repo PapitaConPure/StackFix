@@ -27,11 +27,11 @@ namespace StackFix.Settings {
 				"Additional percentage of damage reduction for every subsequent stack.",
 				"Vanilla value: 0"),
 			defaultValue: 5f,
-			constraint: new(Min: 0.1f, Max: 8f));
+			constraint: new(Min: 0f, Max: 8f));
 
 		public enum WarpedEchoDamageReductionStacking {
 			Linear,
-			Reciprocal,
+			Hyperbolic,
 			Exponential,
 		}
 		public static readonly ConstrainedConfigEntry<WarpedEchoDamageReductionStacking, ListEntryConstraint<WarpedEchoDamageReductionStacking>> WarpedEchoDamageReductionStackType = new(
@@ -41,7 +41,7 @@ namespace StackFix.Settings {
 				StackTypeDescription<WarpedEchoDamageReductionStacking>(),
 				"Vanilla value: N/A",
 				"Not recommended: Linear, Exponential"),
-			defaultValue: WarpedEchoDamageReductionStacking.Reciprocal,
+			defaultValue: WarpedEchoDamageReductionStacking.Hyperbolic,
 			constraint: new(typeof(WarpedEchoDamageReductionStacking)));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> WarpedEchoDamageSpreadBase = new(
