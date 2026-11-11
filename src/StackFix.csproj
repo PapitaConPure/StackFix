@@ -50,6 +50,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Include="LookingGlass">
+			<HintPath>..\lib\LookingGlass-nstrip.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\ConfigEntryExt\ConfigEntryExt.csproj" />
 	</ItemGroup>
 
