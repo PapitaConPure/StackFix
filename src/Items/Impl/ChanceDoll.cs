@@ -60,7 +60,7 @@ namespace StackFix.Items.Impl {
 				throw new ILSeekException(il, "itemCountEffective assignment", "ShrineChanceBehavior.AddShrineStack");
 
 			if(!cursor.TryGotoNext(MoveType.Before,
-				instr => instr.MatchLdloc(out int _),
+				instr => instr.MatchLdloc(out _),
 				instr => instr.MatchCallOrCallvirt(typeof(CharacterBody), "get_master"),
 				instr => instr.MatchCallOrCallvirt(typeof(Util).FullName, nameof(Util.CheckRoll))))
 				throw new ILSeekException(il, "CheckRoll call", "ShrineChanceBehavior.AddShrineStack");
