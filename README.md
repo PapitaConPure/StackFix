@@ -9,6 +9,7 @@ It's server-side, and everyone needs the mod. The default values are what I pers
 * **Bolstering Lantern**: Lesser change. Very small reduction of initial attack speed per close character with slightly more scaling (configurable). Maximum character count for the buff is the same as vanilla, but was made configurable as well.
 * **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
+* **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
 * **Faraday Spur**: Great initial nerf, great stacking buff. Reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * There's more planned, but that's it for now...
