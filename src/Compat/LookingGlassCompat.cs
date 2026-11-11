@@ -1,6 +1,6 @@
 ﻿///==================================================================
 ///Heavily based on this guide:
-///https://github.com/Phreelosu/BaseGameFixes/blob/main/docs/LookingGlass-Item-Stats-Guide.md#step-3-call-init-from-your-plugin
+///https://github.com/Phreelosu/BaseGameFixes/blob/main/docs/LookingGlass-Item-Stats-Guide.md
 ///(thanks! <3)
 ///==================================================================
 
