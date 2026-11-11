@@ -55,6 +55,9 @@ namespace StackFix {
 				} catch(ILSeekException ex) {
 					this.Logger.LogError(ex);
 					this.Logger.LogWarning($"Item fix '{itemFix}' was skipped because of an unresolved IL mismatch.");
+				} catch(MissingMethodException ex) {
+					this.Logger.LogError(ex);
+					this.Logger.LogWarning($"Item fix '{itemFix}' was skipped because of a missing IL method.");
 				}
 		}
 
