@@ -39,6 +39,12 @@ namespace StackFix {
 #endif
 		}
 
+		public void OnDestroy() {
+			foreach(IItemFix itemFix in this.ItemFixes)
+				if(itemFix is IDisposable toBeDisposed)
+					toBeDisposed.Dispose();
+		}
+
 		private void RegisterSettings() {
 			Enabled                      = ModSettings.Enabled.RegisterFor(this);
 
