@@ -33,9 +33,21 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.statsBase, new(Suffix: "%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.statsStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.statsBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.statsStack, new(Prefix: "+", Suffix: "%"));
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float statsBasePercent() => this.Enabled ? this.statsBase.Value * 0.01f : VANILLA_STATS_BASE;
+			float statsStackPercent() => this.Enabled ? this.statsStack.Value * 0.01f : VANILLA_STATS_STACK;
+
+			LookingGlassCompat.AddItem(DLC2Content.Items.ExtraStatsOnLevelUp, [
+				new("Stored Stats",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(statsBasePercent(), statsStackPercent(), itemCount)),
+			]);
 		}
 
 		protected override void ApplyDescription() {

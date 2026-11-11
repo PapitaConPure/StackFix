@@ -31,11 +31,35 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedBase, new(Suffix: "%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.attackSpeedStack, new(FormatString: "+{0:0.##}%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.characterCountMaxBase);
-			RiskOfOptionsCompatManager.AddSliderOption(this.characterCountMaxStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.attackSpeedBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.attackSpeedStack, new(FormatString: "+{0:0.##}%"));
+			RiskOfOptionsCompat.AddSliderOption(this.characterCountMaxBase);
+			RiskOfOptionsCompat.AddSliderOption(this.characterCountMaxStack, new(Prefix: "+"));
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float attackSpeedBase() => this.Enabled ? this.attackSpeedBase.Value * 0.01f : VANILLA_ATTACK_SPEED_BASE;
+			float attackSpeedStack() => this.Enabled ? this.attackSpeedStack.Value * 0.01f : VANILLA_ATTACK_SPEED_STACK;
+
+			int charaCountMaxBase() => this.Enabled ? this.characterCountMaxBase.Value : VANILLA_CHARACTER_COUNT_MAX_BASE;
+			int charaCountMaxStack() => this.Enabled ? this.characterCountMaxStack.Value : VANILLA_CHARACTER_COUNT_MAX_STACK;
+
+			LookingGlassCompat.AddItem(DLC2Content.Items.AttackSpeedPerNearbyAllyOrEnemy, [
+				new("Attack Speed per Nearby Character",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(attackSpeedBase(), attackSpeedStack(), itemCount)),
+				new("Max. Character Count",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Number,
+					itemCount => ItemStacking.Linear(charaCountMaxBase(), charaCountMaxStack(), itemCount)),
+				new("Max. Attack Speed",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(attackSpeedBase(), attackSpeedStack(), itemCount)
+							   * ItemStacking.Linear(charaCountMaxBase(), charaCountMaxStack(), itemCount)),
+			]);
 		}
 
 		protected override void ApplyDescription() {

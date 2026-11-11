@@ -39,13 +39,46 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.moveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.jumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.moveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.moveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float moveSpeedBase() => this.Enabled ? this.moveSpeedBase.Value * 0.01f : VANILLA_MAX_CHARGE_MOVE_SPEED_BASE;
+			float moveSpeedStack() => this.Enabled ? this.moveSpeedStack.Value * 0.01f : 0f;
+
+			float jumpHeightBase() => this.Enabled ? this.jumpHeightBase.Value * 0.01f : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE;
+			float jumpHeightStack() => this.Enabled ? this.jumpHeightStack.Value * 0.01f : 0f;
+
+			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_EXPLOSION_DAMAGE_BASE;
+			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : VANILLA_EXPLOSION_DAMAGE_STACK;
+
+			float maxDistanceBase() => VANILLA_MAX_CHARGE_DISTANCE_BASE;
+			float maxDistanceStack() => VANILLA_MAX_CHARGE_DISTANCE_STACK;
+
+			LookingGlassCompat.AddItem(DLC3Content.Items.JumpDamageStrike, [
+				new("Max. Movement Speed",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(moveSpeedBase(), moveSpeedStack(), itemCount)),
+				new("Max. Jump Height",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(jumpHeightBase(), jumpHeightStack(), itemCount)),
+				new("Discharge Damage",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(damageBase(), damageStack(), itemCount)),
+				new("Max. Discharge Distance",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Meters,
+					itemCount => ItemStacking.Linear(maxDistanceBase(), maxDistanceStack(), itemCount)),
+			]);
 		}
 
 		protected override void ApplyDescription() {
@@ -68,7 +101,7 @@ namespace StackFix.Items.Impl {
 				$"{ItD.Utility($"+{ItD.V(moveSpeedBase)}%{ItD.Stack(moveSpeedStack, "+{0:0.##}%")} movement speed")} " +
 				$"and {ItD.Utility($"+{jumpHeightBase:0}%{ItD.Stack(jumpHeightStack, "+{0:0}%")} jump height")} at 100%. " +
 				$"At {ItD.V(thresBase)}%{ItD.Stack(thresStack, "{0:+0.##;-0.##}%")} charge or higher, jumping triggers an " +
-				$"{ItD.Damage("explosive discharge")} for {ItD.Damage($"+{ItD.V(damageBase)}%{ItD.Stack(damageStack, "+{0:0.##}%")} damage")} " +
+				$"{ItD.Damage("explosive discharge")} for {ItD.Damage($"{ItD.V(damageBase)}%{ItD.Stack(damageStack, "+{0:0.##}%")} damage")} " +
 				$"in a {ItD.Damage($"{ItD.V(thresDistanceBase)}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to " +
 				$"{ItD.Damage($"{ItD.V(maxDistanceBase)}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
 		}

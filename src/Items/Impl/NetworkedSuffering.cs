@@ -35,11 +35,29 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.spreadBase);
-			RiskOfOptionsCompatManager.AddSliderOption(this.spreadStack, new(Prefix: "+"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.spreadBase);
+			RiskOfOptionsCompat.AddSliderOption(this.spreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(Prefix: "+", Suffix: "%"));
+		}
+
+		public override void RegisterLookingGlassStats() {
+			int maxVirusCountBase() => this.Enabled ? this.spreadBase.Value : VANILLA_VIRUS_SPREAD_COUNT_BASE;
+			int maxVirusCountStack() => this.Enabled ? this.spreadStack.Value : VANILLA_VIRUS_SPREAD_COUNT_STACK;
+			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_VIRUS_DAMAGE_BASE;
+			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : 0f;
+
+			LookingGlassCompat.AddItem(DLC3Content.Items.SharedSuffering, [
+				new("Max. Infected Enemies Count",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Number,
+					itemCount => ItemStacking.Linear(maxVirusCountBase(), maxVirusCountStack(), itemCount)),
+				new("Damage Sent to Pool",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(damageBase(), damageStack(), itemCount)),
+			]);
 		}
 
 		protected override void ApplyDescription() {

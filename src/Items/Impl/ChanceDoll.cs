@@ -13,7 +13,10 @@ namespace StackFix.Items.Impl {
 	internal class ChanceDoll: ItemFix {
 		private const int VANILLA_CHANCE_BASE_PERCENT = 40;
 		private const int VANILLA_CHANCE_STACK_PERCENT = 10;
-		private const ItemStacking.Type VANILLA_CHANCE_STACK_TYPE = ItemStacking.Type.Linear;
+		private const float VANILLA_CHANCE_BASE = VANILLA_CHANCE_BASE_PERCENT * 0.01f;
+		private const float VANILLA_CHANCE_STACK = VANILLA_CHANCE_STACK_PERCENT * 0.01f;
+		private const ModSettings.ChanceDollChanceStacking VANILLA_CHANCE_STACK_TYPE
+			= ModSettings.ChanceDollChanceStacking.Linear;
 
 		private ConfigEntry<float> chanceBase;
 		private ConfigEntry<float> chanceStack;
@@ -27,21 +30,43 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.chanceBase, new(Suffix: "%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.chanceStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompatManager.AddChoiceOption(this.chanceStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.chanceBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.chanceStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(this.chanceStackType);
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float chanceBase() => this.Enabled ? this.chanceBase.Value * 0.01f : VANILLA_CHANCE_BASE;
+			float chanceStack() => this.Enabled ? this.chanceStack.Value * 0.01f : VANILLA_CHANCE_STACK;
+			ModSettings.ChanceDollChanceStacking chanceStackType()
+				=> this.Enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE;
+
+			LookingGlassCompat.AddItem(DLC2Content.Items.ExtraShrineItem, [
+				new("Chance",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => chanceStackType() switch {
+						ModSettings.ChanceDollChanceStacking.Linear
+							=> ItemStacking.Linear(chanceBase(), chanceStack(), itemCount),
+
+						ModSettings.ChanceDollChanceStacking.Hyperbolic
+							=> ItemStacking.Hyperbolic(chanceBase(), chanceStack(), itemCount),
+
+						_ => chanceBase(),
+					}),
+			]);
 		}
 
 		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
 			float chanceBasePercent           = enabled ? this.chanceBase.Value : VANILLA_CHANCE_BASE_PERCENT;
 			float chanceStackPercent          = enabled ? this.chanceStack.Value : VANILLA_CHANCE_STACK_PERCENT;
-			ItemStacking.Type chanceStackType = enabled ? ItemStacking.FromEnum(this.chanceStackType.Value) : VANILLA_CHANCE_STACK_TYPE;
+			ItemStacking.Type chanceStackType = ItemStacking.FromEnum(enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE);
 
 			LanguageAPI.AddOverlay("ITEM_EXTRASHRINEITEM_DESC",
 				$"On Shrine of Chance success, {ItD.Utility($"{ItD.V(chanceBasePercent)}%")}" +
-				$"{ItD.Stack(chanceStackPercent, chanceStackType, VANILLA_CHANCE_STACK_TYPE)} chance " +
+				$"{ItD.Stack<ModSettings.ChanceDollChanceStacking>(chanceStackPercent, chanceStackType, VANILLA_CHANCE_STACK_TYPE)} chance " +
 				"to get higher rarity items.");
 		}
 

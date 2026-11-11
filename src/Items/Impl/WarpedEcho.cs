@@ -40,15 +40,67 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionBase, new(Suffix: "%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageReductionStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompatManager.AddChoiceOption(this.damageReductionStackType);
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageSpreadBase);
-			RiskOfOptionsCompatManager.AddSliderOption(this.damageSpreadStack, new(Prefix: "+"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
-			RiskOfOptionsCompatManager.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompatManager.AddChoiceOption(this.cooldownStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.damageReductionBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.damageReductionStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(this.damageReductionStackType);
+			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadBase);
+			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float damageReductionBase() => this.Enabled ? this.damageReductionBase.Value * 0.01f : VANILLA_DAMAGE_REDUCTION_BASE;
+			float damageReductionStack() => this.Enabled ? this.damageReductionStack.Value * 0.01f : 0f;
+			ModSettings.WarpedEchoDamageReductionStacking damageReductionStackType()
+				=> this.Enabled ? this.damageReductionStackType.Value : ModSettings.WarpedEchoDamageReductionStacking.Linear;
+
+			int damageSpreadBase() => this.Enabled ? this.damageSpreadBase.Value : VANILLA_DAMAGE_SPREAD_BASE;
+			int damageSpreadStack() => this.Enabled ? this.damageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
+
+			float cooldownBase() => this.Enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_BASE;
+			float cooldownStack() => this.Enabled ? this.cooldownStack.Value : 0f;
+			ModSettings.WarpedEchoCooldownStacking cooldownStackType()
+				=> this.Enabled ? this.cooldownStackType.Value : ModSettings.WarpedEchoCooldownStacking.Linear;
+
+			LookingGlassCompat.AddItem(DLC2Content.Items.DelayedDamage, [
+				new("Damage Reduction",
+					LookingGlassCompat.StatType.Healing,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => damageReductionStackType() switch {
+						ModSettings.WarpedEchoDamageReductionStacking.Linear
+							=> ItemStacking.Linear(damageReductionBase(), damageReductionStack(), itemCount),
+
+						ModSettings.WarpedEchoDamageReductionStacking.Hyperbolic
+							=> ItemStacking.Hyperbolic(damageReductionBase(), damageReductionStack(), itemCount),
+
+						ModSettings.WarpedEchoDamageReductionStacking.Exponential
+							=> 1f - ItemStacking.Exponential(1f - cooldownBase(), 1f - cooldownStack(), itemCount),
+
+						_ => damageReductionBase(),
+					}),
+				new("Damage Spread Count",
+					LookingGlassCompat.StatType.Healing,
+					LookingGlassCompat.StatUnits.Number,
+					itemCount => ItemStacking.Linear(damageSpreadBase(), damageSpreadStack(), itemCount)),
+				new("Cooldown",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Seconds,
+					itemCount => cooldownBase() * cooldownStackType() switch {
+						ModSettings.WarpedEchoCooldownStacking.Linear
+							=> ItemStacking.Linear(1f, -cooldownStack(), itemCount),
+
+						ModSettings.WarpedEchoCooldownStacking.Reciprocal
+							=> ItemStacking.Reciprocal(0f, cooldownStack(), itemCount),
+
+						ModSettings.WarpedEchoCooldownStacking.Exponential
+							=> ItemStacking.Exponential(1f - cooldownStack(), itemCount - 1),
+
+						_ => 1f,
+					}),
+			]);
 		}
 
 		protected override void ApplyDescription() {

@@ -60,5 +60,7 @@ namespace StackFix.Items {
 		protected abstract void ApplyHooks();
 
 		public abstract void RegisterRiskOfOptionsSettings();
+
+		public abstract void RegisterLookingGlassStats();
 	}
 }

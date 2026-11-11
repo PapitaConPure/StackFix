@@ -6,15 +6,10 @@ using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 
 namespace StackFix.Compat {
-	internal static class RiskOfOptionsCompatManager {
-		private static bool? enabled;
+	internal static class RiskOfOptionsCompat {
+		public const string GUID = "com.rune580.riskofoptions";
 
-		public static bool Enabled {
-			get {
-				enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions");
-				return (bool)enabled;
-			}
-		}
+		public static bool Installed => BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void SetModIcon(UnityEngine.Sprite sprite) {

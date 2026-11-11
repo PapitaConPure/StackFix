@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Configuration;
 using R2API.Utils;
+using RoR2;
 using StackFix.Compat;
 using StackFix.Exceptions;
 using StackFix.Items;
@@ -12,7 +13,8 @@ using System;
 namespace StackFix {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 	[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-	[BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency(RiskOfOptionsCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency(LookingGlassCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 	public sealed class Plugin: BaseUnityPlugin {
 		internal static ConfigEntry<bool> Enabled;
 		internal static ConfigEntry<bool> Megumin;
@@ -34,6 +36,7 @@ namespace StackFix {
 			this.RegisterSettings();
 			this.TryApplyItemFixes();
 			this.TryRegisterRiskOfOptions();
+			this.TryRegisterLookingGlass();
 
 #if DEBUG
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded.");
@@ -69,24 +72,41 @@ namespace StackFix {
 		}
 
 		private void TryRegisterRiskOfOptions() {
-			if(!RiskOfOptionsCompatManager.Enabled)
+			if(!RiskOfOptionsCompat.Installed)
 				return;
 
 			try {
-				RiskOfOptionsCompatManager.SetModDescription(
+				RiskOfOptionsCompat.SetModDescription(
 					"Balances the initial/additional stack behavior of a few items. Configurable.");
-				RiskOfOptionsCompatManager.SetModIcon(ModIcon.Load());
+				RiskOfOptionsCompat.SetModIcon(ModIcon.Load());
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(Enabled);
+				RiskOfOptionsCompat.AddCheckboxOption(Enabled);
 
 				foreach(IItemFix itemFix in this.ItemFixes)
 					if(itemFix.Applied)
 						itemFix.RegisterRiskOfOptionsSettings();
 
-				RiskOfOptionsCompatManager.AddCheckboxOption(Megumin);
-			} catch(Exception exception) {
-				this.Logger.LogWarning($"Could not register Risk of Options settings: {exception}");
+				RiskOfOptionsCompat.AddCheckboxOption(Megumin);
+			} catch(Exception ex) {
+				this.Logger.LogWarning($"Could not register Risk of Options settings: {ex}");
 			}
+		}
+
+		private void TryRegisterLookingGlass() {
+			if(!LookingGlassCompat.Installed)
+				return;
+
+			this.Logger.LogDebug("LookingGlass is installed and support will be initialized when items catalog is ready.");
+			ItemCatalog.availability.CallWhenAvailable(() => {
+				try {
+					this.Logger.LogDebug("Trying to initialize LookingGlass support...");
+					foreach(IItemFix itemFix in this.ItemFixes)
+						if(itemFix.Applied)
+							itemFix.RegisterLookingGlassStats();
+				} catch(Exception ex) {
+					this.Logger.LogWarning($"Could not initialize LookingGlass support: {ex}");
+				}
+			});
 		}
 	}
 }

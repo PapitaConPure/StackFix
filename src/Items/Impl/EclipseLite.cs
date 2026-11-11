@@ -26,21 +26,43 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompatManager.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompatManager.AddSliderOption(this.barrierBase, new(Suffix: "%"));
-			RiskOfOptionsCompatManager.AddSliderOption(this.barrierStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompatManager.AddChoiceOption(this.barrierStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(this.barrierBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.barrierStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(this.barrierStackType);
+		}
+
+		public override void RegisterLookingGlassStats() {
+			float barrierBase() => this.Enabled ? this.barrierBase.Value * 0.01f : VANILLA_BARRIER_BASE;
+			float barrierStack() => this.Enabled ? this.barrierStack.Value * 0.01f : VANILLA_BARRIER_STACK;
+			ModSettings.EclipseLiteBarrierStacking barrierStackType()
+				=> this.Enabled ? this.barrierStackType.Value : ModSettings.EclipseLiteBarrierStacking.Linear;
+
+			LookingGlassCompat.AddItem(DLC3Content.Items.BarrierOnCooldown, [
+				new("Barrier per Cooldown Second",
+					LookingGlassCompat.StatType.Healing,
+					LookingGlassCompat.StatUnits.PercentHealth,
+					itemCount => barrierStackType() switch {
+						ModSettings.EclipseLiteBarrierStacking.Linear
+							=> ItemStacking.Linear(barrierBase(), barrierStack(), itemCount),
+
+						ModSettings.EclipseLiteBarrierStacking.Hyperbolic
+							=> ItemStacking.Hyperbolic(barrierBase(), barrierStack(), itemCount),
+
+						_ => barrierBase(),
+					}),
+			]);
 		}
 
 		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
-			float barrierBase                  = enabled ? this.barrierBase.Value : VANILLA_BARRIER_BASE * 100f;
-			float barrierStack                 = enabled ? this.barrierStack.Value : VANILLA_BARRIER_STACK * 100f;
+			float barrierBasePercent           = enabled ? this.barrierBase.Value : VANILLA_BARRIER_BASE * 100f;
+			float barrierStackPercent          = enabled ? this.barrierStack.Value : VANILLA_BARRIER_STACK * 100f;
 			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(this.barrierStackType.Value) : ItemStacking.Type.Linear;
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
-				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{ItD.V(barrierBase)}%")}" +
-				$"{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)} " +
+				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{ItD.V(barrierBasePercent)}%")}" +
+				$"{ItD.Stack(barrierStackPercent, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)} " +
 				"of your maximum health per second of the skill's base cooldown.");
 		}
 
@@ -90,11 +112,7 @@ namespace StackFix.Items.Impl {
 			};
 		}
 
-		private float NullifyVanillaStackBarrierFactor(float stackBarrierFactor) {
-			if(!this.Enabled)
-				return stackBarrierFactor;
-
-			return 0f;
-		}
+		private float NullifyVanillaStackBarrierFactor(float stackBarrierFactor)
+			=> this.Enabled ? 0f : stackBarrierFactor;
 	}
 }
