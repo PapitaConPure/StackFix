@@ -24,11 +24,12 @@ Some settings determine which formula is used to control how a particular effect
 | Name                    | Type    | Default | Vanilla | Description |
 |-------------------------|---------|---------|---------|-------------|
 | Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
-| Fix Bolstering Lantern  | Toggle  | On      | Off     | Enable [Bolstering Lantern fixes](#item-bolstering-lantern). |
-| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable [Eclipse Lite fixes](#item-eclipse-lite). |
-| Fix Warped Echo         | Toggle  | On      | Off     | Enable [Warped Echo fixes](#item-warped-echo). |
-| Fix Faraday Spur        | Toggle  | On      | Off     | Enable [Faraday Spur fixes](#item-faraday-spur). |
-| Fix Networked Suffering | Toggle  | On      | Off     | Enable [Networked Suffering fixes](#item-networked-suffering). |
+| Fix Bolstering Lantern  | Toggle  | On      | Off     | Enable Bolstering Lantern fixes. |
+| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
+| Fix Warped Echo         | Toggle  | On      | Off     | Enable Warped Echo fixes. |
+| Fix Chance Doll         | Toggle  | On      | Off     | Enable Chance Doll fixes. |
+| Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
+| Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
 
 General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
 
@@ -66,6 +67,17 @@ If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stackin
 | Cooldown Reduction Stacking Type | Choice     | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
 
 With default settings, Warped Echo starts with a bit less damage absorption than vanilla and loses its spread count stacking in favor of stacking both damage absorption and cooldown reduction, which is quite the step up.
+
+### Item: Chance Doll
+| Name                 | Type    | Default    | Vanilla | Description |
+|----------------------|---------|------------|---------|-------------|
+| Base Chance          | Percent | `25%`      | `40%`   | Initial improved Shrine of Chance reward chance. |
+| Chance per Stack     | Percent | `+25%`     | `+10%`  | Improved Shrine of Chance reward chance per stack (*configurable formula*). |
+| Chance Stacking Type | Choice  | Hyperbolic | Linear  | Determines how "Chance per Stack" scales with each additional stack. |
+
+With default settings, Chance Doll starts out at 20% (because of how **Hyperbolic** scaling works), approaches the vanilla value stacking curve between 2 and 3 stacks, and doesn't keep up with vanilla scaling afterwards. At 7 stacks, vanilla reaches a 100% chance for an improved reward. Meanwhile, at 10 stacks, this default fix sits at ~71% chance (+1.9% next stack).
+
+This is a decently sized nerf, justified by the fact that stacking more than 7 Chance Dolls is not useless and that the initial effect doesn't yield 4 times more value than every subsequent stack.
 
 ### Item: Faraday Spur
 | Name                     | Type    | Default | Vanilla | Description |
