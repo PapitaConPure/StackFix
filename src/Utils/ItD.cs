@@ -1,41 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace StackFix.Utils {
-	internal class ItD(params FormattableString[] desc) {
-		//Cute thing to avoid the current device's localization settings
-		private readonly FormattableString[] desc = desc;
-		public static implicit operator string(ItD itd) => string.Join("", itd.desc.Select(FormattableString.Invariant));
+	internal static class ItD {
+		public const string FORMAT_NUMBER_DEFAULT      = "{0:0.##}";
+		public const string FORMAT_NUMBER_INCR_DEFAULT = "{0:+0.##;-0.##}";
 
-		public static string Damage(string desc)
+		public static string Damage(object desc)
 			=> $"<style=cIsDamage>{desc}</style>";
 
-		public static string Healing(string desc)
+		public static string Healing(object desc)
 			=> $"<style=cIsHealing>{desc}</style>";
-		public static string ItemGreen(string desc)
+		public static string ItemGreen(object desc)
 			=> $"<style=cIsHealing>{desc}</style>";
 
-		public static string Utility(string desc)
+		public static string Utility(object desc)
 			=> $"<style=cIsUtility>{desc}</style>";
 
-		public static string Health(string desc)
+		public static string Health(object desc)
 			=> $"<style=cIsHealth>{desc}</style>";
 
-		public static string Stack(float value, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+		public static string Stack(float value, string format = FORMAT_NUMBER_INCR_DEFAULT, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(format, value)} per stack)</style>";
+				: $" <style=cStack>({FormatValue(format, value)} per stack)</style>";
 
-		public static string Stack(float value, ItemStacking.Type type, string format = "{0:+0;-0}", ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+		public static string Stack(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({string.Format(format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
+				: $" <style=cStack>({FormatValue(format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
 				  $"{(type == vanillaType ? "" : $", {type.ToString().ToLower()}")}" +
 				  $")</style>";
+		public static string Stack(float value, ItemStacking.Type type, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+			=> Stack(value, type, FORMAT_NUMBER_INCR_DEFAULT, vanillaType, hideThreshold);
 
-		public static string Stack(string desc, ItemStacking.Type type, ItemStacking.Type? vanillaType = null)
-			=> $"<style=cStack>{desc}{(type == vanillaType ? "" : $" [{type}]")}</style>";
+		public static string Stack(string desc)
+			=> $"<style=cStack>{desc}</style>";
 
 		public static string StackingType(ItemStacking.Type type)
 			=> $"<style={type switch {
@@ -45,51 +47,57 @@ namespace StackFix.Utils {
 				_ => "cSub",
 			}}>[{type}]</style>";
 
-		public static string Mono(string desc)
+		public static string Mono(object desc)
 			=> $"<style=cMono>{desc}</style>";
 
-		public static string Death(string desc)
+		public static string Death(object desc)
 			=> $"<style=cDeath>{desc}</style>";
-		public static string Danger(string desc)
+		public static string Danger(object desc)
 			=> $"<style=cDeath>{desc}</style>";
-		public static string ItemRed(string desc)
+		public static string ItemRed(object desc)
 			=> $"<style=cDeath>{desc}</style>";
 
-		public static string UserSetting(string desc)
+		public static string UserSetting(object desc)
 			=> $"<style=cUserSetting>{desc}</style>";
 
-		public static string Artifact(string desc)
+		public static string Artifact(object desc)
 			=> $"<style=cArtifact>{desc}</style>";
 
-		public static string Sub(string desc)
+		public static string Sub(object desc)
 			=> $"<style=cSub>{desc}</style>";
 
-		public static string Event(string desc)
+		public static string Event(object desc)
 			=> $"<style=cEvent>{desc}</style>";
 
-		public static string WorldEvent(string desc)
+		public static string WorldEvent(object desc)
 			=> $"<style=cWorldEvent>{desc}</style>";
 
-		public static string KeywordName(string desc)
+		public static string KeywordName(object desc)
 			=> $"<style=cKeywordName>{desc}</style>";
 
-		public static string Shrine(string desc)
+		public static string Shrine(object desc)
 			=> $"<style=cShrine>{desc}</style>";
-		public static string ItemYellow(string desc)
+		public static string ItemYellow(object desc)
 			=> $"<style=cShrine>{desc}</style>";
 
-		public static string Void(string desc)
+		public static string Void(object desc)
 			=> $"<style=cIsVoid>{desc}</style>";
-		public static string ItemVoid(string desc)
+		public static string ItemVoid(object desc)
 			=> $"<style=cIsVoid>{desc}</style>";
 
-		public static string ItemsWGRY(float white, float green, float red, float yellow, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+		public static string V<T>(T value, string format = FORMAT_NUMBER_DEFAULT) where T : IComparable
+			=> FormatValue(format, value);
+
+		private static string FormatValue(string format, object value)
+			=> string.Format(CultureInfo.InvariantCulture, format, value);
+
+		public static string ItemsWGRY(float white, float green, float red, float yellow, string format = FORMAT_NUMBER_DEFAULT, float hideThreshold = 0.1f)
 			=> string.Join("/", FilterAndFormatValues([white, green, red, yellow], format, hideThreshold));
-		public static string ItemsWGR(float white, float green, float red, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+		public static string ItemsWGR(float white, float green, float red, string format = FORMAT_NUMBER_DEFAULT, float hideThreshold = 0.1f)
 			=> string.Join("/", FilterAndFormatValues([white, green, red], format, hideThreshold));
-		public static string ItemsGRY(float green, float red, float yellow, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+		public static string ItemsGRY(float green, float red, float yellow, string format = FORMAT_NUMBER_DEFAULT, float hideThreshold = 0.1f)
 			=> string.Join("/", FilterAndFormatValues([green, red, yellow], format, hideThreshold));
-		public static string ItemsGR(float green, float red, string format = "{0:+0;-0}", float hideThreshold = 0.1f)
+		public static string ItemsGR(float green, float red, string format = FORMAT_NUMBER_DEFAULT, float hideThreshold = 0.1f)
 			=> string.Join("/", FilterAndFormatValues([green, red], format, hideThreshold));
 
 		private static IEnumerable<string> FilterAndFormatValues(float[] values, string format, float hideThreshold)

@@ -15,6 +15,7 @@ namespace StackFix.Items.Impl {
 		private const float VANILLA_ATTACK_SPEED_STACK = 0.035f;
 		private const int VANILLA_CHARACTER_COUNT_MAX_BASE = 3;
 		private const int VANILLA_CHARACTER_COUNT_MAX_STACK = 1;
+		private const int VANILLA_RANGE_BASE = 20;
 
 		private ConfigEntry<float> attackSpeedBase;
 		private ConfigEntry<float> attackSpeedStack;
@@ -43,10 +44,11 @@ namespace StackFix.Items.Impl {
 			float attackSpeedStack = enabled ? this.attackSpeedStack.Value : VANILLA_ATTACK_SPEED_STACK * 100f;
 			int charaCountMaxBase  = enabled ? this.characterCountMaxBase.Value : VANILLA_CHARACTER_COUNT_MAX_BASE;
 			int charaCountMaxStack = enabled ? this.characterCountMaxStack.Value : VANILLA_CHARACTER_COUNT_MAX_STACK;
+			float rangeBase = VANILLA_RANGE_BASE;
 
-			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC", new ItD(
-				$"Increase your {ItD.Damage("attack speed")} by {ItD.Damage($"{attackSpeedBase:0.##}%")}{ItD.Stack(attackSpeedStack, "+{0:0.##}%")} ",
-				$"for up to {ItD.Utility($"{charaCountMaxBase}")}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility("20")} meters."));
+			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC",
+				$"Increase your {ItD.Damage("attack speed")} by {ItD.Damage($"{ItD.V(attackSpeedBase)}%")}{ItD.Stack(attackSpeedStack, "+{0:0.##}%")} " +
+				$"for up to {ItD.Utility(charaCountMaxBase)}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility(ItD.V(rangeBase))} meters.");
 		}
 
 		protected override void ApplyHooks() {

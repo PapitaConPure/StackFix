@@ -39,10 +39,10 @@ namespace StackFix.Items.Impl {
 			float chanceStackPercent          = enabled ? this.chanceStack.Value : VANILLA_CHANCE_STACK_PERCENT;
 			ItemStacking.Type chanceStackType = enabled ? ItemStacking.FromEnum(this.chanceStackType.Value) : VANILLA_CHANCE_STACK_TYPE;
 
-			LanguageAPI.AddOverlay("ITEM_EXTRASHRINEITEM_DESC", new ItD(
-				$"On Shrine of Chance success, {ItD.Utility($"{chanceBasePercent:0.##}%")}",
-				$"{ItD.Stack(chanceStackPercent, chanceStackType, "+{0:0.##}%", VANILLA_CHANCE_STACK_TYPE)} chance to get ",
-				$"higher rarity items."));
+			LanguageAPI.AddOverlay("ITEM_EXTRASHRINEITEM_DESC",
+				$"On Shrine of Chance success, {ItD.Utility($"{ItD.V(chanceBasePercent)}%")}" +
+				$"{ItD.Stack(chanceStackPercent, chanceStackType, VANILLA_CHANCE_STACK_TYPE)} chance " +
+				"to get higher rarity items.");
 		}
 
 		protected override void ApplyHooks() {

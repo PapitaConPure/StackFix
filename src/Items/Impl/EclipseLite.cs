@@ -38,10 +38,10 @@ namespace StackFix.Items.Impl {
 			float barrierStack                 = enabled ? this.barrierStack.Value : VANILLA_BARRIER_STACK * 100f;
 			ItemStacking.Type barrierStackType = enabled ? ItemStacking.FromEnum(this.barrierStackType.Value) : ItemStacking.Type.Linear;
 
-			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC", new ItD(
-				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{barrierBase:0.##}%")}",
-				$"{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)} ",
-				$"of your maximum health per second of the skill's base cooldown."));
+			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC",
+				$"When a skill comes off cooldown, gain a {ItD.Damage("temporary barrier")} for {ItD.Healing($"{ItD.V(barrierBase)}%")}" +
+				$"{ItD.Stack(barrierStack, barrierStackType, "{0:+0.##;-0.##}%", ItemStacking.Type.Linear)} " +
+				"of your maximum health per second of the skill's base cooldown.");
 		}
 
 		protected override void ApplyHooks() {

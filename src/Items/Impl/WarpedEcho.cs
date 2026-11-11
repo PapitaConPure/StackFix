@@ -62,11 +62,11 @@ namespace StackFix.Items.Impl {
 			float cooldownStack                        = enabled ? this.cooldownStack.Value : 0f;
 			ItemStacking.Type cooldownStackType        = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
 
-			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC", new ItD(
-				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%")}",
-				$"{ItD.Stack(damageReductionStack, damageReductionStackType, "{0:+0.##;-0.##}%")} and {ItD.Healing("spread")} ",
-				$"into {ItD.Utility($"{damageSpreadBase}{ItD.Stack(damageSpreadStack)} hits")}. All echoed damage is {ItD.Utility("non-lethal")} except for the ",
-				$"final hit. Recharges every {ItD.Utility($"{cooldownBase:0.#}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:+0.##;-0.##}%")}."));
+			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC",
+				$"The next source of damage is {ItD.Healing("reduced")} by {ItD.Healing($"{damageReductionBase:0.##}%")}" +
+				$"{ItD.Stack(damageReductionStack, damageReductionStackType, "+{0:0.##}%")} and {ItD.Healing("spread")} " +
+				$"into {ItD.Utility($"{damageSpreadBase}{ItD.Stack(damageSpreadStack)} hits")}. All echoed damage is {ItD.Utility("non-lethal")} except for " +
+				$"the final hit. Recharges every {ItD.Utility($"{cooldownBase:0.#}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:+0.##;-0.##}%")}.");
 		}
 
 		protected override void ApplyHooks() {
