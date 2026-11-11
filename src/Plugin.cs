@@ -23,6 +23,7 @@ namespace StackFix {
 			new EclipseLite(),
 			new WarpedEcho(),
 			//Green
+			new ChanceDoll(),
 			new FaradaySpur(),
 			//Red
 			new NetworkedSuffering(),
