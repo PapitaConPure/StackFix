@@ -22,22 +22,41 @@ namespace StackFix.Utils {
 		public static string Health(object desc)
 			=> $"<style=cIsHealth>{desc}</style>";
 
+		public static string Stack(string desc)
+			=> $"<style=cStack>{desc}</style>";
+
 		public static string Stack(float value, string format = FORMAT_NUMBER_INCR_DEFAULT, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
 				: $" <style=cStack>({FormatValue(format, value)} per stack)</style>";
 
-		public static string Stack(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+		public static string Stack<TVanilla>(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, TVanilla? vanillaType = null, float hideThreshold = 0.1f)
+			where TVanilla : struct, Enum
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
 				: $" <style=cStack>({FormatValue(format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
-				  $"{(type == vanillaType ? "" : $", {type.ToString().ToLower()}")}" +
+				  $"{(IsVanillaType(type, vanillaType) ? "" : $", {type.ToString().ToLower()}")}" +
 				  $")</style>";
-		public static string Stack(float value, ItemStacking.Type type, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+
+		public static string Stack(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+			=> Stack<ItemStacking.Type>(value, type, format, vanillaType, hideThreshold);
+
+		public static string Stack<TVanilla>(float value, ItemStacking.Type type, TVanilla? vanillaType = null, float hideThreshold = 0.1f)
+			where TVanilla : struct, Enum
 			=> Stack(value, type, FORMAT_NUMBER_INCR_DEFAULT, vanillaType, hideThreshold);
 
-		public static string Stack(string desc)
-			=> $"<style=cStack>{desc}</style>";
+		public static string Stack(float value, ItemStacking.Type type, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
+			=> Stack<ItemStacking.Type>(value, type, vanillaType, hideThreshold);
+
+		private static bool IsVanillaType<TVanilla>(ItemStacking.Type type, TVanilla? vanillaType) where TVanilla: struct, Enum {
+			if(vanillaType is ItemStacking.Type itemStackingVanillaType)
+				return type == itemStackingVanillaType;
+
+			if(vanillaType is TVanilla vt)
+				return type == ItemStacking.FromEnum(vt);
+
+			return false;
+		}
 
 		public static string StackingType(ItemStacking.Type type)
 			=> $"<style={type switch {
