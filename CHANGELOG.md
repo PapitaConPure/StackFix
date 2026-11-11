@@ -1,3 +1,12 @@
+### v2.0.0
+* <span style="color:#ff6173">[Breaking]</span> Removed RiskOfOptions integration build option (RiskOfOptions integration is now always included - still a soft dependency, though).
+* Added Chance Doll item fix.
+* Warped Echo damage reduction **Reciprocal** scaling type removed.
+* Warped Echo damage reduction **Hyperbolic** scaling type added and set as the default.
+* Fixed Warped Echo incorrectly using the reciprocal scaling formula when "Damage Reduction Stacking Type" is **Exponential**.
+* Refactoring and reorganization never end.
+* Corrected a few descriptions for real now.
+
 ### v1.3.0
 * Added Bolstering Lantern item fix.
 * If there's a problem matching the original code of one item, only that item will fail.
