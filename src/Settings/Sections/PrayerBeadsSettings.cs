@@ -13,7 +13,7 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> PrayerBeadsStatsBase = new(
 			section: "Item: Prayer Beads",
-			name: "Base Extra Gains",
+			name: "Base Extra Stats",
 			description: Paragraph(
 				"Stored extra stat gains percentage for the first stack.",
 				"Vanilla value: 20"),
@@ -22,7 +22,7 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> PrayerBeadsStatsStack = new(
 			section: "Item: Prayer Beads",
-			name: "Extra Gains per Stack",
+			name: "Extra Stats per Stack",
 			description: Paragraph(
 				"Additional stored extra stat gains percentage for every subsequent stack.",
 				"Vanilla value: 5"),
