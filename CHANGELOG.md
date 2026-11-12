@@ -1,3 +1,6 @@
+### v2.1.1
+* Fixed exception when LookingGlass is not installed due to a silly oversight.
+
 ### v2.1.0
 * Added Prayer Beads item fix.
 * Introduced LookingGlass support!
