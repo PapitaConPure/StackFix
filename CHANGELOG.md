@@ -1,10 +1,15 @@
+### v2.1.0
+* Added Prayer Beads item fix.
+* Introduced LookingGlass support!
+* Fixed Faraday Spur description incorrectly using a plus sign in: "Trigger an explosive discharge for +X% damage".
+* Improved item fix exception handling.
+* Actually ZIP the LICENSE file.
+
 ### v2.0.0
-* <span style="color:#ff6173">[Breaking]</span> Removed RiskOfOptions integration build option (RiskOfOptions integration is now always included - still a soft dependency, though).
+* <span style="color:#ff6173">[Breaking]</span> Removed RiskOfOptions integration build option (RiskOfOptions integration is now always included - do not confuse with dropped support).
 * Added Chance Doll item fix.
-* Warped Echo damage reduction **Reciprocal** scaling type removed.
-* Warped Echo damage reduction **Hyperbolic** scaling type added and set as the default.
-* Fixed Warped Echo incorrectly using the reciprocal scaling formula when "Damage Reduction Stacking Type" is **Exponential**.
-* Refactoring and reorganization never end.
+* Warped Echo damage reduction **Reciprocal** scaling type removed in favor of **Hyperbolic**, which is the new default choice.
+* Fixed Warped Echo incorrectly using the reciprocal scaling formula when "Damage Reduction Stacking Type" is set to **Exponential**.
 * Corrected a few descriptions for real now.
 
 ### v1.3.0
