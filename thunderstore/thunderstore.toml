@@ -7,7 +7,7 @@ repository = "https://thunderstore.io"
 [package]
 namespace = "PapitaConPure"
 name = "StackFix"
-description = "Balances the initial/additional stack behavior of a few items. Configurable."
+description = "Balances the initial effect and stacking behavior of a few items to incentivize stacking and nerf upfront power spikes. Fully configurable."
 websiteUrl = "https://github.com/PapitaConPure/StackFix"
 containsNsfwContent = false
 
