@@ -75,6 +75,10 @@ namespace StackFix {
 			if(!RiskOfOptionsCompat.Installed)
 				return;
 
+#if DEBUG
+			this.Logger.LogDebug("Risk Of Options is installed. Trying to initialize support...");
+#endif
+
 			try {
 				RiskOfOptionsCompat.SetModDescription(
 					"Balances the initial/additional stack behavior of a few items. Configurable.");
@@ -87,8 +91,10 @@ namespace StackFix {
 						itemFix.RegisterRiskOfOptionsSettings();
 
 				RiskOfOptionsCompat.AddCheckboxOption(Megumin);
+
+				this.Logger.LogDebug("Risk Of Options support initialized!");
 			} catch(Exception ex) {
-				this.Logger.LogWarning($"Could not register Risk of Options settings: {ex}");
+				this.Logger.LogWarning($"Could not register Risk Of Options settings: {ex}");
 			}
 		}
 
@@ -109,6 +115,8 @@ namespace StackFix {
 					foreach(IItemFix itemFix in this.ItemFixes)
 						if(itemFix.Applied)
 							itemFix.RegisterLookingGlassStats();
+
+					this.Logger.LogDebug("LookingGlass support initialized!");
 				} catch(Exception ex) {
 					this.Logger.LogWarning($"Could not initialize LookingGlass support: {ex}");
 				}
