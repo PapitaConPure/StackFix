@@ -91,7 +91,7 @@ namespace StackFix.Compat {
 		/// <param name="stats">The display specifier for each stat.</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddItem(ItemDef itemDef, params StatEntry<Func<int, float>>[] stats) {
-			ItemStatsDef itemStatsDef = Create(stats);
+			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
 			itemStatsDef.calculateValuesFlat = itemCount => [.. stats.Select(l => l.ValueFn(itemCount))];
 			Register(itemDef, itemStatsDef);
 		}
@@ -103,7 +103,7 @@ namespace StackFix.Compat {
 		/// <param name="stats">The display specifier for each stat.</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddProcChanceItem(ItemDef itemDef, params StatEntry<Func<float, int, float>>[] stats) {
-			ItemStatsDef itemStatsDef = Create(stats);
+			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
 			itemStatsDef.hasChance = true;
 			itemStatsDef.calculateValuesNew = (luck, itemCount, procChance) => [.. stats.Select(l => l.ValueFn(luck, itemCount))];
 			Register(itemDef, itemStatsDef);
@@ -116,26 +116,13 @@ namespace StackFix.Compat {
 		/// <param name="stats">The display specifier for each stat.</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddMasterItem(ItemDef itemDef, params StatEntry<Func<CharacterMaster, int, float>>[] stats) {
-			ItemStatsDef itemStatsDef = Create(stats);
+			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
 			itemStatsDef.calculateValues = (master, itemCount) => [.. stats.Select(l => l.ValueFn(master, itemCount))];
 			Register(itemDef, itemStatsDef);
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-		private static ItemStatsDef Create<TFunc>(StatEntry<TFunc>[] stats) where TFunc : Delegate {
-			ItemStatsDef itemStatsDef = new();
-
-			foreach(StatEntry<TFunc> entry in stats) {
-				itemStatsDef.descriptions.Add($"{entry.Label}: ");
-				itemStatsDef.valueTypes.Add(typeMap[entry.Type]);
-				itemStatsDef.measurementUnits.Add(unitMap[entry.Units]);
-			}
-
-			return itemStatsDef;
-		}
-
-		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-		private static void Register(ItemDef itemDef, ItemStatsDef itemStatsDef) {
+		public static void Register(ItemDef itemDef, ItemStatsDef itemStatsDef) {
 			if(!itemDef || itemDef.itemIndex == ItemIndex.None)
 				return;
 
@@ -143,20 +130,35 @@ namespace StackFix.Compat {
 			ItemDefinitions.allItemDefinitions[itemIndex] = itemStatsDef;
 		}
 
-		private static readonly Dictionary<StatType, ItemStatsDef.ValueType> typeMap =
-			typeof(StatType)
-				.GetEnumValues()
-				.OfType<StatType>()
-				.ToDictionary(
-					t => t,
-					EnumUtils.EnumToEnum<StatType, ItemStatsDef.ValueType>);
+		private static class InnerStatsManager {
+			[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+			public static ItemStatsDef Create<TFunc>(StatEntry<TFunc>[] stats) where TFunc : Delegate {
+				ItemStatsDef itemStatsDef = new();
 
-		private static readonly Dictionary<StatUnits, ItemStatsDef.MeasurementUnits> unitMap =
-			typeof(StatUnits)
-				.GetEnumValues()
-				.OfType<StatUnits>()
-				.ToDictionary(
-					t => t,
-					EnumUtils.EnumToEnum<StatUnits, ItemStatsDef.MeasurementUnits>);
+				foreach(StatEntry<TFunc> entry in stats) {
+					itemStatsDef.descriptions.Add($"{entry.Label}: ");
+					itemStatsDef.valueTypes.Add(typeMap[entry.Type]);
+					itemStatsDef.measurementUnits.Add(unitMap[entry.Units]);
+				}
+
+				return itemStatsDef;
+			}
+
+			private static readonly Dictionary<StatType, ItemStatsDef.ValueType> typeMap =
+				typeof(StatType)
+					.GetEnumValues()
+					.OfType<StatType>()
+					.ToDictionary(
+						t => t,
+						EnumUtils.EnumToEnum<StatType, ItemStatsDef.ValueType>);
+
+			private static readonly Dictionary<StatUnits, ItemStatsDef.MeasurementUnits> unitMap =
+				typeof(StatUnits)
+					.GetEnumValues()
+					.OfType<StatUnits>()
+					.ToDictionary(
+						t => t,
+						EnumUtils.EnumToEnum<StatUnits, ItemStatsDef.MeasurementUnits>);
+		}
 	}
 }
