@@ -96,10 +96,16 @@ namespace StackFix {
 			if(!LookingGlassCompat.Installed)
 				return;
 
+#if DEBUG
 			this.Logger.LogDebug("LookingGlass is installed and support will be initialized when items catalog is ready.");
+#endif
+
 			ItemCatalog.availability.CallWhenAvailable(() => {
 				try {
+#if DEBUG
 					this.Logger.LogDebug("Trying to initialize LookingGlass support...");
+#endif
+
 					foreach(IItemFix itemFix in this.ItemFixes)
 						if(itemFix.Applied)
 							itemFix.RegisterLookingGlassStats();
