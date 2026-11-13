@@ -61,7 +61,7 @@ namespace StackFix.Items.Impl {
 			int damageSpreadStack() => this.Enabled ? this.damageSpreadStack.Value : VANILLA_DAMAGE_SPREAD_STACK;
 
 			float cooldownBase() => this.Enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_BASE;
-			float cooldownStack() => this.Enabled ? this.cooldownStack.Value : 0f;
+			float cooldownStack() => this.Enabled ? this.cooldownStack.Value * 0.01f : 0f;
 			ModSettings.WarpedEchoCooldownStacking cooldownStackType()
 				=> this.Enabled ? this.cooldownStackType.Value : ModSettings.WarpedEchoCooldownStacking.Linear;
 
