@@ -1,3 +1,7 @@
+### v2.1.2
+* Fixed Warped Echo cooldown stat display through LookingGlass.
+* Added to some more Thunderstore categories.
+
 ### v2.1.1
 * Fixed exception when LookingGlass is not installed due to a silly oversight.
 
