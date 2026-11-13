@@ -86,10 +86,10 @@ namespace StackFix.Items.Impl {
 			MethodInfo getter = (property?.GetGetMethod(nonPublic: true))
 				?? throw new MissingMethodException(typeof(SharedSufferingItemBehaviour).FullName, "get_currentMax");
 
-			this.currentMaxHook = new ILHook(getter, this.CurrentMax);
+			this.currentMaxHook = new ILHook(getter, this.SharedSufferingItemBehaviour_CurrentMax);
 		}
 
-		private void CurrentMax(ILContext il) {
+		private void SharedSufferingItemBehaviour_CurrentMax(ILContext il) {
 			il.Body.Instructions.Clear();
 
 			ILCursor cursor = new(il);
