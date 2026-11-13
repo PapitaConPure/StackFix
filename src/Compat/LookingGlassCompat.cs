@@ -88,7 +88,7 @@ namespace StackFix.Compat {
 		/// Values that only depend on the stack count.
 		/// </summary>
 		/// <param name="itemDef">The item definition.</param>
-		/// <param name="stats">The display specifier for each stat.</param>
+		/// <param name="stats">The display specifier for each stat. ValueFn takes (int itemCount).</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddItem(ItemDef itemDef, params StatEntry<Func<int, float>>[] stats) {
 			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
@@ -100,7 +100,7 @@ namespace StackFix.Compat {
 		/// Values that include a proc chance, which LookingGlass should show adjusted for luck.
 		/// </summary>
 		/// <param name="itemDef">The item definition.</param>
-		/// <param name="stats">The display specifier for each stat.</param>
+		/// <param name="stats">The display specifier for each stat. ValueFn takes (float luck, int itemCount).</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddProcChanceItem(ItemDef itemDef, params StatEntry<Func<float, int, float>>[] stats) {
 			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
@@ -113,7 +113,7 @@ namespace StackFix.Compat {
 		/// Values that depend on the holder's other items. master can be null (e.g. in the logbook).
 		/// </summary>
 		/// <param name="itemDef">The item definition.</param>
-		/// <param name="stats">The display specifier for each stat.</param>
+		/// <param name="stats">The display specifier for each stat. ValueFn takes (CharacterMaster master, int itemCount).</param>
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddMasterItem(ItemDef itemDef, params StatEntry<Func<CharacterMaster, int, float>>[] stats) {
 			ItemStatsDef itemStatsDef = InnerStatsManager.Create(stats);
