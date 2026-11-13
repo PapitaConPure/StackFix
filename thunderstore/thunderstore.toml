@@ -50,4 +50,4 @@ target = "/"
 communities = [ "riskofrain2" ]
 
 [publish.categories]
-riskofrain2 = [ "server-side", "tweaks", "mods", "seekers of the storm update", "alloyed collective" ]
+riskofrain2 = [ "server-side", "tweaks", "mods", "sots", "ac" ]
