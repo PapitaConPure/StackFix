@@ -114,18 +114,16 @@ namespace StackFix.Items.Impl {
 		private void CharacterBody_RecalculateStats(ILContext il) {
 			ILCursor cursor = new(il);
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(
-				nameof(JumpDamageStrikeBodyBehavior.MoveSpeedVelocityPerCharge)
-			)))
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(nameof(JumpDamageStrikeBodyBehavior.MoveSpeedVelocityPerCharge))))
 				throw new ILSeekException(il, "MoveSpeedVelocityPerCharge", nameof(CharacterBody.RecalculateStats));
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyMoveSpeedPerCharge);
 
 			cursor.Index = 0;
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(
-				nameof(JumpDamageStrikeBodyBehavior.JumpVelocityPerCharge)
-			)))
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld<JumpDamageStrikeBodyBehavior>(nameof(JumpDamageStrikeBodyBehavior.JumpVelocityPerCharge))))
 				throw new ILSeekException(il, "JumpVelocityPerCharge", nameof(CharacterBody.RecalculateStats));
 
 			cursor.Emit(OpCodes.Ldarg_0);
