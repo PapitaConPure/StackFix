@@ -1,3 +1,7 @@
+### v2.1.3
+* Fixed Chance Doll's chance stat display through LookingGlass not taking luck into account.
+* Improved mod description in Thunderstore/Risk Of Options
+
 ### v2.1.2
 * Fixed Warped Echo cooldown stat display through LookingGlass.
 * Added to some more Thunderstore categories.
@@ -13,7 +17,7 @@
 * Actually ZIP the LICENSE file.
 
 ### v2.0.0
-* <span style="color:#ff6173">[Breaking]</span> Removed RiskOfOptions integration build option (RiskOfOptions integration is now always included - do not confuse with dropped support).
+* <span style="color:#ff6173">[Breaking]</span> Removed RiskOfOptions integration build option (Risk Of Options integration is now always included - DO NOT CONFUSE with dropped support).
 * Added Chance Doll item fix.
 * Warped Echo damage reduction **Reciprocal** scaling type removed in favor of **Hyperbolic**, which is the new default choice.
 * Fixed Warped Echo incorrectly using the reciprocal scaling formula when "Damage Reduction Stacking Type" is set to **Exponential**.
@@ -27,7 +31,7 @@
 
 ### v1.2.0
 * Added Warped Echo item fix.
-* Improved Risk of Options stack settings display.
+* Improved Risk Of Options stack settings display.
 * "(...) Stacking Type" entries now only show choices that make sense.
 
 ### v1.1.0
