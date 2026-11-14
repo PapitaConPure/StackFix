@@ -19,7 +19,9 @@ This is a summary of how the mod affects items with default settings.
 * There's more planned, but that's it for now...
 
 ## Configuration
-Some settings determine which formula is used to control how a particular effect scales per stack. These are available choices:
+There's a section for each item fix. I invite you to carefully inspect the differences between the default and vanilla values for each fix, as it'll give you a good insight on what to change whenever you feel something's off. If you completely disagree with one or more fixes, you can turn them off individually.
+
+Some settings determine which formula is used to control how a particular effect scales per stack. These are the available choices:
 * **Linear**: effect scales by a fixed amount per stack.
 * **Hyperbolic**: effect scales with diminishing returns per stack, approaching a limit.
 * **Reciprocal**: effect decreases proportionally per stack.
