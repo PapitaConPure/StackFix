@@ -42,19 +42,21 @@ namespace StackFix.Items.Impl {
 			ModSettings.ChanceDollChanceStacking chanceStackType()
 				=> this.Enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE;
 
-			LookingGlassCompat.AddItem(DLC2Content.Items.ExtraShrineItem, [
+			LookingGlassCompat.AddProcChanceItem(DLC2Content.Items.ExtraShrineItem, [
 				new("Chance",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
-					itemCount => chanceStackType() switch {
-						ModSettings.ChanceDollChanceStacking.Linear
-							=> ItemStacking.Linear(chanceBase(), chanceStack(), itemCount),
+					(luck, itemCount) => RoR2Utils.ChanceWithLuck(
+						chanceStackType() switch {
+							ModSettings.ChanceDollChanceStacking.Linear
+								=> ItemStacking.Linear(chanceBase(), chanceStack(), itemCount),
 
-						ModSettings.ChanceDollChanceStacking.Hyperbolic
-							=> ItemStacking.Hyperbolic(chanceBase(), chanceStack(), itemCount),
+							ModSettings.ChanceDollChanceStacking.Hyperbolic
+								=> ItemStacking.Hyperbolic(chanceBase(), chanceStack(), itemCount),
 
-						_ => chanceBase(),
-					}),
+							_ => chanceBase(),
+						},
+						luck)),
 			]);
 		}
 
@@ -82,16 +84,16 @@ namespace StackFix.Items.Impl {
 				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.ExtraShrineItem)),
 				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
 				instr => instr.MatchStloc(out itemCountEffectiveLocalIndex)))
-				throw new ILSeekException(il, "itemCountEffective assignment", "ShrineChanceBehavior.AddShrineStack");
+				throw new ILSeekException(il, "itemCountEffective assignment", nameof(ShrineChanceBehavior.AddShrineStack));
 
 			if(!cursor.TryGotoNext(MoveType.Before,
 				instr => instr.MatchLdloc(out _),
 				instr => instr.MatchCallOrCallvirt(typeof(CharacterBody), "get_master"),
 				instr => instr.MatchCallOrCallvirt(typeof(Util).FullName, nameof(Util.CheckRoll))))
-				throw new ILSeekException(il, "CheckRoll call", "ShrineChanceBehavior.AddShrineStack");
+				throw new ILSeekException(il, "CheckRoll call", nameof(ShrineChanceBehavior.AddShrineStack));
 
 			if(!cursor.TryGotoPrev(MoveType.After, instr => instr.MatchConvR4()))
-				throw new ILSeekException(il, "jackpot chance f32 conversion", "ShrineChanceBehavior.AddShrineStack");
+				throw new ILSeekException(il, "jackpot chance f32 conversion", nameof(ShrineChanceBehavior.AddShrineStack));
 
 			cursor.Emit(OpCodes.Ldloc, itemCountEffectiveLocalIndex);
 			cursor.EmitDelegate(this.ModifyJackpotChancePercent);
