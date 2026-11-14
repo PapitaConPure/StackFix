@@ -81,7 +81,7 @@ namespace StackFix {
 
 			try {
 				RiskOfOptionsCompat.SetModDescription(
-					"Balances the initial/additional stack behavior of a few items. Configurable.");
+					"Balances the initial effect and stacking of a few items to reduce upfront power spikes and incentivize stacking.");
 				RiskOfOptionsCompat.SetModIcon(ModIcon.Load());
 
 				RiskOfOptionsCompat.AddCheckboxOption(Enabled);
