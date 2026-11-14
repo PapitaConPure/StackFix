@@ -73,6 +73,11 @@ namespace StackFix.Items.Impl {
 		private void CharacterBody_OnSkillCooldown(ILContext il) {
 			ILCursor cursor = new(il);
 
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC3Content.Items), nameof(DLC3Content.Items.BarrierOnCooldown)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
+				throw new ILSeekException(il, "Eclipse Lite item count", nameof(CharacterBody.OnSkillCooldown));
+
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_BARRIER_BASE)))
 				throw new ILSeekException(il, "base barrier", nameof(CharacterBody.OnSkillCooldown));
 
