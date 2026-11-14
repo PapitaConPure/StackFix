@@ -132,7 +132,7 @@ namespace StackFix.Items.Impl {
 			if(!cursor.TryGotoNext(MoveType.After,
 				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.DelayedDamage)),
 				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
-				throw new ILSeekException(il, "delayed damage item count", nameof(HealthComponent.TakeDamageProcess));
+				throw new ILSeekException(il, "Warped Echo item count", nameof(HealthComponent.TakeDamageProcess));
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(1f - VANILLA_DAMAGE_REDUCTION_BASE)))
 				throw new ILSeekException(il, "damage reduction multiplier", nameof(HealthComponent.TakeDamageProcess));
