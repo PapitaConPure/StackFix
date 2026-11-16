@@ -79,11 +79,70 @@ namespace StackFix.Items.Impl {
 		protected override void ApplyHooks() {
 			IL.RoR2.CharacterBody.GetIncreasedDamageFromMultiKillBuffsForCharacter += this.CharacterBody_GetIncreasedDamageFromMultiKillBuffsForCharacter;
 			IL.RoR2.CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter += this.CharacterBody_GetMaxIncreasedDamageMultiKillBuffsForCharacter;
-			//IL.RoR2.CharacterBody.UpdateMultiKill += this.CharacterBody_UpdateMultiKill;
 		}
 
-		private void CharacterBody_GetIncreasedDamageFromMultiKillBuffsForCharacter(ILContext il) => throw new System.NotImplementedException();
+		private void CharacterBody_GetIncreasedDamageFromMultiKillBuffsForCharacter(ILContext il) {
+			ILCursor cursor = new(il);
 
-		private void CharacterBody_GetMaxIncreasedDamageMultiKillBuffsForCharacter(ILContext il) => throw new System.NotImplementedException();
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_DAMAGE_BASE)))
+				throw new ILSeekException(il, "base damage", nameof(CharacterBody.GetIncreasedDamageFromMultiKillBuffsForCharacter));
+
+			Instruction baseDamageInstr = cursor.Prev;
+
+			cursor.Index = 0;
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_DAMAGE_STACK)))
+				throw new ILSeekException(il, "stack damage", nameof(CharacterBody.GetIncreasedDamageFromMultiKillBuffsForCharacter));
+
+			cursor.EmitDelegate(this.ModifyStackDamage);
+
+			cursor.Goto(baseDamageInstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyBaseDamage);
+		}
+
+		private float ModifyBaseDamage(float baseDamage) {
+			if(!this.Enabled)
+				return baseDamage;
+
+			return this.damageBase.Value * 0.01f;
+		}
+
+		private float ModifyStackDamage(float stackDamage) {
+			if(!this.Enabled)
+				return stackDamage;
+
+			return this.damageStack.Value * 0.01f;
+		}
+
+		private void CharacterBody_GetMaxIncreasedDamageMultiKillBuffsForCharacter(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_COMBO_MAX_BASE)))
+				throw new ILSeekException(il, "base damage", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
+
+			Instruction baseComboInstr = cursor.Prev;
+
+			cursor.Index = 0;
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_COMBO_MAX_STACK)))
+				throw new ILSeekException(il, "stack damage", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
+
+			cursor.EmitDelegate(this.ModifyStackMaxCombo);
+
+			cursor.Goto(baseComboInstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyBaseMaxCombo);
+		}
+
+		private float ModifyBaseMaxCombo(float baseMaxCombo) {
+			if(!this.Enabled)
+				return baseMaxCombo;
+
+			return this.comboMaxBase.Value;
+		}
+
+		private float ModifyStackMaxCombo(float stackMaxCombo) {
+			if(!this.Enabled)
+				return stackMaxCombo;
+
+			return this.comboMaxStack.Value;
+		}
 	}
 }
