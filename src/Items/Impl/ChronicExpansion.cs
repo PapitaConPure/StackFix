@@ -1,8 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using R2API;
 using RoR2;
 using StackFix.Compat;
+using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
 
@@ -74,13 +77,13 @@ namespace StackFix.Items.Impl {
 		}
 
 		protected override void ApplyHooks() {
-			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
-			IL.RoR2.CharacterBody.AddMultiKill += this.CharacterBody_AddMultiKill;
+			IL.RoR2.CharacterBody.GetIncreasedDamageFromMultiKillBuffsForCharacter += this.CharacterBody_GetIncreasedDamageFromMultiKillBuffsForCharacter;
+			IL.RoR2.CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter += this.CharacterBody_GetMaxIncreasedDamageMultiKillBuffsForCharacter;
 			//IL.RoR2.CharacterBody.UpdateMultiKill += this.CharacterBody_UpdateMultiKill;
 		}
 
-		private void CharacterBody_RecalculateStats(MonoMod.Cil.ILContext il) => throw new System.NotImplementedException();
+		private void CharacterBody_GetIncreasedDamageFromMultiKillBuffsForCharacter(ILContext il) => throw new System.NotImplementedException();
 
-		private void CharacterBody_AddMultiKill(MonoMod.Cil.ILContext il) => throw new System.NotImplementedException();
+		private void CharacterBody_GetMaxIncreasedDamageMultiKillBuffsForCharacter(ILContext il) => throw new System.NotImplementedException();
 	}
 }
