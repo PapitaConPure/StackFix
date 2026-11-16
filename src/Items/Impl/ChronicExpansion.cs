@@ -117,13 +117,13 @@ namespace StackFix.Items.Impl {
 			ILCursor cursor = new(il);
 
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_COMBO_MAX_BASE)))
-				throw new ILSeekException(il, "base damage", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
+				throw new ILSeekException(il, "base max combo", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
 
 			Instruction baseComboInstr = cursor.Prev;
 
 			cursor.Index = 0;
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_COMBO_MAX_STACK)))
-				throw new ILSeekException(il, "stack damage", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
+				throw new ILSeekException(il, "stack max combo", nameof(CharacterBody.GetMaxIncreasedDamageMultiKillBuffsForCharacter));
 
 			cursor.EmitDelegate(this.ModifyStackMaxCombo);
 
