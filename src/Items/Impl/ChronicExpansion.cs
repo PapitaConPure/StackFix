@@ -74,7 +74,13 @@ namespace StackFix.Items.Impl {
 		}
 
 		protected override void ApplyHooks() {
-			//TODO: hook and implement fix
+			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
+			IL.RoR2.CharacterBody.AddMultiKill += this.CharacterBody_AddMultiKill;
+			//IL.RoR2.CharacterBody.UpdateMultiKill += this.CharacterBody_UpdateMultiKill;
 		}
+
+		private void CharacterBody_RecalculateStats(MonoMod.Cil.ILContext il) => throw new System.NotImplementedException();
+
+		private void CharacterBody_AddMultiKill(MonoMod.Cil.ILContext il) => throw new System.NotImplementedException();
 	}
 }
