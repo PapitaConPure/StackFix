@@ -51,7 +51,7 @@ namespace StackFix {
 		}
 
 		private void RegisterSettings() {
-			Enabled                      = ModSettings.Enabled.RegisterFor(this);
+			Enabled = ModSettings.Enabled.RegisterFor(this);
 
 			foreach(IItemFix itemFix in this.ItemFixes)
 				itemFix.RegisterSettings(this);
