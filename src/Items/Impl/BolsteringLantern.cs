@@ -50,11 +50,11 @@ namespace StackFix.Items.Impl {
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(attackSpeedBase(), attackSpeedStack(), itemCount)),
-				new("Max. Character Count",
+				new("Max Character Count",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Number,
 					itemCount => ItemStacking.Linear(charaCountMaxBase(), charaCountMaxStack(), itemCount)),
-				new("Max. Attack Speed",
+				new("Max Attack Speed",
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(attackSpeedBase(), attackSpeedStack(), itemCount)

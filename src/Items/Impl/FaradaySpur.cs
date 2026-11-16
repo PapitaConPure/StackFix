@@ -62,11 +62,11 @@ namespace StackFix.Items.Impl {
 			float maxDistanceStack() => VANILLA_MAX_CHARGE_DISTANCE_STACK;
 
 			LookingGlassCompat.AddItem(DLC3Content.Items.JumpDamageStrike, [
-				new("Max. Movement Speed",
+				new("Max Movement Speed",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(moveSpeedBase(), moveSpeedStack(), itemCount)),
-				new("Max. Jump Height",
+				new("Max Jump Height",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(jumpHeightBase(), jumpHeightStack(), itemCount)),
@@ -74,7 +74,7 @@ namespace StackFix.Items.Impl {
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(damageBase(), damageStack(), itemCount)),
-				new("Max. Discharge Distance",
+				new("Max Discharge Distance",
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.Meters,
 					itemCount => ItemStacking.Linear(maxDistanceBase(), maxDistanceStack(), itemCount)),

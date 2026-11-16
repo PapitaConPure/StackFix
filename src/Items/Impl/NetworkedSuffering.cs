@@ -49,7 +49,7 @@ namespace StackFix.Items.Impl {
 			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : 0f;
 
 			LookingGlassCompat.AddItem(DLC3Content.Items.SharedSuffering, [
-				new("Max. Infected Enemies Count",
+				new("Max Infected Enemies Count",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Number,
 					itemCount => ItemStacking.Linear(maxVirusCountBase(), maxVirusCountStack(), itemCount)),
