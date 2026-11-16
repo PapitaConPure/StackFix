@@ -36,7 +36,7 @@ namespace StackFix.Settings {
 				"Maximum combo the buff can reach on the first stack.",
 				"Vanilla value: 10"),
 			defaultValue: 10,
-			constraint: new(Min: 2, Max: 6));
+			constraint: new(Min: 6, Max: 12));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> ChronicExpansionComboMaxStack = new(
 			section: "Item: Chronic Expansion",
@@ -45,6 +45,6 @@ namespace StackFix.Settings {
 				"Increased maximum combo the buff can reach per every subsequent stack.",
 				"Vanilla value: 5"),
 			defaultValue: 5,
-			constraint: new(Min: 1, Max: 5));
+			constraint: new(Min: 0, Max: 6));
 	}
 }
