@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace StackFix.Items {
 	internal abstract class ItemFix: IItemFix {
 		protected ConfigEntry<bool> fixEnabled;
+		private readonly List<Action> extraFixes;
 
 		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
@@ -38,6 +39,11 @@ namespace StackFix.Items {
 			this.ApplyDescription();
 
 #if DEBUG
+			UnityEngine.Debug.Log($"Applying fix #{fixCount} extras...");
+#endif
+			this.ApplyExtras();
+
+#if DEBUG
 			UnityEngine.Debug.Log($"Registering fix #{fixCount} config entries...");
 #endif
 			Plugin.Enabled.SettingChanged += this.ConfigEntry_SettingChanged;
@@ -51,6 +57,15 @@ namespace StackFix.Items {
 			UnityEngine.Debug.Log($"Fix #{fixCount} has been applied.");
 #endif
 			this.Applied = true;
+		}
+
+		private void ApplyExtras() {
+			foreach(Action fix in this.extraFixes)
+				fix.Invoke();
+		}
+
+		protected void AddExtraFix(Action extra) {
+			this.extraFixes.Add(extra);
 		}
 
 		private void ConfigEntry_SettingChanged(object sender, EventArgs e) => this.ApplyDescription();
