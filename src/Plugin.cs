@@ -22,6 +22,7 @@ namespace StackFix {
 		private readonly IItemFix[] ItemFixes = [
 			//White
 			new BolsteringLantern(),
+			new ChronicExpansion(),
 			new EclipseLite(),
 			new WarpedEcho(),
 			//Green
