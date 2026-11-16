@@ -32,8 +32,8 @@ namespace StackFix.Items.Impl {
 
 		public override void RegisterRiskOfOptionsSettings() {
 			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.##}%"));
+			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.##}%"));
 			RiskOfOptionsCompat.AddSliderOption(this.comboMaxBase);
 			RiskOfOptionsCompat.AddSliderOption(this.comboMaxStack, new(Prefix: "+"));
 		}
