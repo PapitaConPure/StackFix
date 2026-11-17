@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace StackFix.Utils {
 	internal static class EnumUtils {
@@ -15,5 +16,9 @@ namespace StackFix.Utils {
 			where TSource : struct, Enum
 			where TResult : struct, Enum
 			=> Enum.Parse<TResult>(value.ToString());
+
+		public static TEnum[] GetEnumValues<TEnum>() where TEnum : struct, Enum {
+			return [.. Enum.GetValues(typeof(TEnum)).OfType<TEnum>()];
+		}
 	}
 }
