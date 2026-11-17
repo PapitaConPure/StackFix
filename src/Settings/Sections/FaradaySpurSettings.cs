@@ -53,7 +53,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Explosion damage percentage for the first stack.",
 				"Vanilla value: 400"),
-			defaultValue: 300f,
+			defaultValue: 360f,
 			constraint: new(Min: 0f, Max: 400f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> FaradaySpurDamageStack = new(
@@ -62,7 +62,20 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Increased explosion damage percentage for every subsequent stack.",
 				"Vanilla value: 280"),
-			defaultValue: 200f,
+			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 400f));
+
+		public enum FaradaySpurCategory {
+			Damage,
+			Utility,
+		}
+		public static readonly ConstrainedConfigEntry<FaradaySpurCategory, ListEntryConstraint<FaradaySpurCategory>> FaradaySpurSelectedCategory = new(
+			section: "Item: Faraday Spur",
+			name: "Category",
+			description: Paragraph(
+				"Determines which kind of category chest can contain this item.",
+				"Vanilla value: Damage"),
+			defaultValue: FaradaySpurCategory.Utility,
+			constraint: new(typeof(FaradaySpurCategory)));
 	}
 }
