@@ -9,6 +9,10 @@ using StackFix.Compat;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static StackFix.Utils.EnumUtils;
 
 namespace StackFix.Items.Impl {
 	internal sealed class FaradaySpur: ItemFix {
@@ -20,6 +24,7 @@ namespace StackFix.Items.Impl {
 		private const float VANILLA_MAX_CHARGE_DISTANCE_BASE = 32.3f;
 		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
 		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
+		private const ItemTag VANILLA_CATEGORY = ItemTag.Damage;
 
 		private ConfigEntry<float> moveSpeedBase;
 		private ConfigEntry<float> moveSpeedStack;
@@ -27,6 +32,39 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<float> jumpHeightStack;
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
+		private ConfigEntry<ModSettings.FaradaySpurCategory> category;
+
+		public FaradaySpur() {
+			this.AddExtraFix(() => {
+				this.fixEnabled.SettingChanged += this.OnItemCategoryChanged;
+				this.category.SettingChanged += this.OnItemCategoryChanged;
+				ItemCatalog.availability.CallWhenAvailable(this.ApplyItemCategory);
+			});
+		}
+
+		private void OnItemCategoryChanged(object sender, EventArgs e)
+			=> this.ApplyItemCategory();
+
+		private void ApplyItemCategory() {
+			static ItemTag toItemTag(ModSettings.FaradaySpurCategory v)
+				=> EnumToEnum<ModSettings.FaradaySpurCategory, ItemTag>(v);
+
+			IEnumerable<ItemTag> possibleTags
+				= GetEnumValues<ModSettings.FaradaySpurCategory>()
+					.Select(toItemTag);
+
+			ItemTag newTag = this.fixEnabled.Value
+				? toItemTag(this.category.Value)
+				: VANILLA_CATEGORY;
+
+			ItemTag[] tags = DLC3Content.Items.JumpDamageStrike.tags;
+			for(int i = 0; i < tags.Length; i++) {
+				if(possibleTags.Contains(tags[i])) {
+					tags[i] = newTag;
+					break;
+				}
+			}
+		}
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled      = this.RegisterSetting(plugin, ModSettings.FaradaySpurFixEnabled);
@@ -36,6 +74,7 @@ namespace StackFix.Items.Impl {
 			this.jumpHeightStack = this.RegisterSetting(plugin, ModSettings.FaradaySpurJumpHeightStack);
 			this.damageBase      = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageBase);
 			this.damageStack     = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageStack);
+			this.category        = this.RegisterSetting(plugin, ModSettings.FaradaySpurSelectedCategory);
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
@@ -46,6 +85,7 @@ namespace StackFix.Items.Impl {
 			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddChoiceOption(this.category);
 		}
 
 		public override void RegisterLookingGlassStats() {
