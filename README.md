@@ -17,6 +17,7 @@ This is a summary of how the mod affects items with default settings.
 * **Faraday Spur**: Great initial nerf, great stacking buff. Reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
+* **Networked Suffering**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
 * There's more planned, but that's it for now...
 
 ## Configuration
@@ -40,6 +41,7 @@ Some settings determine which formula is used to control how a particular effect
 | Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
 | Fix Prayer Beads        | Toggle  | On      | Off     | Enable Prayer Beads fixes. |
 | Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
+| Fix Sonorous Whispers   | Toggle  | On      | Off     | Enable Sonorous Whispers fixes. |
 
 General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
 
@@ -91,8 +93,8 @@ With default settings, Warped Echo starts with a bit less damage absorption than
 ### Item: Chance Doll
 | Name                 | Type    | Default    | Vanilla | Description |
 |----------------------|---------|------------|---------|-------------|
-| Base Chance          | Percent | `25%`      | `40%`   | Initial improved Shrine of Chance reward chance. |
-| Chance per Stack     | Percent | `+25%`     | `+10%`  | Improved Shrine of Chance reward chance per stack (*configurable formula*). |
+| Base Chance          | Percent | `25%`      | `40%`   | Initial improved Shrine of Chance reward chance percentage. |
+| Chance per Stack     | Percent | `+25%`     | `+10%`  | Improved Shrine of Chance reward chance percentage per stack (*configurable formula*). |
 | Chance Stacking Type | Choice  | Hyperbolic | Linear  | Determines how "Chance per Stack" scales with each additional stack. |
 
 With default settings, Chance Doll starts out at 20% (because of how **Hyperbolic** scaling works), approaches the vanilla value stacking curve between 2 and 3 stacks, and doesn't keep up with vanilla scaling afterwards. At 7 stacks, vanilla reaches a 100% chance for an improved reward. Meanwhile, at 10 stacks, this default fix sits at ~71% chance (+1.9% next stack).
@@ -132,6 +134,15 @@ With default settings, Prayer Beads reach vanilla extra stat gains at 3 stacks a
 The initial virus damage duplication needed a small nerf for a long time. I also went aheand and reduced the maximum spread by 1 on the first stack.
 
 With default settings, you can actually stack the damage duplication, but need TEN STACKS of the thing to reach the vanilla value. It isn't really a small effect, though. Every 1% is impactful and the default spread per stack of 2 also contributes to the total damage. In fact, I'd say you should consider lowering the damage per stack to +0% (disable stacking). Still, I personally like +1~5% per stack as it's a red item.
+
+### Item: Sonorous Whispers
+| Name                            | Type    | Default | Vanilla | Description |
+|---------------------------------|---------|---------|---------|-------------|
+| Base Elite Drop Chance          | Percent | `0%`    | `5%`    | Initial chance percentage for elite monsters to drop an item. |
+| Elite Drop Chance per Stack     | Percent | `+2.5%` | `+1%`   | Additional chance percentage for elite monsters to drop an item per stack (*configurable formula*). |
+| Elite Drop Chance Stacking Type | Choice  | Linear  | Linear  | Determines how "Elite Drop Chance per Stack" scales with each additional stack. |
+
+With default settings, Sonorous Whispers doesn't make elite monsters drop items initially. The elite item drop chance is equal to the vanilla initial 5% chance at 3 stacks, and surpasses that of vanilla by 1% at 5 stacks (remember this a red item, so in practice this is mostly just a nerf).
 
 ### Megumin
 | Name    | Type    | Default | Vanilla | Description |
