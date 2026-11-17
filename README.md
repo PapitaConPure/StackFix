@@ -10,6 +10,7 @@ Supports `Rune580-Risk Of Options` and `DropPod-LookingGlass`!
 ## Item Fixes
 This is a summary of how the mod affects items with default settings.
 * **Bolstering Lantern**: Lesser change. Very small reduction of initial attack speed per close character with slightly more scaling (configurable). Maximum character count for the buff is the same as vanilla, but was made configurable as well.
+* **Chronic Expansion**: Initial nerf, stacking tweak. Very small reduction of initial combo damage gains (configurable). Slightly increased combo damage gains per stack and considerably reduced max combo per stack.
 * **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
 * **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
@@ -32,6 +33,7 @@ Some settings determine which formula is used to control how a particular effect
 |-------------------------|---------|---------|---------|-------------|
 | Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
 | Fix Bolstering Lantern  | Toggle  | On      | Off     | Enable Bolstering Lantern fixes. |
+| Fix Chronic Expansion   | Toggle  | On      | Off     | Enable Chronic Expansion fixes. |
 | Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
 | Fix Warped Echo         | Toggle  | On      | Off     | Enable Warped Echo fixes. |
 | Fix Chance Doll         | Toggle  | On      | Off     | Enable Chance Doll fixes. |
@@ -50,6 +52,16 @@ General settings act as umbrella toggles for their respective features. Turn off
 | Max Character Count per Stack | Integer | `+1`    | `+1`    | Maximum number of characters in close range that count towards the effect per stack (*linear*). |
 
 With default settings, Bolstering Lantern is almost exactly the same as vanilla but with a slightly worse initial attack speed and decently better attack speed stacking.
+
+### Item: Chronic Expansion
+| Name                          | Type    | Default | Vanilla | Description |
+|-------------------------------|---------|---------|---------|-------------|
+| Base Damage                   | Percent | `3%`    | `3.5%`  | Initial percentage of damage gained with multi-kill combos. |
+| Damage per Stack              | Percent | `+1.5%` | `+1%`   | Percentage of damage gained with multi-kill combos per stack (*linear*). |
+| Base Max Combo                | Integer | `10`    | `10`    | Initial maximum multi-kill combo number. |
+| Max Combo per Stack           | Integer | `+2`    | `+5`    | Maximum multi-kill combo number per stack (*linear*). |
+
+With default settings, Chronic Expansion has a slightly weaker initial max combo gain (+30% damage), but stacks in a way that keeps the maximum combo per stack within reasonable numbers, balanced by the fact that each combo stack gives a bit more damage per stack. Having quadratic-type stacking on a white item is certainly a choice Gearbox has made. I'm weak and scared to turn off the stacking of one of the two stats, but you can set any of the two to +0 and the item's potential damage gains will stack linearly.
 
 ### Item: Eclipse Lite
 | Name                           | Type    | Default    | Vanilla  | Description |
