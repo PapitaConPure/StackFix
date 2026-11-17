@@ -49,7 +49,7 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> FaradaySpurDamageBase = new(
 			section: "Item: Faraday Spur",
-			name: "Base Damage",
+			name: "Base Discharge Damage",
 			description: Paragraph(
 				"Explosion damage percentage for the first stack.",
 				"Vanilla value: 400"),
@@ -58,12 +58,30 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> FaradaySpurDamageStack = new(
 			section: "Item: Faraday Spur",
-			name: "Damage per Stack",
+			name: "Discharge Damage per Stack",
 			description: Paragraph(
 				"Increased explosion damage percentage for every subsequent stack.",
 				"Vanilla value: 280"),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 400f));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> FaradaySpurDistanceBase = new(
+			section: "Item: Faraday Spur",
+			name: "Base Discharge Distance",
+			description: Paragraph(
+				"Explosion radius (in meters) for the first stack.",
+				"Vanilla value: 32.3"),
+			defaultValue: 32.3f,
+			constraint: new(Min: 0f, Max: 44.5f)); //( ^)o(^ )b
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> FaradaySpurDistanceStack = new(
+			section: "Item: Faraday Spur",
+			name: "Discharge Distance per Stack",
+			description: Paragraph(
+				"Increased explosion radius (in meters) for every subsequent stack.",
+				"Vanilla value: 7.5"),
+			defaultValue: 7.5f,
+			constraint: new(Min: 0f, Max: 7.5f));
 
 		public enum FaradaySpurCategory {
 			Damage,
