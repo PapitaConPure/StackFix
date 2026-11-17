@@ -12,6 +12,7 @@ using StackFix.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Networking;
 using static StackFix.Utils.EnumUtils;
 
 namespace StackFix.Items.Impl {
@@ -66,6 +67,9 @@ namespace StackFix.Items.Impl {
 					break;
 				}
 			}
+
+			if(Run.instance)
+				PickupDropTable.RegenerateAll(Run.instance);
 		}
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {

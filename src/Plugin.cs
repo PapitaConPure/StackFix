@@ -40,6 +40,8 @@ namespace StackFix {
 			this.TryRegisterRiskOfOptions();
 			this.TryRegisterLookingGlass();
 
+			Enabled.SettingChanged += this.Enabled_SettingChanged;
+
 #if DEBUG
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded.");
 #endif
@@ -127,6 +129,11 @@ namespace StackFix {
 					this.Logger.LogWarning($"Could not initialize LookingGlass support: {ex}");
 				}
 			});
+		}
+
+		private void Enabled_SettingChanged(object sender, EventArgs e) {
+			if(Run.instance)
+				PickupDropTable.RegenerateAll(Run.instance);
 		}
 	}
 }
