@@ -26,7 +26,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Additional percentage of damage each buff stack grants for every subsequent stack.",
 				"Vanilla value: 1"),
-			defaultValue: 1f,
+			defaultValue: 1.5f,
 			constraint: new(Min: 0f, Max: 2f));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> ChronicExpansionComboMaxBase = new(
@@ -44,7 +44,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Increased maximum combo the buff can reach per every subsequent stack.",
 				"Vanilla value: 5"),
-			defaultValue: 5,
+			defaultValue: 2,
 			constraint: new(Min: 0, Max: 6));
 	}
 }
