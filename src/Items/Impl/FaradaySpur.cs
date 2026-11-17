@@ -12,7 +12,6 @@ using StackFix.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.Networking;
 using static StackFix.Utils.EnumUtils;
 
 namespace StackFix.Items.Impl {
@@ -25,6 +24,7 @@ namespace StackFix.Items.Impl {
 		private const float VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE = 32.3f;
 		private const float VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK = 7.5f;
 		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
+		private const float VANILLA_AURA_RADIUS_START_SIZE = 5f;
 		private const ItemTag VANILLA_CATEGORY = ItemTag.Damage;
 
 		private ConfigEntry<float> moveSpeedBase;
@@ -159,6 +159,18 @@ namespace StackFix.Items.Impl {
 		protected override void ApplyHooks() {
 			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
 			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.DischargeEffects += this.JumpDamageStrikeBodyBehavior_DischargeEffects;
+			IL.RoR2.Items.JumpDamageStrikeBodyBehavior.GetRadius += this.JumpDamageStrikeBodyBehavior_GetRadius;
+
+			//I am going to jump off an [INFERIOR CONSTRUCT]
+			ItemCatalog.availability.CallWhenAvailable(() => {
+				if(Plugin.Enabled != null)
+					Plugin.Enabled.SettingChanged += this.OnBaseDistanceChanged;
+
+				this.fixEnabled.SettingChanged += this.OnBaseDistanceChanged;
+				this.distanceBase.SettingChanged += this.OnBaseDistanceChanged;
+
+				this.ApplyBaseDistance();
+			});
 		}
 
 		private void CharacterBody_RecalculateStats(ILContext il) {
@@ -239,6 +251,40 @@ namespace StackFix.Items.Impl {
 				return stackDamage;
 
 			return this.damageStack.Value * 0.01f;
+		}
+
+		private void JumpDamageStrikeBodyBehavior_GetRadius(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK)))
+				throw new ILSeekException(il, "stack distance", nameof(JumpDamageStrikeBodyBehavior.GetRadius));
+
+			cursor.EmitDelegate(this.ModifyStackDistance);
+		}
+
+		private float ModifyStackDistance(float stackDistance) {
+			if(!this.Enabled)
+				return stackDistance;
+
+			return this.distanceStack.Value;
+		}
+
+		private void OnBaseDistanceChanged(object sender, EventArgs e)
+			=> this.ApplyBaseDistance();
+
+		private void ApplyBaseDistance() {
+			if(!this.Enabled) {
+				JumpDamageStrikeBodyBehavior.auraRadiusStartSize = VANILLA_AURA_RADIUS_START_SIZE;
+				return;
+			}
+
+			//This may reach negative values, because the 32.3m max distance reported by the game is the result of
+			//this whole equation: {auraRadiusPerCharge * (charge - 1f) + auraRadiusStartSize + stacks * 7.5f},
+			//from which we're trying to solve {auraRadiusStartSize}
+			JumpDamageStrikeBodyBehavior.auraRadiusStartSize = this.distanceBase.Value
+				- VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE
+				+ VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK //{stacks * 7.5f} | stacks = 1 initially
+				+ VANILLA_AURA_RADIUS_START_SIZE;
 		}
 	}
 }
