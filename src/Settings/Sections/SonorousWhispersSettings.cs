@@ -13,16 +13,16 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> SonorousWhispersChanceBase = new(
 			section: "Item: Sonorous Whispers",
-			name: "Base Chance",
+			name: "Base Elite Drop Chance",
 			description: Paragraph(
 				"Chance percentage for elite monsters to drop an item for the first stack.",
-				"Vanilla value: 5"),
+				"Vanilla value: 5 (incorrectly reported as 4)"),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 5f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> SonorousWhispersChanceStack = new(
 			section: "Item: Sonorous Whispers",
-			name: "Chance per Stack",
+			name: "Elite Drop Chance per Stack",
 			description: Paragraph(
 				"Additional chance percentage for elite monsters to drop an item for every subsequent stack.",
 				"Vanilla value: 1"),
@@ -35,7 +35,7 @@ namespace StackFix.Settings {
 		}
 		public static readonly ConstrainedConfigEntry<SonorousWhispersChanceStacking, ListEntryConstraint<SonorousWhispersChanceStacking>> SonorousWhispersChanceStackType = new(
 			section: "Item: Sonorous Whispers",
-			name: "Chance Stacking Type",
+			name: "Elite Drop Chance Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<SonorousWhispersChanceStacking>(),
 				"Vanilla value: Linear"),
