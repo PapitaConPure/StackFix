@@ -110,8 +110,8 @@ This is a decently sized nerf, justified by the fact that stacking more than 7 C
 | Jump Height per Stack    | Percent | `+40%`  | `+0%`   | Jump height gains per stack (*linear*) at max charge. |
 | Base Damage              | Percent | `360%`  | `400%`  | Initial discharge explosion damage. |
 | Damage per Stack         | Percent | `+0%`   | `+280%` | Discharge explosion damage per stack (*linear*). |
-| Base Damage              | Percent | `32.3m` | `32.3m` | Initial discharge explosion damage. |
-| Damage per Stack         | Percent | `+7.5m` | `+7.5m` | Discharge explosion damage per stack (*linear*). |
+| Base Distance            | Percent | `32.3m` | `32.3m` | Initial discharge explosion maximum distance. |
+| Distance per Stack       | Percent | `+7.5m` | `+7.5m` | Discharge explosion maximum distance increase per stack (*linear*). |
 
 With default settings, Faraday Spur reaches the vanilla speed/jump gains at 4 stacks.
 
