@@ -5,10 +5,10 @@ namespace StackFix.Utils {
 		/// <summary>
 		/// Returns a proc chance affected by luck.
 		/// </summary>
-		/// <param name="chance">The proc chance. From 0 to 1.</param>
 		/// <param name="luck">The luck value (cloverCount - purityCount).</param>
+		/// <param name="chance">The proc chance. From 0 to 1.</param>
 		/// <returns></returns>
-		public static float ChanceWithLuck(float chance, float luck) {
+		public static float LuckChance(float luck, float chance) {
 			chance = MathF.Min(chance, 1f);
 
 			int rolls = (int)MathF.Ceiling(luck);

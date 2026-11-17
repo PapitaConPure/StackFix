@@ -46,7 +46,7 @@ namespace StackFix.Items.Impl {
 				new("Chance",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
-					(luck, itemCount) => RoR2Utils.ChanceWithLuck(
+					(luck, itemCount) => RoR2Utils.LuckChance(luck,
 						chanceStackType() switch {
 							ModSettings.ChanceDollChanceStacking.Linear
 								=> ItemStacking.Linear(chanceBase(), chanceStack(), itemCount),
@@ -55,8 +55,7 @@ namespace StackFix.Items.Impl {
 								=> ItemStacking.Hyperbolic(chanceBase(), chanceStack(), itemCount),
 
 							_ => chanceBase(),
-						},
-						luck)),
+						})),
 			]);
 		}
 

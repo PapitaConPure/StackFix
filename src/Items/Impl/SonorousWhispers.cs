@@ -52,7 +52,7 @@ namespace StackFix.Items.Impl {
 				new("Elite Drop Chance",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
-					(luck, itemCount) => RoR2Utils.ChanceWithLuck(
+					(luck, itemCount) => RoR2Utils.LuckChance(luck,
 						chanceStackType() switch {
 							ModSettings.SonorousWhispersChanceStacking.Linear
 								=> ItemStacking.Linear(chanceBase(), chanceStack(), itemCount),
@@ -61,8 +61,7 @@ namespace StackFix.Items.Impl {
 								=> ItemStacking.Hyperbolic(chanceBase(), chanceStack(), itemCount),
 
 							_ => chanceBase(),
-						},
-						luck)),
+						})),
 			]);
 		}
 
