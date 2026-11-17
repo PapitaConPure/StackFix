@@ -17,7 +17,7 @@ This is a summary of how the mod affects items with default settings.
 * **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
-* **Networked Suffering**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
+* **Sonorous Whispers**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
 * There's more planned, but that's it for now...
 
 ## Configuration
