@@ -71,9 +71,9 @@ namespace StackFix.Items.Impl {
 			float durationBase       = VANILLA_DURATION_BASE;
 
 			LanguageAPI.AddOverlay("ITEM_INCREASEDAMAGEONMULTIKILL_DESC",
-				$"Killing an enemy increases your damage by {ItD.Damage($"{damageBasePercent}%")}{ItD.Stack(damageStackPercent, "+{0:0.##}%")}, " +
-				$"up to {ItD.Utility(comboMaxBase)}{ItD.Stack(comboMaxStack)}, for {ItD.Utility($"{durationBase}s")}. " +
-				$"Dealing damage refreshes the timer.");
+				$"Killing an enemy increases your damage by {ItD.Damage($"{ItD.V(damageBasePercent)}%")}" +
+				$"{ItD.Stack(damageStackPercent, "+{0:0.##}%")}, up to {ItD.Utility(comboMaxBase)}{ItD.Stack(comboMaxStack)}, " +
+				$"for {ItD.Utility($"{ItD.V(durationBase)}s")}. Dealing damage refreshes the timer.");
 		}
 
 		protected override void ApplyHooks() {
