@@ -14,7 +14,7 @@ This is a summary of how the mod affects items with default settings.
 * **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
 * **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
-* **Faraday Spur**: Great initial nerf, great stacking buff. Reduced initial movement speed and jump height gains (configurable), as well as initial and per-stack explosion damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable).
+* **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * **Networked Suffering**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
@@ -108,8 +108,10 @@ This is a decently sized nerf, justified by the fact that stacking more than 7 C
 | Movement Speed per Stack | Percent | `+30%`  | `+0%`   | Movement speed gains per stack (*linear*) at max charge. |
 | Base Jump Height         | Percent | `80%`   | `200%`  | Initial jump height gains at max charge. |
 | Jump Height per Stack    | Percent | `+40%`  | `+0%`   | Jump height gains per stack (*linear*) at max charge. |
-| Base Damage              | Percent | `300%`  | `400%`  | Initial discharge explosion damage. |
-| Damage per Stack         | Percent | `+200%` | `+280%` | Discharge explosion damage per stack (*linear*). |
+| Base Damage              | Percent | `360%`  | `400%`  | Initial discharge explosion damage. |
+| Damage per Stack         | Percent | `+0%`   | `+280%` | Discharge explosion damage per stack (*linear*). |
+| Base Damage              | Percent | `32.3m` | `32.3m` | Initial discharge explosion damage. |
+| Damage per Stack         | Percent | `+7.5m` | `+7.5m` | Discharge explosion damage per stack (*linear*). |
 
 With default settings, Faraday Spur reaches the vanilla speed/jump gains at 4 stacks.
 
