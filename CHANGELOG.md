@@ -1,3 +1,12 @@
+### v2.2.0
+* Added Chronic Expansion item fix.
+* Added Sonorous Whispers item fix.
+* Moved Faraday Spur from Damage chests to Utility chests (configurable).
+* Bumped Faraday Spur's default initial discharge damage from 300% to 360%.
+* Reduced Faraday Spur's default discharge damage per stack from 200% to 0%. This means that, with default settings, it will only stack mobility and never proc bands.
+* Renamed Faraday Spur's "Base Damage" and "Damage per Stack" to "Base Discharge Damage" and "Discharge Damage per Stack" respectively.
+* Made Faraday Spur's discharge distance configurable (same as vanilla by default).
+
 ### v2.1.3
 * Fixed Chance Doll's chance stat display through LookingGlass not taking luck into account.
 * Improved mod description in Thunderstore/Risk Of Options
