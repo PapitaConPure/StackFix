@@ -11,9 +11,11 @@ using StackFix.Utils;
 
 namespace StackFix.Items.Impl {
 	internal class SonorousWhispers: ItemFix {
-		private const int VANILLA_CHANCE_BASE_PERCENT = 5;
-		private const int VANILLA_CHANCE_STACK_PERCENT = 1;
+		private const float VANILLA_CHANCE_BASE_PERCENT = 4f;
+		private const float VANILLA_ACTUAL_CHANCE_BASE_PERCENT = 5f;
+		private const float VANILLA_CHANCE_STACK_PERCENT = 1f;
 		private const float VANILLA_CHANCE_BASE = VANILLA_CHANCE_BASE_PERCENT * 0.01f;
+		private const float VANILLA_ACTUAL_CHANCE_BASE = VANILLA_ACTUAL_CHANCE_BASE_PERCENT * 0.01f;
 		private const float VANILLA_CHANCE_STACK = VANILLA_CHANCE_STACK_PERCENT * 0.01f;
 		private const ModSettings.SonorousWhispersChanceStacking VANILLA_CHANCE_STACK_TYPE
 			= ModSettings.SonorousWhispersChanceStacking.Linear;
@@ -37,7 +39,7 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterLookingGlassStats() {
-			float chanceBase() => this.Enabled ? this.chanceBase.Value * 0.01f : VANILLA_CHANCE_BASE;
+			float chanceBase() => this.Enabled ? this.chanceBase.Value * 0.01f : VANILLA_ACTUAL_CHANCE_BASE;
 			float chanceStack() => this.Enabled ? this.chanceStack.Value * 0.01f : VANILLA_CHANCE_STACK;
 			ModSettings.SonorousWhispersChanceStacking chanceStackType()
 				=> this.Enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE;
@@ -66,22 +68,54 @@ namespace StackFix.Items.Impl {
 
 		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
-			float chanceBasePercent           = enabled ? this.chanceBase.Value : VANILLA_CHANCE_BASE_PERCENT;
+			float chanceBasePercent           = enabled ? this.chanceBase.Value : VANILLA_ACTUAL_CHANCE_BASE_PERCENT;
 			float chanceStackPercent          = enabled ? this.chanceStack.Value : VANILLA_CHANCE_STACK_PERCENT;
 			ItemStacking.Type chanceStackType = ItemStacking.FromEnum(enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE);
 
 			LanguageAPI.AddOverlay("ITEM_ITEMDROPCHANCEONKILL_DESC",
 				$"When a large monster is killed, it will always drop an item. All elites have a {ItD.Utility($"{ItD.V(chanceBasePercent)}%")} chance " +
-				$"of dropping an item{ItD.Stack<ModSettings.SonorousWhispersChanceStacking>(chanceStackPercent, chanceStackType, VANILLA_CHANCE_STACK_TYPE)}.");
+				$"of dropping an item{ItD.Stack<ModSettings.SonorousWhispersChanceStacking>(chanceStackPercent, chanceStackType, "+{0:0.##}%", VANILLA_CHANCE_STACK_TYPE)}.");
 		}
 
 		protected override void ApplyHooks() {
-			//TODO: HOOC
+			IL.RoR2.GlobalEventManager.OnCharacterDeath += this.GlobalEventManager_OnCharacterDeath;
 		}
 
-		private float ModifyEliteDropChancePercent(float eliteDropChancePercent, int itemCount) {
+		private void GlobalEventManager_OnCharacterDeath(ILContext il) {
+			ILCursor cursor = new(il);
+
+			int itemCountEffectiveLocalIndex = default;
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.ItemDropChanceOnKill)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
+				instr => instr.MatchStloc(out itemCountEffectiveLocalIndex)))
+				throw new ILSeekException(il, "itemCountEffective assignment", "GlobalEventManager.OnCharacterDeath");
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchCallOrCallvirt<CharacterBody>("get_isElite")))
+				throw new ILSeekException(il, "isElite call", "GlobalEventManager.OnCharacterDeath");
+
+			Instruction isEliteInstr = cursor.Prev;
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_CHANCE_BASE_PERCENT)))
+				throw new ILSeekException(il, "base elite drop chance", "GlobalEventManager.OnCharacterDeath");
+
+			Instruction chanceBaseInstr = cursor.Prev;
+
+			cursor.Goto(isEliteInstr, MoveType.After);
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_CHANCE_STACK_PERCENT)))
+				throw new ILSeekException(il, "stack elite drop chance", "GlobalEventManager.OnCharacterDeath");
+
+			cursor.EmitDelegate(this.NullifyVanillaStackEliteDropChancePercent);
+
+			cursor.Goto(chanceBaseInstr, MoveType.After);
+			cursor.Emit(OpCodes.Ldloc, itemCountEffectiveLocalIndex);
+			cursor.EmitDelegate(this.ModifyEliteDropChancePercent);
+		}
+
+		private float ModifyEliteDropChancePercent(float baseEliteDropChancePercent, int itemCount) {
 			if(!this.Enabled)
-				return eliteDropChancePercent;
+				return baseEliteDropChancePercent;
 
 			float initialPercent = this.chanceBase.Value;
 			float perStackPercent = this.chanceStack.Value;
@@ -96,5 +130,8 @@ namespace StackFix.Items.Impl {
 				_ => initialPercent,
 			};
 		}
+
+		private float NullifyVanillaStackEliteDropChancePercent(float stackEliteDropChancePercent)
+			=> this.Enabled ? 0f : stackEliteDropChancePercent;
 	}
 }

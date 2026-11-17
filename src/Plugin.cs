@@ -31,6 +31,7 @@ namespace StackFix {
 			new PrayerBeads(),
 			//Red
 			new NetworkedSuffering(),
+			new SonorousWhispers(),
 		];
 
 		public void Awake() {
