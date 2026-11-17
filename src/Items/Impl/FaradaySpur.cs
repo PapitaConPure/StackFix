@@ -18,11 +18,11 @@ namespace StackFix.Items.Impl {
 	internal sealed class FaradaySpur: ItemFix {
 		private const float VANILLA_MAX_CHARGE_MOVE_SPEED_BASE = 1.6f;
 		private const float VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE = 2f;
-		private const float VANILLA_EXPLOSION_DAMAGE_BASE = 4f;
-		private const float VANILLA_EXPLOSION_DAMAGE_STACK = 2.8f;
-		private const float VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE = 5f;
-		private const float VANILLA_MAX_CHARGE_DISTANCE_BASE = 32.3f;
-		private const float VANILLA_MAX_CHARGE_DISTANCE_STACK = 7.5f;
+		private const float VANILLA_DISCHARGE_DAMAGE_BASE = 4f;
+		private const float VANILLA_DISCHARGE_DAMAGE_STACK = 2.8f;
+		private const float VANILLA_THRESHOLD_CHARGE_DISCHARGE_DISTANCE_BASE = 5f;
+		private const float VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE = 32.3f;
+		private const float VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK = 7.5f;
 		private const float VANILLA_CHARGE_THRESHOLD_BASE = 0.25f;
 		private const ItemTag VANILLA_CATEGORY = ItemTag.Damage;
 
@@ -32,6 +32,8 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<float> jumpHeightStack;
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
+		private ConfigEntry<float> distanceBase;
+		private ConfigEntry<float> distanceStack;
 		private ConfigEntry<ModSettings.FaradaySpurCategory> category;
 
 		public FaradaySpur() {
@@ -74,6 +76,8 @@ namespace StackFix.Items.Impl {
 			this.jumpHeightStack = this.RegisterSetting(plugin, ModSettings.FaradaySpurJumpHeightStack);
 			this.damageBase      = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageBase);
 			this.damageStack     = this.RegisterSetting(plugin, ModSettings.FaradaySpurDamageStack);
+			this.distanceBase    = this.RegisterSetting(plugin, ModSettings.FaradaySpurDistanceBase);
+			this.distanceStack   = this.RegisterSetting(plugin, ModSettings.FaradaySpurDistanceStack);
 			this.category        = this.RegisterSetting(plugin, ModSettings.FaradaySpurSelectedCategory);
 		}
 
@@ -85,6 +89,8 @@ namespace StackFix.Items.Impl {
 			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.distanceBase, new(Suffix: "m"));
+			RiskOfOptionsCompat.AddSliderOption(this.distanceStack, new(Prefix: "+", Suffix: "m"));
 			RiskOfOptionsCompat.AddChoiceOption(this.category);
 		}
 
@@ -95,11 +101,11 @@ namespace StackFix.Items.Impl {
 			float jumpHeightBase() => this.Enabled ? this.jumpHeightBase.Value * 0.01f : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE;
 			float jumpHeightStack() => this.Enabled ? this.jumpHeightStack.Value * 0.01f : 0f;
 
-			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_EXPLOSION_DAMAGE_BASE;
-			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : VANILLA_EXPLOSION_DAMAGE_STACK;
+			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_DISCHARGE_DAMAGE_BASE;
+			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : VANILLA_DISCHARGE_DAMAGE_STACK;
 
-			float maxDistanceBase() => VANILLA_MAX_CHARGE_DISTANCE_BASE;
-			float maxDistanceStack() => VANILLA_MAX_CHARGE_DISTANCE_STACK;
+			float maxDistanceBase() => this.Enabled ? this.distanceBase.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE;
+			float maxDistanceStack() => this.Enabled ? this.distanceStack.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK;
 
 			LookingGlassCompat.AddItem(DLC3Content.Items.JumpDamageStrike, [
 				new("Max Movement Speed",
@@ -127,12 +133,12 @@ namespace StackFix.Items.Impl {
 			float moveSpeedStack     = enabled ? this.moveSpeedStack.Value : 0f;
 			float jumpHeightBase     = enabled ? this.jumpHeightBase.Value : VANILLA_MAX_CHARGE_JUMP_HEIGHT_BASE * 100f;
 			float jumpHeightStack    = enabled ? this.jumpHeightStack.Value : 0f;
-			float damageBase         = enabled ? this.damageBase.Value : VANILLA_EXPLOSION_DAMAGE_BASE * 100f;
-			float damageStack        = enabled ? this.damageStack.Value : VANILLA_EXPLOSION_DAMAGE_STACK * 100f;
-			float thresDistanceBase  = VANILLA_THRESHOLD_CHARGE_DISTANCE_BASE;
+			float damageBase         = enabled ? this.damageBase.Value : VANILLA_DISCHARGE_DAMAGE_BASE * 100f;
+			float damageStack        = enabled ? this.damageStack.Value : VANILLA_DISCHARGE_DAMAGE_STACK * 100f;
+			float thresDistanceBase  = VANILLA_THRESHOLD_CHARGE_DISCHARGE_DISTANCE_BASE;
 			float thresDistanceStack = 0f;
-			float maxDistanceBase    = VANILLA_MAX_CHARGE_DISTANCE_BASE;
-			float maxDistanceStack   = VANILLA_MAX_CHARGE_DISTANCE_STACK;
+			float maxDistanceBase    = enabled ? this.distanceBase.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE;
+			float maxDistanceStack   = enabled ? this.distanceStack.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK;
 			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE * 100f;
 			float thresStack         = 0f;
 
@@ -205,13 +211,13 @@ namespace StackFix.Items.Impl {
 		private void JumpDamageStrikeBodyBehavior_DischargeEffects(ILContext il) {
 			ILCursor cursor = new(il);
 
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_BASE)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_DISCHARGE_DAMAGE_BASE)))
 				throw new ILSeekException(il, "base damage", nameof(JumpDamageStrikeBodyBehavior.DischargeEffects));
 
 			cursor.EmitDelegate(this.ModifyBaseDamage);
 
 			cursor.Index = 0;
-			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_EXPLOSION_DAMAGE_STACK)))
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdcR4(VANILLA_DISCHARGE_DAMAGE_STACK)))
 				throw new ILSeekException(il, "stack damage", nameof(JumpDamageStrikeBodyBehavior.DischargeEffects));
 
 			cursor.EmitDelegate(this.ModifyStackDamage);
