@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace StackFix.Items {
 	internal abstract class ItemFix: IItemFix {
 		protected ConfigEntry<bool> fixEnabled;
-		private readonly List<Action> extraFixes;
+		private readonly List<Action> extraFixes = [];
 
 		public bool Enabled => Plugin.Enabled.Value && this.fixEnabled.Value;
 
