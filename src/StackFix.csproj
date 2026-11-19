@@ -54,6 +54,10 @@
 			<HintPath>..\lib\LookingGlass-nstrip.dll</HintPath>
 			<Private>true</Private>
 		</Reference>
+		<Reference Include="ItemQualities">
+			<HintPath>..\lib\ItemQualities-nstrip.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

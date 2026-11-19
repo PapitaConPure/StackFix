@@ -9,15 +9,20 @@ using StackFix.Items.Impl;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
+using System.Diagnostics;
 
 namespace StackFix {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 	[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
 	[BepInDependency(RiskOfOptionsCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency(LookingGlassCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency(ItemQualitiesCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 	public sealed class Plugin: BaseUnityPlugin {
 		internal static ConfigEntry<bool> Enabled;
 		internal static ConfigEntry<bool> Megumin;
+
+		private static Plugin instance;
+		public static Plugin Instance { get; private set; }
 
 		private readonly IItemFix[] ItemFixes = [
 			//White
@@ -35,22 +40,25 @@ namespace StackFix {
 		];
 
 		public void Awake() {
+			SingletonHelper.Assign(ref instance, this);
+
+			Stopwatch stopwatch = Stopwatch.StartNew();
 			this.RegisterSettings();
 			this.TryApplyItemFixes();
 			this.TryRegisterRiskOfOptions();
 			this.TryRegisterLookingGlass();
+			this.ListenToExtraEvents();
 
-			Enabled.SettingChanged += this.Enabled_SettingChanged;
-
-#if DEBUG
-			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded.");
-#endif
+			stopwatch.Stop();
+			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded in {stopwatch.ElapsedMilliseconds}ms.");
 		}
 
 		public void OnDestroy() {
 			foreach(IItemFix itemFix in this.ItemFixes)
 				if(itemFix is IDisposable toBeDisposed)
 					toBeDisposed.Dispose();
+
+			SingletonHelper.Unassign(ref instance, this);
 		}
 
 		private void RegisterSettings() {
@@ -129,6 +137,10 @@ namespace StackFix {
 					this.Logger.LogWarning($"Could not initialize LookingGlass support: {ex}");
 				}
 			});
+		}
+
+		private void ListenToExtraEvents() {
+			Enabled.SettingChanged += this.Enabled_SettingChanged;
 		}
 
 		private void Enabled_SettingChanged(object sender, EventArgs e) {
