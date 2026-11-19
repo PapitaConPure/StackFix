@@ -140,7 +140,6 @@ namespace StackFix.Items.Impl {
 			float damageBase         = enabled ? this.damageBase.Value : VANILLA_DISCHARGE_DAMAGE_BASE * 100f;
 			float damageStack        = enabled ? this.damageStack.Value : VANILLA_DISCHARGE_DAMAGE_STACK * 100f;
 			float thresDistanceBase  = VANILLA_THRESHOLD_CHARGE_DISCHARGE_DISTANCE_BASE;
-			float thresDistanceStack = 0f;
 			float maxDistanceBase    = enabled ? this.distanceBase.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_BASE;
 			float maxDistanceStack   = enabled ? this.distanceStack.Value : VANILLA_MAX_CHARGE_DISCHARGE_DISTANCE_STACK;
 			float thresBase          = VANILLA_CHARGE_THRESHOLD_BASE * 100f;
@@ -149,11 +148,31 @@ namespace StackFix.Items.Impl {
 			LanguageAPI.AddOverlay("ITEM_JUMPDAMAGESTRIKE_DESC",
 				$"Moving around builds up {ItD.Utility("charge")}, granting up to " +
 				$"{ItD.Utility($"+{ItD.V(moveSpeedBase)}%{ItD.Stack(moveSpeedStack, "+{0:0.##}%")} movement speed")} " +
-				$"and {ItD.Utility($"+{jumpHeightBase:0}%{ItD.Stack(jumpHeightStack, "+{0:0}%")} jump height")} at 100%. " +
+				$"and {ItD.Utility($"+{ItD.V(jumpHeightBase)}%{ItD.Stack(jumpHeightStack, "+{0:0}%")} jump height")} at 100%. " +
 				$"At {ItD.V(thresBase)}%{ItD.Stack(thresStack, "{0:+0.##;-0.##}%")} charge or higher, jumping triggers an " +
 				$"{ItD.Damage("explosive discharge")} for {ItD.Damage($"{ItD.V(damageBase)}%{ItD.Stack(damageStack, "+{0:0.##}%")} damage")} " +
-				$"in a {ItD.Damage($"{ItD.V(thresDistanceBase)}m{ItD.Stack(thresDistanceStack, "+{0:0.#}m")}")} to " +
-				$"{ItD.Damage($"{ItD.V(maxDistanceBase)}m{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
+				$"in a {ItD.Damage($"{ItD.V(thresDistanceBase)}m")} to {ItD.Damage($"{ItD.V(maxDistanceBase)}m" +
+				$"{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
+
+			ItemQualitiesCompat.ApplyQualityDescriptions("JUMPDAMAGESTRIKE", [
+				new(ItD.Utility("+160% movement speed"),
+					ItD.Utility("+{0}%{1} movement speed"),
+					ItD.V(moveSpeedBase),
+					ItD.Stack(moveSpeedStack, "+{0:0.##}%")),
+				new(ItD.Utility("+200% jump height"),
+					ItD.Utility("+{0}%{1} jump height"),
+					ItD.V(jumpHeightBase),
+					ItD.Stack(jumpHeightStack, "+{0:0.##}%")),
+				new(ItD.Damage("400% <style=cStack>(+280% per stack)</style> damage"),
+					ItD.Damage("{0}%{1} damage"),
+					ItD.V(damageBase),
+					ItD.Stack(damageStack, "+{0:0.##}%")),
+				new("5m to 32.3m <style=cStack>(+7.5m per stack)</style>",
+					"{0} to {1}{2}",
+					ItD.Damage($"{ItD.V(thresDistanceBase)}m"),
+					ItD.Damage($"{ItD.V(maxDistanceBase)}m"),
+					ItD.Stack(maxDistanceStack, "+{0:0.#}m")),
+			]);
 		}
 
 		protected override void ApplyHooks() {
