@@ -13,6 +13,7 @@ This is a summary of how the mod affects items with default settings.
 * **Chronic Expansion**: Initial nerf, stacking tweak. Very small reduction of initial combo damage gains (configurable). Slightly increased combo damage gains per stack and considerably reduced max combo per stack.
 * **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
+* **Box of Dynamite**: Stacking buff. Stacks cooldown reduction instead of damage (configurable).
 * **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
 * **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
@@ -30,18 +31,19 @@ Some settings determine which formula is used to control how a particular effect
 * **Exponential**: effect compounds by a constant factor per stack.
 
 ### General
-| Name                    | Type    | Default | Vanilla | Description |
-|-------------------------|---------|---------|---------|-------------|
-| Enable Mod              | Toggle  | On      | Off     | Turn this whole thing on or off (or maybe). |
-| Fix Bolstering Lantern  | Toggle  | On      | Off     | Enable Bolstering Lantern fixes. |
-| Fix Chronic Expansion   | Toggle  | On      | Off     | Enable Chronic Expansion fixes. |
-| Fix Eclipse Lite        | Toggle  | On      | Off     | Enable Eclipse Lite fixes. |
-| Fix Warped Echo         | Toggle  | On      | Off     | Enable Warped Echo fixes. |
-| Fix Chance Doll         | Toggle  | On      | Off     | Enable Chance Doll fixes. |
-| Fix Faraday Spur        | Toggle  | On      | Off     | Enable Faraday Spur fixes. |
-| Fix Prayer Beads        | Toggle  | On      | Off     | Enable Prayer Beads fixes. |
-| Fix Networked Suffering | Toggle  | On      | Off     | Enable Networked Suffering fixes. |
-| Fix Sonorous Whispers   | Toggle  | On      | Off     | Enable Sonorous Whispers fixes. |
+| Name                    | Type   | Default | Vanilla | Description |
+|-------------------------|--------|---------|---------|-------------|
+| Enable Mod              | Toggle | On      | Off     | Turn this whole thing on or off (or maybe). |
+| Fix Bolstering Lantern  | Toggle | On      | Off     | Enable Bolstering Lantern fixes. |
+| Fix Chronic Expansion   | Toggle | On      | Off     | Enable Chronic Expansion fixes. |
+| Fix Eclipse Lite        | Toggle | On      | Off     | Enable Eclipse Lite fixes. |
+| Fix Warped Echo         | Toggle | On      | Off     | Enable Warped Echo fixes. |
+| Fix Box of Dynamite     | Toggle | On      | Off     | Enable Box of Dynamite fixes. |
+| Fix Chance Doll         | Toggle | On      | Off     | Enable Chance Doll fixes. |
+| Fix Faraday Spur        | Toggle | On      | Off     | Enable Faraday Spur fixes. |
+| Fix Prayer Beads        | Toggle | On      | Off     | Enable Prayer Beads fixes. |
+| Fix Networked Suffering | Toggle | On      | Off     | Enable Networked Suffering fixes. |
+| Fix Sonorous Whispers   | Toggle | On      | Off     | Enable Sonorous Whispers fixes. |
 
 General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
 
@@ -77,18 +79,30 @@ With default settings, Eclipse Lite starts a bit weaker but catches up to vanill
 If you change "Cooldown Barrier Stacking Type" to the vanilla **Linear** stacking, it still catches up at 3 stacks but becomes ~1.75x as effective as vanilla at ~20 stacks.
 
 ### Item: Warped Echo
-| Name                             | Type       | Default     | Vanilla | Description |
-|----------------------------------|------------|-------------|---------|-------------|
-| Base Damage Reduction            | Percent    | `5%`        | `10%`   | Initial damage absorption percentage on trigger. |
-| Damage Reduction per Stack       | Percent    | `+5%`       | `+0%`   | Damage absorption percentage on trigger per stack (*configurable formula*). |
-| Damage Reduction Stacking Type   | Choice     | Reciprocal  | N/A     | Determines how "Damage Reduction per Stack" scales with each additional stack. |
-| Base Damage Spread               | Integer    | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
-| Damage Spread per Stack          | Integer    | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*linear*). |
-| Base Cooldown                    | Fractional | `15.0`      | `15.0`  | Initial cooldown before damage absorption can trigger again. |
-| Cooldown Reduction per Stack     | Percent    | `+2.5%`     | `+0%`   | Damage absorption cooldown reduction per stack (*configurable formula*). |
-| Cooldown Reduction Stacking Type | Choice     | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
+| Name                             | Type    | Default     | Vanilla | Description |
+|----------------------------------|---------|-------------|---------|-------------|
+| Base Damage Reduction            | Percent | `5%`        | `10%`   | Initial damage absorption percentage on trigger. |
+| Damage Reduction per Stack       | Percent | `+5%`       | `+0%`   | Damage absorption percentage on trigger per stack (*configurable formula*). |
+| Damage Reduction Stacking Type   | Choice  | Reciprocal  | N/A     | Determines how "Damage Reduction per Stack" scales with each additional stack. |
+| Base Damage Spread               | Integer | `3`         | `3`     | Initial number of instances in which the absorbed damage spreads on trigger. |
+| Damage Spread per Stack          | Integer | `+0`        | `+1`    | Number of instances in which the absorbed damage spreads on trigger per stack (*linear*). |
+| Base Cooldown                    | Seconds | `15s`       | `15s`   | Initial cooldown before damage absorption can trigger again. |
+| Cooldown Reduction per Stack     | Percent | `+2.5%`     | `+0%`   | Damage absorption cooldown reduction per stack (*configurable formula*). |
+| Cooldown Reduction Stacking Type | Choice  | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
 
 With default settings, Warped Echo starts with a bit less damage absorption than vanilla and loses its spread count stacking in favor of stacking both damage absorption and cooldown reduction, which is quite the step up.
+
+### Item: Box of Dynamite
+| Name                             | Type    | Default     | Vanilla | Description |
+|----------------------------------|---------|-------------|---------|-------------|
+| Base Damage                      | Percent | `240%`      | `240%`  | Initial drone dynamite damage percentage. |
+| Damage per Stack                 | Percent | `+0%`       | `+85%`  | Drone dynamite damage percentage per stack (*linear*). |
+| Base Cooldown                    | Seconds | `10s`       | `10s`   | Initial cooldown between a drone's dynamites. |
+| Cooldown Reduction per Stack     | Percent | `+10%`      | `+0%`   | Drone dynamite cooldown reduction per stack (*configurable formula*). |
+| Cooldown Reduction Stacking Type | Choice  | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
+| Minimum Cooldown                 | Seconds | `0.25s`     | N/A     | Minimum cooldown between a drone's dynamites. |
+
+With default settings, Box of Dynamite just stacks better. No initial nerf.
 
 ### Item: Chance Doll
 | Name                 | Type    | Default    | Vanilla | Description |
@@ -110,8 +124,8 @@ This is a decently sized nerf, justified by the fact that stacking more than 7 C
 | Jump Height per Stack    | Percent | `+40%`  | `+0%`   | Jump height gains per stack (*linear*) at max charge. |
 | Base Damage              | Percent | `360%`  | `400%`  | Initial discharge explosion damage. |
 | Damage per Stack         | Percent | `+0%`   | `+280%` | Discharge explosion damage per stack (*linear*). |
-| Base Distance            | Percent | `32.3m` | `32.3m` | Initial discharge explosion maximum distance. |
-| Distance per Stack       | Percent | `+7.5m` | `+7.5m` | Discharge explosion maximum distance increase per stack (*linear*). |
+| Base Distance            | Meters  | `32.3m` | `32.3m` | Initial discharge explosion maximum distance. |
+| Distance per Stack       | Meters  | `+7.5m` | `+7.5m` | Discharge explosion maximum distance increase per stack (*linear*). |
 
 With default settings, Faraday Spur reaches the vanilla speed/jump gains at 4 stacks.
 
