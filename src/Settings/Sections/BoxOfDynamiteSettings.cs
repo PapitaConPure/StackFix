@@ -44,7 +44,7 @@ namespace StackFix.Settings {
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> BoxOfDynamiteCooldownStack = new(
 			section: "Item: Box of Dynamite",
-			name: "Cooldown per Stack",
+			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
 				"",
@@ -59,7 +59,7 @@ namespace StackFix.Settings {
 		}
 		public static readonly ConstrainedConfigEntry<BoxOfDynamiteCooldownStacking, ListEntryConstraint<BoxOfDynamiteCooldownStacking>> BoxOfDynamiteCooldownStackType = new(
 			section: "Item: Box of Dynamite",
-			name: "Chance Stacking Type",
+			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<BoxOfDynamiteCooldownStacking>(),
 				"Vanilla value: N/A"),
