@@ -154,25 +154,26 @@ namespace StackFix.Items.Impl {
 				$"in a {ItD.Damage($"{ItD.V(thresDistanceBase)}m")} to {ItD.Damage($"{ItD.V(maxDistanceBase)}m" +
 				$"{ItD.Stack(maxDistanceStack, "+{0:0.#}m")}")} area.");
 
-			ItemQualitiesCompat.ApplyQualityDescriptions("JUMPDAMAGESTRIKE", [
-				new(ItD.Utility("+160% movement speed"),
-					ItD.Utility("+{0}%{1} movement speed"),
-					ItD.V(moveSpeedBase),
-					ItD.Stack(moveSpeedStack, "+{0:0.##}%")),
-				new(ItD.Utility("+200% jump height"),
-					ItD.Utility("+{0}%{1} jump height"),
-					ItD.V(jumpHeightBase),
-					ItD.Stack(jumpHeightStack, "+{0:0.##}%")),
-				new(ItD.Damage("400% <style=cStack>(+280% per stack)</style> damage"),
-					ItD.Damage("{0}%{1} damage"),
-					ItD.V(damageBase),
-					ItD.Stack(damageStack, "+{0:0.##}%")),
-				new("5m to 32.3m <style=cStack>(+7.5m per stack)</style>",
-					"{0} to {1}{2}",
-					ItD.Damage($"{ItD.V(thresDistanceBase)}m"),
-					ItD.Damage($"{ItD.V(maxDistanceBase)}m"),
-					ItD.Stack(maxDistanceStack, "+{0:0.#}m")),
-			]);
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("JUMPDAMAGESTRIKE", [
+					new(ItD.Utility("+160% movement speed"),
+						ItD.Utility("+{0}%{1} movement speed"),
+						ItD.V(moveSpeedBase),
+						ItD.Stack(moveSpeedStack, "+{0:0.##}%")),
+					new(ItD.Utility("+200% jump height"),
+						ItD.Utility("+{0}%{1} jump height"),
+						ItD.V(jumpHeightBase),
+						ItD.Stack(jumpHeightStack, "+{0:0.##}%")),
+					new(ItD.Damage("400% <style=cStack>(+280% per stack)</style> damage"),
+						ItD.Damage("{0}%{1} damage"),
+						ItD.V(damageBase),
+						ItD.Stack(damageStack, "+{0:0.##}%")),
+					new("5m to 32.3m <style=cStack>(+7.5m per stack)</style>",
+						"{0} to {1}{2}",
+						ItD.Damage($"{ItD.V(thresDistanceBase)}m"),
+						ItD.Damage($"{ItD.V(maxDistanceBase)}m"),
+						ItD.Stack(maxDistanceStack, "+{0:0.#}m")),
+				]);
 		}
 
 		protected override void ApplyHooks() {

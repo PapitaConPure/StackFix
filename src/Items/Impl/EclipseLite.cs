@@ -66,7 +66,9 @@ namespace StackFix.Items.Impl {
 				"of your maximum health per second of the skill's base cooldown.";
 
 			LanguageAPI.AddOverlay("ITEM_BARRIERONCOOLDOWN_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("BARRIERONCOOLDOWN", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("BARRIERONCOOLDOWN", description);
 		}
 
 		protected override void ApplyHooks() {

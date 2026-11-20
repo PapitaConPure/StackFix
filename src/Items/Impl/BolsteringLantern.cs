@@ -75,7 +75,9 @@ namespace StackFix.Items.Impl {
 				$"for up to {ItD.Utility(charaCountMaxBase)}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility(ItD.V(rangeBase))} meters.";
 
 			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("ATTACKSPEEDPERNEARBYALLYORENEMY", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("ATTACKSPEEDPERNEARBYALLYORENEMY", description);
 		}
 
 		protected override void ApplyHooks() {

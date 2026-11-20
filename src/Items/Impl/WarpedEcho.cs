@@ -121,7 +121,9 @@ namespace StackFix.Items.Impl {
 				$"the final hit. Recharges every {ItD.Utility($"{cooldownBase:0.#}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")}.";
 
 			LanguageAPI.AddOverlay("ITEM_DELAYEDDAMAGE_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("DELAYEDDAMAGE", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("DELAYEDDAMAGE", description);
 		}
 
 		protected override void ApplyHooks() {

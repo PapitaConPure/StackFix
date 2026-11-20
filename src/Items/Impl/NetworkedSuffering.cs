@@ -73,7 +73,9 @@ namespace StackFix.Items.Impl {
 				$"global damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}.";
 
 			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("SHAREDSUFFERING", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("SHAREDSUFFERING", description);
 		}
 
 		protected override void ApplyHooks() {

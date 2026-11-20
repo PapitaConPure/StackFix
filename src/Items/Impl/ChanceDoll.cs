@@ -71,7 +71,9 @@ namespace StackFix.Items.Impl {
 				"to get higher rarity items.";
 
 			LanguageAPI.AddOverlay("ITEM_EXTRASHRINEITEM_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("EXTRASHRINEITEM", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("EXTRASHRINEITEM", description);
 		}
 
 		protected override void ApplyHooks() {

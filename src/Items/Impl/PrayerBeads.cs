@@ -60,10 +60,11 @@ namespace StackFix.Items.Impl {
 				$"bonus stats ({ItD.Healing("health")}, {ItD.Healing("regeneration")}, and {ItD.Damage("damage")}). " +
 				$"On removal, gain all stored stats.");
 
-			ItemQualitiesCompat.ApplyQualityDescriptions("EXTRASTATSONLEVELUP", [
-				new($"{ItD.Utility("20%")} {ItD.Stack("(+5% per stack)")}",
-					$"{ItD.Utility($"{statsBasePercent}%")}{ItD.Stack(statsStackPercent, "+{0:0.##}%")}")
-			]);
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("EXTRASTATSONLEVELUP", [
+					new($"{ItD.Utility("20%")} {ItD.Stack("(+5% per stack)")}",
+						$"{ItD.Utility($"{statsBasePercent}%")}{ItD.Stack(statsStackPercent, "+{0:0.##}%")}")
+				]);
 		}
 
 		protected override void ApplyHooks() {

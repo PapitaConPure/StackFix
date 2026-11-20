@@ -76,7 +76,9 @@ namespace StackFix.Items.Impl {
 				$"of dropping an item{ItD.Stack<ModSettings.SonorousWhispersChanceStacking>(chanceStackPercent, chanceStackType, "+{0:0.##}%", VANILLA_CHANCE_STACK_TYPE)}.";
 
 			LanguageAPI.AddOverlay("ITEM_ITEMDROPCHANCEONKILL_DESC", description);
-			ItemQualitiesCompat.ApplyQualityDescriptions("ITEMDROPCHANCEONKILL", description);
+
+			if(ItemQualitiesCompat.Installed)
+				ItemQualitiesCompat.ApplyQualityDescriptions("ITEMDROPCHANCEONKILL", description);
 		}
 
 		protected override void ApplyHooks() {
