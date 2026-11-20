@@ -76,7 +76,7 @@ namespace StackFix.Settings {
 				"Increase this to improve CPU performance at higher drone and stack counts.",
 				"",
 				"Vanilla value: N/A"),
-			defaultValue: 0.5f,
+			defaultValue: 0.25f,
 			constraint: new(Min: 0.25f, Max: 2.5f));
 	}
 }
