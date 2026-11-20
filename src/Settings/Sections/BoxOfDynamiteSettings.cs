@@ -49,7 +49,7 @@ namespace StackFix.Settings {
 				"Percentage of cooldown reduction for every subsequent stack.",
 				"",
 				"Vanilla value: N/A"),
-			defaultValue: 0f,
+			defaultValue: 10f,
 			constraint: new(Min: 0f, Max: 15f));
 
 		public enum BoxOfDynamiteCooldownStacking {
