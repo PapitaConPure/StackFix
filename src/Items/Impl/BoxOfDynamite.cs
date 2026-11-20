@@ -5,6 +5,12 @@ using StackFix.Settings;
 
 namespace StackFix.Items.Impl {
 	internal sealed class BoxOfDynamite: ItemFix {
+		private const float VANILLA_DAMAGE_BASE = 2.4f;
+		private const float VANILLA_DAMAGE_STACK = 0.8f;
+		private const float VANILLA_DAMAGE_BASE_PERCENT = VANILLA_DAMAGE_BASE * 100f;
+		private const float VANILLA_DAMAGE_STACK_PERCENT = VANILLA_DAMAGE_STACK * 100f;
+		private const float VANILLA_COOLDOWN_BASE = 10f;
+
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
 		private ConfigEntry<float> cooldownBase;
@@ -30,6 +36,7 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterLookingGlassStats() {
+
 		}
 
 		protected override void ApplyDescription() {
