@@ -1,7 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using RoR2;
 using StackFix.Compat;
 using StackFix.Settings;
+using StackFix.Utils;
 
 namespace StackFix.Items.Impl {
 	internal sealed class BoxOfDynamite: ItemFix {
@@ -36,7 +38,35 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterLookingGlassStats() {
+			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_DAMAGE_BASE;
+			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : VANILLA_DAMAGE_STACK;
 
+			float cooldownBase() => this.Enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_BASE;
+			float cooldownStack() => this.Enabled ? this.cooldownStack.Value * 0.01f : 0f;
+			ModSettings.BoxOfDynamiteCooldownStacking cooldownStackType()
+				=> this.Enabled ? this.cooldownStackType.Value : ModSettings.BoxOfDynamiteCooldownStacking.Linear;
+
+			LookingGlassCompat.AddItem(DLC3Content.Items.DronesDropDynamite, [
+				new("Damage",
+					LookingGlassCompat.StatType.Damage,
+					LookingGlassCompat.StatUnits.Percentage,
+					itemCount => ItemStacking.Linear(damageBase(), damageStack(), itemCount)),
+				new("Cooldown",
+					LookingGlassCompat.StatType.Utility,
+					LookingGlassCompat.StatUnits.Seconds,
+					itemCount => cooldownBase() * cooldownStackType() switch {
+						ModSettings.BoxOfDynamiteCooldownStacking.Linear
+							=> ItemStacking.Linear(1f, -cooldownStack(), itemCount),
+
+						ModSettings.BoxOfDynamiteCooldownStacking.Reciprocal
+							=> ItemStacking.Reciprocal(0f, cooldownStack(), itemCount),
+
+						ModSettings.BoxOfDynamiteCooldownStacking.Exponential
+							=> ItemStacking.Exponential(1f - cooldownStack(), itemCount - 1),
+
+						_ => 1f,
+					}),
+			]);
 		}
 
 		protected override void ApplyDescription() {
