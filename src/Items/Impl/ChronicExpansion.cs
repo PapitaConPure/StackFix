@@ -74,6 +74,13 @@ namespace StackFix.Items.Impl {
 				$"Killing an enemy increases your damage by {ItD.Damage($"{ItD.V(damageBasePercent)}%")}" +
 				$"{ItD.Stack(damageStackPercent, "+{0:0.##}%")}, up to {ItD.Utility(comboMaxBase)}{ItD.Stack(comboMaxStack)}, " +
 				$"for {ItD.Utility($"{ItD.V(durationBase)}s")}. Dealing damage refreshes the timer.");
+
+			ItemQualitiesCompat.ApplyQualityDescriptions("INCREASEDAMAGEONMULTIKILL", [
+				new($"{ItD.Damage("3.5%")} {ItD.Stack("(+1% per stack)")}",
+					$"{ItD.Damage($"{ItD.V(damageBasePercent)}%")}{ItD.Stack(damageStackPercent, "+{0:0.##}%")}"),
+				new($"{ItD.Utility(10)} {ItD.Stack("(+5 per stack)")}",
+					$"{ItD.Utility(comboMaxBase)}{ItD.Stack(comboMaxStack)}"),
+			]);
 		}
 
 		protected override void ApplyHooks() {
