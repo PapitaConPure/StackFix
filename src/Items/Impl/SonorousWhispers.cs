@@ -71,9 +71,12 @@ namespace StackFix.Items.Impl {
 			float chanceStackPercent          = enabled ? this.chanceStack.Value : VANILLA_CHANCE_STACK_PERCENT;
 			ItemStacking.Type chanceStackType = ItemStacking.FromEnum(enabled ? this.chanceStackType.Value : VANILLA_CHANCE_STACK_TYPE);
 
-			LanguageAPI.AddOverlay("ITEM_ITEMDROPCHANCEONKILL_DESC",
+			string description =
 				$"When a large monster is killed, it will always drop an item. All elites have a {ItD.Utility($"{ItD.V(chanceBasePercent)}%")} chance " +
-				$"of dropping an item{ItD.Stack<ModSettings.SonorousWhispersChanceStacking>(chanceStackPercent, chanceStackType, "+{0:0.##}%", VANILLA_CHANCE_STACK_TYPE)}.");
+				$"of dropping an item{ItD.Stack<ModSettings.SonorousWhispersChanceStacking>(chanceStackPercent, chanceStackType, "+{0:0.##}%", VANILLA_CHANCE_STACK_TYPE)}.";
+
+			LanguageAPI.AddOverlay("ITEM_ITEMDROPCHANCEONKILL_DESC", description);
+			ItemQualitiesCompat.ApplyQualityDescriptions("ITEMDROPCHANCEONKILL", description);
 		}
 
 		protected override void ApplyHooks() {

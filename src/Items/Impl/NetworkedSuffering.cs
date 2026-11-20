@@ -67,10 +67,13 @@ namespace StackFix.Items.Impl {
 			float damageBase       = enabled ? this.damageBase.Value : VANILLA_VIRUS_DAMAGE_BASE * 100f;
 			float damageStack      = enabled ? this.damageStack.Value : 0f;
 
-			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC",
+			string description =
 				$"Infect up to {ItD.Utility(maxVirusCountBase)}{ItD.Stack(maxVirusCountStack)} enemies with a computer virus that " +
 				$"duplicates {ItD.Damage($"{damageBase}%{ItD.Stack(damageStack, "+{0:0.##}%")} of all damage taken")} and sends it to a " +
-				$"global damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}.");
+				$"global damage pool. Every 3 seconds, ALL infected enemies suffer {ItD.Damage("100% pooled damage")}.";
+
+			LanguageAPI.AddOverlay("ITEM_SHAREDSUFFERING_DESC", description);
+			ItemQualitiesCompat.ApplyQualityDescriptions("SHAREDSUFFERING", description);
 		}
 
 		protected override void ApplyHooks() {

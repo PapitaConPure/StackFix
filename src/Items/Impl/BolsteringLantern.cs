@@ -70,9 +70,12 @@ namespace StackFix.Items.Impl {
 			int charaCountMaxStack = enabled ? this.characterCountMaxStack.Value : VANILLA_CHARACTER_COUNT_MAX_STACK;
 			float rangeBase = VANILLA_RANGE_BASE;
 
-			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC",
+			string description =
 				$"Increase your {ItD.Damage("attack speed")} by {ItD.Damage($"{ItD.V(attackSpeedBase)}%")}{ItD.Stack(attackSpeedStack, "+{0:0.##}%")} " +
-				$"for up to {ItD.Utility(charaCountMaxBase)}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility(ItD.V(rangeBase))} meters.");
+				$"for up to {ItD.Utility(charaCountMaxBase)}{ItD.Stack(charaCountMaxStack)} enemies and allies within {ItD.Utility(ItD.V(rangeBase))} meters.";
+
+			LanguageAPI.AddOverlay("ITEM_ATTACKSPEEDPERNEARBYALLYORENEMY_DESC", description);
+			ItemQualitiesCompat.ApplyQualityDescriptions("ATTACKSPEEDPERNEARBYALLYORENEMY", description);
 		}
 
 		protected override void ApplyHooks() {
