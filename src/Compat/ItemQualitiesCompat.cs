@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
-using UnityEngine.Networking.Types;
 
 namespace StackFix.Compat {
 	internal class ItemQualitiesCompat {
