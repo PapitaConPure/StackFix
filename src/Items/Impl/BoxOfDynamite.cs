@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using R2API;
 using RoR2;
 using StackFix.Compat;
 using StackFix.Settings;
@@ -8,7 +9,7 @@ using StackFix.Utils;
 namespace StackFix.Items.Impl {
 	internal sealed class BoxOfDynamite: ItemFix {
 		private const float VANILLA_DAMAGE_BASE = 2.4f;
-		private const float VANILLA_DAMAGE_STACK = 0.8f;
+		private const float VANILLA_DAMAGE_STACK = 0.85f;
 		private const float VANILLA_DAMAGE_BASE_PERCENT = VANILLA_DAMAGE_BASE * 100f;
 		private const float VANILLA_DAMAGE_STACK_PERCENT = VANILLA_DAMAGE_STACK * 100f;
 		private const float VANILLA_COOLDOWN_BASE = 10f;
@@ -70,6 +71,19 @@ namespace StackFix.Items.Impl {
 		}
 
 		protected override void ApplyDescription() {
+			bool enabled = this.Enabled;
+			float damageBase                    = enabled ? this.damageBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
+			float damageStack                   = enabled ? this.damageStack.Value : VANILLA_DAMAGE_STACK_PERCENT;
+			float cooldownBase                  = enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_BASE;
+			float cooldownStack                 = enabled ? this.cooldownStack.Value : 0f;
+			ItemStacking.Type cooldownStackType = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
+
+			LanguageAPI.AddOverlay("ITEM_DRONESDROPDYNAMITE_DESC",
+				$"Gain {ItD.Damage("Lt.Droneboy")}. While in combat, your drones drop sticks of dynamite that detonate for " +
+				$"{ItD.Damage($"{damageBase}% damage{ItD.Stack(damageStack, "+{0:0.#}%")}")}, stunning enemies. " +
+				$"Recharges after {ItD.Utility(cooldownBase)} seconds{ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")}.");
+
+			ItemQualitiesCompat.ApplyQualityDescriptions("DRONESDROPDYNAMITE", []);
 		}
 
 		protected override void ApplyHooks() {
