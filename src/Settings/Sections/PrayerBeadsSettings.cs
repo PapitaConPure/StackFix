@@ -8,6 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Prayer Beads",
 			description: Paragraph(
 				"Enables Prayer Beads tweaks.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 
@@ -16,6 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Extra Stats",
 			description: Paragraph(
 				"Stored extra stat gains percentage for the first stack.",
+				"",
 				"Vanilla value: 20"),
 			defaultValue: 10f,
 			constraint: new(Min: 10f, Max: 30f));
@@ -25,6 +27,7 @@ namespace StackFix.Settings {
 			name: "Extra Stats per Stack",
 			description: Paragraph(
 				"Additional stored extra stat gains percentage for every subsequent stack.",
+				"",
 				"Vanilla value: 5"),
 			defaultValue: 10f,
 			constraint: new(Min: 5f, Max: 25f));

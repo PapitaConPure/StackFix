@@ -8,6 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Sonorous Whispers",
 			description: Paragraph(
 				"Enables Sonorous Whispers tweaks.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 
@@ -16,6 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Elite Drop Chance",
 			description: Paragraph(
 				"Chance percentage for elite monsters to drop an item for the first stack.",
+				"",
 				"Vanilla value: 5 (incorrectly reported as 4)"),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 5f));
@@ -25,6 +27,7 @@ namespace StackFix.Settings {
 			name: "Elite Drop Chance per Stack",
 			description: Paragraph(
 				"Additional chance percentage for elite monsters to drop an item for every subsequent stack.",
+				"",
 				"Vanilla value: 1"),
 			defaultValue: 2.5f,
 			constraint: new(Min: 0f, Max: 5f));

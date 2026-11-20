@@ -7,6 +7,7 @@ namespace StackFix.Settings {
 			name: "Enable Mod",
 			description: Paragraph(
 				"Enables the mod.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 

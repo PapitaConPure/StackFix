@@ -8,6 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Faraday Spur",
 			description: Paragraph(
 				"Enables Faraday Spur tweaks.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 
@@ -16,6 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Movement Speed",
 			description: Paragraph(
 				"Bonus movement speed percentage at maximum charge for the first stack.",
+				"",
 				"Vanilla value: 160"),
 			defaultValue: 70f,
 			constraint: new(Min: 0f, Max: 160f));
@@ -25,6 +27,7 @@ namespace StackFix.Settings {
 			name: "Movement Speed per Stack",
 			description: Paragraph(
 				"Increased bonus movement speed percentage at maximum charge for every subsequent stack.",
+				"",
 				"Vanilla value: 0"),
 			defaultValue: 30f,
 			constraint: new(Min: 0f, Max: 160f));
@@ -34,6 +37,7 @@ namespace StackFix.Settings {
 			name: "Base Jump Height",
 			description: Paragraph(
 				"Bonus jump height percentage at maximum charge for the first stack.",
+				"",
 				"Vanilla value: 200"),
 			defaultValue: 80f,
 			constraint: new(Min: 0f, Max: 200f));
@@ -43,6 +47,7 @@ namespace StackFix.Settings {
 			name: "Jump Height per Stack",
 			description: Paragraph(
 				"Increased bonus jump height percentage at maximum charge for every subsequent stack.",
+				"",
 				"Vanilla value: 0"),
 			defaultValue: 40f,
 			constraint: new(Min: 0f, Max: 200f));
@@ -52,6 +57,7 @@ namespace StackFix.Settings {
 			name: "Base Discharge Damage",
 			description: Paragraph(
 				"Explosion damage percentage for the first stack.",
+				"",
 				"Vanilla value: 400"),
 			defaultValue: 360f,
 			constraint: new(Min: 0f, Max: 400f));
@@ -61,6 +67,7 @@ namespace StackFix.Settings {
 			name: "Discharge Damage per Stack",
 			description: Paragraph(
 				"Increased explosion damage percentage for every subsequent stack.",
+				"",
 				"Vanilla value: 280"),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 400f));
@@ -70,6 +77,7 @@ namespace StackFix.Settings {
 			name: "Base Discharge Distance",
 			description: Paragraph(
 				"Explosion radius (in meters) for the first stack.",
+				"",
 				"Vanilla value: 32.3"),
 			defaultValue: 32.3f,
 			constraint: new(Min: 0f, Max: 44.5f)); //( ^)o(^ )b
@@ -79,6 +87,7 @@ namespace StackFix.Settings {
 			name: "Discharge Distance per Stack",
 			description: Paragraph(
 				"Increased explosion radius (in meters) for every subsequent stack.",
+				"",
 				"Vanilla value: 7.5"),
 			defaultValue: 7.5f,
 			constraint: new(Min: 0f, Max: 7.5f));
@@ -93,6 +102,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Determines which kind of category chest can contain this item.",
 				"This setting will take effect next stage if changed during a run.",
+				"",
 				"Vanilla value: Damage"),
 			defaultValue: FaradaySpurCategory.Utility,
 			constraint: new(typeof(FaradaySpurCategory)));

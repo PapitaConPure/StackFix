@@ -8,6 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Eclipse Lite",
 			description: Paragraph(
 				"Enables Eclipse Lite tweaks.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 
@@ -16,6 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown Barrier",
 			description: Paragraph(
 				"Percentage of max health gained in barrier for every second of a skill's cooldown for the first stack.",
+				"",
 				"Vanilla value: 1"),
 			defaultValue: 0.5f,
 			constraint: new(Min: 0.25f, Max: 1.5f));
@@ -25,6 +27,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Barrier per Stack",
 			description: Paragraph(
 				"Additional percentage of max health gained in barrier for every second of a skill's cooldown for every subsequent stack.",
+				"",
 				"Vanilla value: 0.25"),
 			defaultValue: 0.5f,
 			constraint: new(Min: 0.1f, Max: 1f));

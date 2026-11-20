@@ -8,6 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Warped Echo",
 			description: Paragraph(
 				"Enables Warped Echo tweaks.",
+				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
 
@@ -16,6 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Damage Reduction",
 			description: Paragraph(
 				"Percentage of damage reduction for the first stack.",
+				"",
 				"Vanilla value: 10"),
 			defaultValue: 5f,
 			constraint: new(Min: 1f, Max: 10f));
@@ -25,6 +27,7 @@ namespace StackFix.Settings {
 			name: "Damage Reduction per Stack",
 			description: Paragraph(
 				"Additional percentage of damage reduction for every subsequent stack.",
+				"",
 				"Vanilla value: 0"),
 			defaultValue: 5f,
 			constraint: new(Min: 0f, Max: 8f));
@@ -49,6 +52,7 @@ namespace StackFix.Settings {
 			name: "Base Damage Spread",
 			description: Paragraph(
 				"Damage spread instances for the first stack.",
+				"",
 				"Vanilla value: 3"),
 			defaultValue: 3,
 			constraint: new(Min: 2, Max: 6));
@@ -58,6 +62,7 @@ namespace StackFix.Settings {
 			name: "Damage Spread per Stack",
 			description: Paragraph(
 				"Additional damage spread instances for every subsequent stack.",
+				"",
 				"Vanilla value: 1"),
 			defaultValue: 0,
 			constraint: new(Min: 0, Max: 2));
@@ -67,6 +72,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown",
 			description: Paragraph(
 				"Base cooldown in seconds.",
+				"",
 				"Vanilla value: 15"),
 			defaultValue: 15f,
 			constraint: new(Min: 10f, Max: 20f));
@@ -76,6 +82,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
+				"",
 				"Vanilla value: 0"),
 			defaultValue: 2.5f,
 			constraint: new(Min: 0f, Max: 10f));
