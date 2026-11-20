@@ -31,6 +31,7 @@ namespace StackFix {
 			new EclipseLite(),
 			new WarpedEcho(),
 			//Green
+			new BoxOfDynamite(),
 			new ChanceDoll(),
 			new FaradaySpur(),
 			new PrayerBeads(),
