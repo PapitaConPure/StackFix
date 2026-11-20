@@ -10,7 +10,7 @@ using StackFix.Settings;
 using StackFix.Utils;
 
 namespace StackFix.Items.Impl {
-	internal class SonorousWhispers: ItemFix {
+	internal sealed class SonorousWhispers: ItemFix {
 		private const float VANILLA_CHANCE_BASE_PERCENT = 4f;
 		private const float VANILLA_ACTUAL_CHANCE_BASE_PERCENT = 5f;
 		private const float VANILLA_CHANCE_STACK_PERCENT = 1f;

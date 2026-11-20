@@ -10,7 +10,7 @@ using StackFix.Settings;
 using StackFix.Utils;
 
 namespace StackFix.Items.Impl {
-	internal class ChanceDoll: ItemFix {
+	internal sealed class ChanceDoll: ItemFix {
 		private const int VANILLA_CHANCE_BASE_PERCENT = 40;
 		private const int VANILLA_CHANCE_STACK_PERCENT = 10;
 		private const float VANILLA_CHANCE_BASE = VANILLA_CHANCE_BASE_PERCENT * 0.01f;

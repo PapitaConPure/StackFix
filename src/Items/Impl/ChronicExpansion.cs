@@ -10,7 +10,7 @@ using StackFix.Settings;
 using StackFix.Utils;
 
 namespace StackFix.Items.Impl {
-	internal class ChronicExpansion: ItemFix {
+	internal sealed class ChronicExpansion: ItemFix {
 		private const float VANILLA_DAMAGE_BASE = 0.035f;
 		private const float VANILLA_DAMAGE_STACK = 0.01f;
 		private const int VANILLA_COMBO_MAX_BASE = 10;

@@ -14,7 +14,7 @@ using System.Linq;
 using System.Reflection;
 
 namespace StackFix.Items.Impl {
-	internal class PrayerBeads: ItemFix, IDisposable {
+	internal sealed class PrayerBeads: ItemFix, IDisposable {
 		private const float VANILLA_STATS_BASE = 0.2f;
 		private const float VANILLA_STATS_STACK = 0.05f;
 		private const float VANILLA_STATS_BASE_PERCENT = VANILLA_STATS_BASE * 100f;
