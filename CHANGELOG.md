@@ -1,3 +1,10 @@
+### v2.3.0
+* Added Box of Dynamite item fix.
+* Added support for Quality Mod descriptions.
+* Corrected some setting inconsistencies
+* Corrected a lot of description inconsistencies.
+* Corrected a few README mistakes.
+
 ### v2.2.0
 * Added Chronic Expansion item fix.
 * Added Sonorous Whispers item fix.
