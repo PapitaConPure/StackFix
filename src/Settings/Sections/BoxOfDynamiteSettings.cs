@@ -48,7 +48,7 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
 				"",
-				"Vanilla value: N/A"),
+				"Vanilla value: 0"),
 			defaultValue: 10f,
 			constraint: new(Min: 0f, Max: 15f));
 
