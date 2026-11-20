@@ -46,7 +46,7 @@ namespace StackFix.Items.Impl {
 			RiskOfOptionsCompat.AddChoiceOption(this.damageReductionStackType);
 			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadBase);
 			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadStack, new(Prefix: "+"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
 			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
 			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
 		}
