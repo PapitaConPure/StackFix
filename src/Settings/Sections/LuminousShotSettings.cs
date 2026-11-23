@@ -32,7 +32,7 @@ namespace StackFix.Settings {
 			defaultValue: 60f,
 			constraint: new(Min: 0f, Max: 80f));
 
-		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> LuminousShotMaxChargesBase = new(
+		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> LuminousShotChargesMaxBase = new(
 			section: "Item: Luminous Shot",
 			name: "Base Max Charges",
 			description: Paragraph(
@@ -42,7 +42,7 @@ namespace StackFix.Settings {
 			defaultValue: 3,
 			constraint: new(Min: 3, Max: 6));
 
-		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> LuminousShotMaxChargesStack = new(
+		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> LuminousShotChargesMaxStack = new(
 			section: "Item: Luminous Shot",
 			name: "Max Charges per Stack",
 			description: Paragraph(
