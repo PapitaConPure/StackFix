@@ -56,7 +56,7 @@ namespace StackFix.Settings {
 			section: "Item: Luminous Shot",
 			name: "Base Cooldown Reduction",
 			description: Paragraph(
-				"Percentage of secondary skill cooldown reduction for the first stack.",
+				"Percentage of Secondary skill cooldown reduction for the first stack.",
 				"",
 				"Vanilla value: 20"),
 			defaultValue: 15f,
@@ -66,7 +66,7 @@ namespace StackFix.Settings {
 			section: "Item: Luminous Shot",
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
-				"Percentage of secondary skill cooldown reduction for every subsequent stack.",
+				"Percentage of Secondary skill cooldown reduction for every subsequent stack.",
 				"",
 				"Vanilla value: 0"),
 			defaultValue: 0f,
