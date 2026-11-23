@@ -8,13 +8,14 @@ using StackFix.Compat;
 using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
+using System;
 
 namespace StackFix.Items.Impl {
-	internal class LuminousShot: ItemFix {
+	internal sealed class LuminousShot: ItemFix {
 		private const int VANILLA_CHARGES_MAX_BASE = 5;
 		private const int VANILLA_CHARGES_MAX_STACK = 1;
-		private const float VANILLA_DAMAGE_BASE_PERCENT = 40f;
-		private const float VANILLA_DAMAGE_STACK_PERCENT = 10f;
+		private const float VANILLA_DAMAGE_BASE_PERCENT = 175f;
+		private const float VANILLA_DAMAGE_STACK_PERCENT = 50f;
 		private const float VANILLA_DAMAGE_BASE = VANILLA_DAMAGE_BASE_PERCENT * 0.01f;
 		private const float VANILLA_DAMAGE_STACK = VANILLA_DAMAGE_STACK_PERCENT * 0.01f;
 		private const float VANILLA_COOLDOWN_REDUCTION_BASE_PERCENT = 20f;
@@ -24,17 +25,19 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<int> chargesMaxStack;
 		private ConfigEntry<float> damageBase;
 		private ConfigEntry<float> damageStack;
-		private ConfigEntry<float> cooldownBase;
-		private ConfigEntry<float> cooldownStack;
+		private ConfigEntry<float> cooldownReductionBase;
+		private ConfigEntry<float> cooldownReductionStack;
+		private ConfigEntry<ModSettings.LuminousShotCooldownReductionStacking> cooldownReductionStackType;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled      = this.RegisterSetting(plugin, ModSettings.LuminousShotFixEnabled);
-			this.chargesMaxBase  = this.RegisterSetting(plugin, ModSettings.LuminousShotChargesMaxBase);
-			this.chargesMaxStack = this.RegisterSetting(plugin, ModSettings.LuminousShotChargesMaxStack);
-			this.damageBase      = this.RegisterSetting(plugin, ModSettings.LuminousShotDamageBase);
-			this.damageStack     = this.RegisterSetting(plugin, ModSettings.LuminousShotDamageStack);
-			this.cooldownBase    = this.RegisterSetting(plugin, ModSettings.LuminousShotCooldownReductionBase);
-			this.cooldownStack   = this.RegisterSetting(plugin, ModSettings.LuminousShotCooldownReductionStack);
+			this.fixEnabled                 = this.RegisterSetting(plugin, ModSettings.LuminousShotFixEnabled);
+			this.chargesMaxBase             = this.RegisterSetting(plugin, ModSettings.LuminousShotChargesMaxBase);
+			this.chargesMaxStack            = this.RegisterSetting(plugin, ModSettings.LuminousShotChargesMaxStack);
+			this.damageBase                 = this.RegisterSetting(plugin, ModSettings.LuminousShotDamageBase);
+			this.damageStack                = this.RegisterSetting(plugin, ModSettings.LuminousShotDamageStack);
+			this.cooldownReductionBase      = this.RegisterSetting(plugin, ModSettings.LuminousShotCooldownReductionBase);
+			this.cooldownReductionStack     = this.RegisterSetting(plugin, ModSettings.LuminousShotCooldownReductionStack);
+			this.cooldownReductionStackType = this.RegisterSetting(plugin, ModSettings.LuminousShotCooldownReductionStackType);
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
@@ -43,8 +46,9 @@ namespace StackFix.Items.Impl {
 			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
 			RiskOfOptionsCompat.AddSliderOption(this.chargesMaxBase);
 			RiskOfOptionsCompat.AddSliderOption(this.chargesMaxStack, new(Prefix: "+"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownReductionBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownReductionStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(this.cooldownReductionStackType);
 		}
 
 		public override void RegisterLookingGlassStats() {
@@ -54,8 +58,10 @@ namespace StackFix.Items.Impl {
 			float damageBase() => this.Enabled ? this.damageBase.Value * 0.01f : VANILLA_DAMAGE_BASE;
 			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : VANILLA_DAMAGE_STACK;
 
-			float cooldownBase() => this.Enabled ? this.cooldownBase.Value * 0.01f : VANILLA_COOLDOWN_REDUCTION_BASE;
-			float cooldownStack() => this.Enabled ? this.cooldownStack.Value * 0.01f : 0f;
+			float cooldownBase() => this.Enabled ? this.cooldownReductionBase.Value * 0.01f : VANILLA_COOLDOWN_REDUCTION_BASE;
+			float cooldownStack() => this.Enabled ? this.cooldownReductionStack.Value * 0.01f : 0f;
+			ModSettings.LuminousShotCooldownReductionStacking cooldownStackType()
+				=> this.Enabled ? this.cooldownReductionStackType.Value : ModSettings.LuminousShotCooldownReductionStacking.Linear;
 
 			LookingGlassCompat.AddItem(DLC2Content.Items.IncreasePrimaryDamage, [
 				new("Max Charges",
@@ -69,7 +75,18 @@ namespace StackFix.Items.Impl {
 				new("Secondary Cooldown Reduction",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
-					itemCount => ItemStacking.Linear(cooldownBase(), cooldownStack(), itemCount)),
+					itemCount => cooldownStackType() switch {
+						ModSettings.LuminousShotCooldownReductionStacking.Linear
+							=> 1f - ItemStacking.Linear(cooldownBase(), cooldownStack(), itemCount),
+
+						ModSettings.LuminousShotCooldownReductionStacking.Hyperbolic
+							=> 1f - ItemStacking.Hyperbolic(cooldownBase(), cooldownStack(), itemCount),
+
+						ModSettings.LuminousShotCooldownReductionStacking.Exponential
+							=> ItemStacking.Exponential(1f - cooldownBase(), 1f - cooldownStack(), itemCount),
+
+						_ => 1f - cooldownBase(),
+					}),
 				new("Proc Coefficient",
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.ProcCoeff,
@@ -79,18 +96,19 @@ namespace StackFix.Items.Impl {
 
 		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
-			int chargesMaxBase         = enabled ? this.chargesMaxBase.Value : VANILLA_CHARGES_MAX_BASE;
-			int chargesMaxStack        = enabled ? this.chargesMaxStack.Value : VANILLA_CHARGES_MAX_STACK;
-			float damageBasePercent    = enabled ? this.damageBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
-			float damageStackPercent   = enabled ? this.damageStack.Value : VANILLA_DAMAGE_STACK_PERCENT;
-			float cooldownBasePercent  = enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_REDUCTION_BASE_PERCENT;
-			float cooldownStackPercent = enabled ? this.cooldownStack.Value : 0f;
+			int chargesMaxBase                  = enabled ? this.chargesMaxBase.Value : VANILLA_CHARGES_MAX_BASE;
+			int chargesMaxStack                 = enabled ? this.chargesMaxStack.Value : VANILLA_CHARGES_MAX_STACK;
+			float damageBasePercent             = enabled ? this.damageBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
+			float damageStackPercent            = enabled ? this.damageStack.Value : VANILLA_DAMAGE_STACK_PERCENT;
+			float cooldownBasePercent           = enabled ? this.cooldownReductionBase.Value : VANILLA_COOLDOWN_REDUCTION_BASE_PERCENT;
+			float cooldownStackPercent          = enabled ? this.cooldownReductionStack.Value : 0f;
+			ItemStacking.Type cooldownStackType = enabled ? ItemStacking.FromEnum(this.cooldownReductionStackType.Value) : ItemStacking.Type.Linear;
 
 			string description =
 				$"Activating {ItD.Utility("Secondary skill")} stores up to {ItD.Utility($"{chargesMaxBase} charges")}{ItD.Stack(chargesMaxStack)}. " +
 				$"Requires {ItD.Utility("3 charges")} for your {ItD.Utility("Primary skill")} to fire lightning strikes, dealing " +
 				$"{ItD.Damage($"{damageBasePercent}% TOTAL damage")}{ItD.Stack(damageStackPercent, "+{0:0.##}%")} each. " +
-				$"{ItD.Utility($"Reduces Secondary skill cooldown by {cooldownBasePercent}%")}{ItD.Stack(cooldownStackPercent, "+{0:0.##;0.##}%")}.";
+				$"{ItD.Utility($"Reduces Secondary skill cooldown by {cooldownBasePercent}%")}{ItD.Stack(cooldownStackPercent, cooldownStackType, "+{0:0.##;0.##}%")}.";
 
 			LanguageAPI.AddOverlay("ITEM_INCREASEPRIMARYDAMAGE_DESC", description);
 
@@ -99,7 +117,66 @@ namespace StackFix.Items.Impl {
 		}
 
 		protected override void ApplyHooks() {
-			//TODO: hook things and implement tweaks
+			IL.RoR2.CharacterBody.AddIncreasePrimaryDamageStack += this.CharacterBody_AddIncreasePrimaryDamageStack;
+			IL.RoR2.GlobalEventManager.ProcessHitEnemy += this.GlobalEventManager_ProcessHitEnemy;
+			IL.RoR2.CharacterBody.RecalculateStats += this.CharacterBody_RecalculateStats;
+		}
+
+		private void CharacterBody_AddIncreasePrimaryDamageStack(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.IncreasePrimaryDamage)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
+				throw new ILSeekException(il, "stack max buff count", nameof(CharacterBody.AddIncreasePrimaryDamageStack));
+
+			Instruction itemCountInstr = cursor.Prev;
+
+			if(!cursor.TryGotoPrev(MoveType.After,
+				instr => instr.MatchLdcI4(VANILLA_CHARGES_MAX_BASE - 1)))
+				throw new ILSeekException(il, "base max buff count", nameof(CharacterBody.AddIncreasePrimaryDamageStack));
+
+			cursor.EmitDelegate(this.NullifyBaseMaxCharges);
+
+			cursor.Goto(itemCountInstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyMaxCharges);
+		}
+
+		private int NullifyBaseMaxCharges(int baseMaxCharges)
+			=> this.Enabled ? 0 : baseMaxCharges;
+
+		private int ModifyMaxCharges(int itemCount) {
+			if(!this.Enabled)
+				return itemCount;
+
+			return ItemStacking.Linear(this.chargesMaxBase.Value, this.chargesMaxStack.Value, itemCount);
+		}
+
+		private void GlobalEventManager_ProcessHitEnemy(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.IncreasePrimaryDamage)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective))))
+				throw new ILSeekException(il, "item count", nameof(GlobalEventManager.ProcessHitEnemy));
+
+			Instruction itemCountInstr = cursor.Prev;
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdcR4(VANILLA_DAMAGE_BASE)))
+				throw new ILSeekException(il, "base damage", nameof(GlobalEventManager.ProcessHitEnemy));
+
+			Instruction baseDamageInstr = cursor.Prev;
+
+			cursor.Goto(itemCountInstr, MoveType.After);
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdcR4(VANILLA_DAMAGE_STACK)))
+				throw new ILSeekException(il, "stack damage", nameof(GlobalEventManager.ProcessHitEnemy));
+
+			cursor.EmitDelegate(this.ModifyStackDamage);
+
+			cursor.Goto(baseDamageInstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyBaseDamage);
 		}
 
 		private float ModifyBaseDamage(float baseDamage) {
@@ -114,6 +191,52 @@ namespace StackFix.Items.Impl {
 				return stackDamage;
 
 			return this.damageStack.Value * 0.01f;
+		}
+
+		private void CharacterBody_RecalculateStats(ILContext il) {
+			ILCursor cursor = new(il);
+
+			int itemCountEffectiveLocalIndex = default;
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdsfld(typeof(DLC2Content.Items), nameof(DLC2Content.Items.IncreasePrimaryDamage)),
+				instr => instr.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCountEffective)),
+				instr => instr.MatchStloc(out itemCountEffectiveLocalIndex)))
+				throw new ILSeekException(il, "item count", nameof(CharacterBody.RecalculateStats));
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdloc(itemCountEffectiveLocalIndex),
+				instr => instr.MatchLdcI4(0)))
+				throw new ILSeekException(il, "cooldown reduction logical expression", nameof(CharacterBody.RecalculateStats));
+
+			if(!cursor.TryGotoNext(MoveType.After,
+				instr => instr.MatchLdcR4(1f - VANILLA_COOLDOWN_REDUCTION_BASE)))
+				throw new ILSeekException(il, "base cooldown reduction factor", nameof(CharacterBody.RecalculateStats));
+
+			cursor.Emit(OpCodes.Ldloc, itemCountEffectiveLocalIndex);
+			cursor.EmitDelegate(this.ModifyCooldownFactor);
+		}
+
+		private float ModifyCooldownFactor(float vanillaFactor, int itemCount) {
+			if(!this.Enabled)
+				return vanillaFactor;
+
+			float initial = this.cooldownReductionBase.Value * 0.01f;
+			float perStack = this.cooldownReductionStack.Value * 0.01f;
+
+			float factor = this.cooldownReductionStackType.Value switch {
+				ModSettings.LuminousShotCooldownReductionStacking.Linear
+					=> 1f - ItemStacking.Linear(initial, perStack, itemCount),
+
+				ModSettings.LuminousShotCooldownReductionStacking.Hyperbolic
+					=> 1f - ItemStacking.Hyperbolic(initial, perStack, itemCount),
+
+				ModSettings.LuminousShotCooldownReductionStacking.Exponential
+					=> ItemStacking.Exponential(1f - initial, 1f - perStack, itemCount),
+
+				_ => 1f - initial,
+			};
+
+			return MathF.Max(0.1f, factor);
 		}
 	}
 }
