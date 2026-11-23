@@ -28,6 +28,10 @@ namespace StackFix.Compat {
 			else
 				ItemCatalog.availability.CallWhenAvailable(apply);
 
+#if DEBUG
+			UnityEngine.Debug.Log($"Applying pattern-based ItemQualities descriptions for item: {itemToken}", Plugin.Instance);
+#endif
+
 			void apply() {
 				string strippedItemToken = StripItemToken(itemToken);
 
@@ -39,15 +43,15 @@ namespace StackFix.Compat {
 						?? throw new InvalidOperationException(
 							$"Couldn't find ItemQualities description token: '{qualityToken}' for item: '{strippedItemToken}', quality: '{qualityTierName}'");
 
-	#if DEBUG
+#if DEBUG
 					UnityEngine.Debug.Log($"qualityDescription = {qualityDescription}", Plugin.Instance);
-	#endif
+#endif
 
 					string finalDescription = ApplyReplacementPatterns(qualityDescription, patterns);
 
-	#if DEBUG
+#if DEBUG
 					UnityEngine.Debug.Log($"finalDescription = {finalDescription}", Plugin.Instance);
-	#endif
+#endif
 
 					LanguageAPI.AddOverlay(qualityToken, finalDescription);
 				}
@@ -123,14 +127,10 @@ namespace StackFix.Compat {
 				if(pattern == null)
 					throw new ArgumentNullException(nameof(replacementPattern.Pattern));
 
-#if DEBUG
-				UnityEngine.Debug.Log($"Applying {pattern} from string index {lastReplacementEndIndex}", Plugin.Instance);
-#endif
-
 				MatchResult match = pattern.Match(qualityDescription, lastReplacementEndIndex);
 
 				if(!match.Success) {
-					UnityEngine.Debug.LogWarning($"Couldn't match {pattern} from string index {lastReplacementEndIndex}, to apply StackFix replacement.");
+					UnityEngine.Debug.LogWarning($"Couldn't match {pattern} from string index {lastReplacementEndIndex}, to apply StackFix replacement.", Plugin.Instance);
 					continue;
 				}
 
