@@ -34,6 +34,7 @@ namespace StackFix {
 			new BoxOfDynamite(),
 			new ChanceDoll(),
 			new FaradaySpur(),
+			new LuminousShot(),
 			new PrayerBeads(),
 			//Red
 			new NetworkedSuffering(),
