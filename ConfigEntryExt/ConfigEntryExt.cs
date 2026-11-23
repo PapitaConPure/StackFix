@@ -21,7 +21,9 @@ namespace ConfigEntryExt {
 		public ConfigEntry<TValue> ConfigEntry { get; private set; }
 
 		public ConfigEntry<TValue> RegisterFor(BaseUnityPlugin plugin)
-			=> this.ConfigEntry = this.MaterializeAndBind(plugin);
+			=> plugin.Config.ContainsKey(new ConfigDefinition(this.Section, this.Name))
+				? throw new InvalidOperationException($"Key '{this.Name}' in section '{this.Section}' already exists.")
+				: this.ConfigEntry = this.MaterializeAndBind(plugin);
 
 		protected virtual ConfigEntry<TValue> MaterializeAndBind(BaseUnityPlugin plugin)
 			=> plugin.Config.Bind(
