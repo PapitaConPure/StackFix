@@ -15,7 +15,8 @@ This is a summary of how the mod affects items with default settings.
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
 * **Box of Dynamite**: Stacking buff. Stacks cooldown reduction instead of damage (configurable).
 * **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
-* **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
+* **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Dramatically reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
+* **Luminous Shot**: Great initial nerf, stacking buff. Dramatically reduced initial damage and max charges (configurable), but increased damage per stack (configurable). Cooldown reduction is half that of vanilla, but was made configurable and it may also be configured to stack.
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * **Sonorous Whispers**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
@@ -41,6 +42,7 @@ Some settings determine which formula is used to control how a particular effect
 | Fix Box of Dynamite     | Toggle | On      | Off     | Enable Box of Dynamite fixes. |
 | Fix Chance Doll         | Toggle | On      | Off     | Enable Chance Doll fixes. |
 | Fix Faraday Spur        | Toggle | On      | Off     | Enable Faraday Spur fixes. |
+| Fix Luminous Shot       | Toggle | On      | Off     | Enable Luminous Shot fixes. |
 | Fix Prayer Beads        | Toggle | On      | Off     | Enable Prayer Beads fixes. |
 | Fix Networked Suffering | Toggle | On      | Off     | Enable Networked Suffering fixes. |
 | Fix Sonorous Whispers   | Toggle | On      | Off     | Enable Sonorous Whispers fixes. |
@@ -58,12 +60,12 @@ General settings act as umbrella toggles for their respective features. Turn off
 With default settings, Bolstering Lantern is almost exactly the same as vanilla but with a slightly worse initial attack speed and decently better attack speed stacking.
 
 ### Item: Chronic Expansion
-| Name                          | Type    | Default | Vanilla | Description |
-|-------------------------------|---------|---------|---------|-------------|
-| Base Damage                   | Percent | `3%`    | `3.5%`  | Initial percentage of damage gained with multi-kill combos. |
-| Damage per Stack              | Percent | `+1.5%` | `+1%`   | Percentage of damage gained with multi-kill combos per stack (*linear*). |
-| Base Max Combo                | Integer | `10`    | `10`    | Initial maximum multi-kill combo number. |
-| Max Combo per Stack           | Integer | `+2`    | `+5`    | Maximum multi-kill combo number per stack (*linear*). |
+| Name                | Type    | Default | Vanilla | Description |
+|---------------------|---------|---------|---------|-------------|
+| Base Damage         | Percent | `3%`    | `3.5%`  | Initial percentage of damage gained with multi-kill combos. |
+| Damage per Stack    | Percent | `+1.5%` | `+1%`   | Percentage of damage gained with multi-kill combos per stack (*linear*). |
+| Base Max Combo      | Integer | `10`    | `10`    | Initial maximum multi-kill combo number. |
+| Max Combo per Stack | Integer | `+2`    | `+5`    | Maximum multi-kill combo number per stack (*linear*). |
 
 With default settings, Chronic Expansion has a slightly weaker initial max combo gain (+30% damage), but stacks in a way that keeps the maximum combo per stack within reasonable numbers, balanced by the fact that each combo stack gives a bit more damage per stack. Having quadratic-type stacking on a white item is certainly a choice Gearbox has made. I'm weak and scared to turn off the stacking of one of the two stats, but you can set any of the two to +0 and the item's potential damage gains will stack linearly.
 
@@ -131,6 +133,21 @@ With default settings, Faraday Spur reaches the vanilla speed/jump gains at 4 st
 
 I have wondered for quite a bit if perhaps the first stack feels somewhat underwhelming now, but this should really incentivize printing and actually stacking the item instead of giving you a free win after picking it up once.
 
+### Item: Luminous Shot
+| Name                             | Type    | Default    | Vanilla | Description |
+|----------------------------------|---------|------------|---------|-------------|
+| Base Max Charges                 | Integer | `3`        | `5`     | Initial maximum number of lightning strike charges. |
+| Max Charges per Stack            | Integer | `+1`       | `+1`    | Maximum number of lightning strike charges per stack (*linear*). |
+| Base Damage                      | Percent | `140%`     | `175%`  | Initial lightning strike damage. |
+| Damage per Stack                 | Percent | `+60%`     | `+50%`  | Lightning strike damage per stack (*linear*). |
+| Base Cooldown Reduction          | Percent | `10%`      | `20%`   | Initial Secondary skill cooldown reduction. |
+| Cooldown Reduction per Stack     | Percent | `+0%`      | `+0%`   | Secondary skill cooldown reduction per stack (*configurable formula*). |
+| Cooldown Reduction Stacking Type | Choice  | Reciprocal | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
+
+With default settings, Luminous Shot's initial maximum potential TOTAL damage of 3x140%=420% is about half as effective than vanilla's 5x175%=875%. At 3 stacks, the initial vanilla potential is almost reached. At 4 stacks, the vanilla initial potential it is surpassed. At ~15 stacks, it fully catches up to vanilla stacking and surpasses it.
+
+If you so desire, you can make Secondary cooldown reduction stack so that it also eventually reaches and surpasses the vanilla value. I wouldn't really recommend it, though.
+
 ### Item: Prayer Beads
 | Name                  | Type    | Default | Vanilla | Description |
 |-----------------------|---------|---------|---------|-------------|
@@ -172,12 +189,14 @@ If something breaks real bad, there's some incompatibility you think I should kn
 * Discord: `papitaconpure`
 
 ## Compatibility notes
-From what I've tested: `Goorakh-Quality` seems to work fine. I haven't tested the thing in multiplayer yet, though. I'd appreciate it if you let me know if it works! I'll eventually test it myself.
+I played one long run with this mod and some QoL mods in multiplayer and everything seemed to work.
 
 If any single item breaks because of another mod or something, you can disable the individual fix. If that doesn't work either, please do let me know.
 
+If you suspect there's a problem with this mod but you're playing with AI-generated mods, try disabling those first to see if the issue goes away, as AI-generated mods don't usually consider compatibility.
+
 ### Nerd
-I've never really worked with IL Hooks nor overriden any item behavior before, but I can at least confirm it works perfectly in singleplayer. I also mess with as small a portion of IL code as possible, so I don't think networking/compat should be much of an issue. I did make it so that everyone must have the mod with the same version just in case, though. You never know.
+I've never really worked with IL Hooks nor overriden any item behavior before. I mess with as small a portion of IL code as possible, so I don't think networking/compat should be much of an issue, but I did make it so that everyone must have the mod with the same version just in case. You never know.
 
 I assume shit may break if:
 * Another mod removes an entire IL section this mod expects to match for an item fix.
