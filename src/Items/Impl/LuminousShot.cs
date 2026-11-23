@@ -75,7 +75,7 @@ namespace StackFix.Items.Impl {
 				new("Secondary Cooldown Reduction",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Percentage,
-					itemCount => cooldownStackType() switch {
+					itemCount => 1f - cooldownStackType() switch {
 						ModSettings.LuminousShotCooldownReductionStacking.Linear
 							=> 1f - ItemStacking.Linear(cooldownBase(), cooldownStack(), itemCount),
 
