@@ -79,8 +79,8 @@ namespace StackFix.Items.Impl {
 						ModSettings.LuminousShotCooldownReductionStacking.Linear
 							=> 1f - ItemStacking.Linear(cooldownBase(), cooldownStack(), itemCount),
 
-						ModSettings.LuminousShotCooldownReductionStacking.Hyperbolic
-							=> 1f - ItemStacking.Hyperbolic(cooldownBase(), cooldownStack(), itemCount),
+						ModSettings.LuminousShotCooldownReductionStacking.Reciprocal
+							=> ItemStacking.Reciprocal(cooldownBase(), cooldownStack(), itemCount),
 
 						ModSettings.LuminousShotCooldownReductionStacking.Exponential
 							=> ItemStacking.Exponential(1f - cooldownBase(), 1f - cooldownStack(), itemCount),
@@ -227,8 +227,8 @@ namespace StackFix.Items.Impl {
 				ModSettings.LuminousShotCooldownReductionStacking.Linear
 					=> 1f - ItemStacking.Linear(initial, perStack, itemCount),
 
-				ModSettings.LuminousShotCooldownReductionStacking.Hyperbolic
-					=> 1f - ItemStacking.Hyperbolic(initial, perStack, itemCount),
+				ModSettings.LuminousShotCooldownReductionStacking.Reciprocal
+					=> ItemStacking.Reciprocal(initial, perStack, itemCount),
 
 				ModSettings.LuminousShotCooldownReductionStacking.Exponential
 					=> ItemStacking.Exponential(1f - initial, 1f - perStack, itemCount),

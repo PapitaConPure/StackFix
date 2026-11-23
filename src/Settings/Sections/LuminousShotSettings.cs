@@ -70,10 +70,10 @@ namespace StackFix.Settings {
 				"",
 				"Vanilla value: 0"),
 			defaultValue: 0f,
-			constraint: new(Min: 0f, Max: 10f));
+			constraint: new(Min: 0f, Max: 5f));
 		public enum LuminousShotCooldownReductionStacking {
 			Linear,
-			Hyperbolic,
+			Reciprocal,
 			Exponential,
 		}
 		public static readonly ConstrainedConfigEntry<LuminousShotCooldownReductionStacking, ListEntryConstraint<LuminousShotCooldownReductionStacking>> LuminousShotCooldownReductionStackType = new(
@@ -83,7 +83,7 @@ namespace StackFix.Settings {
 				StackTypeDescription<LuminousShotCooldownReductionStacking>(),
 				"Vanilla value: N/A",
 				"Not recommended: Linear"),
-			defaultValue: LuminousShotCooldownReductionStacking.Hyperbolic,
+			defaultValue: LuminousShotCooldownReductionStacking.Reciprocal,
 			constraint: new(typeof(LuminousShotCooldownReductionStacking)));
 	}
 }
