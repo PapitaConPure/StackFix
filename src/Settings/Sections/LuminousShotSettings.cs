@@ -59,7 +59,7 @@ namespace StackFix.Settings {
 				"Percentage of Secondary skill cooldown reduction for the first stack.",
 				"",
 				"Vanilla value: 20"),
-			defaultValue: 15f,
+			defaultValue: 10f,
 			constraint: new(Min: 0f, Max: 30f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> LuminousShotCooldownReductionStack = new(
