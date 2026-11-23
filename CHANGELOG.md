@@ -1,3 +1,7 @@
+### v2.4.0
+* Added Luminous Shot item fix.
+* Fixed Quality Mod descriptions not updating when changing settings in-game.
+
 ### v2.3.0
 * Added Box of Dynamite item fix.
 * Added support for Quality Mod descriptions.
