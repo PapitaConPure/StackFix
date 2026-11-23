@@ -12,6 +12,8 @@ namespace StackFix.Compat {
 	internal class ItemQualitiesCompat {
 		public const string GUID = "com.Gorakh.ItemQualities";
 
+		private static readonly Dictionary<string, string> vanillaDescriptions = [];
+
 		public static bool Installed => BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID);
 
 		/// <summary>
@@ -28,20 +30,18 @@ namespace StackFix.Compat {
 			else
 				ItemCatalog.availability.CallWhenAvailable(apply);
 
+			void apply() {
+
 #if DEBUG
-			UnityEngine.Debug.Log($"Applying pattern-based ItemQualities descriptions for item: {itemToken}", Plugin.Instance);
+				UnityEngine.Debug.Log($"Applying pattern-based ItemQualities descriptions for item: {itemToken}", Plugin.Instance);
 #endif
 
-			void apply() {
 				string strippedItemToken = StripItemToken(itemToken);
 
 				for(QualityTier qualityTier = 0; qualityTier < QualityTier.Count; qualityTier++) {
 					string qualityTierName = qualityTier.ToString().ToUpper();
 					string qualityToken = $"ITEM_{strippedItemToken}_{qualityTierName}_DESC";
-
-					string qualityDescription = Language.english.GetLocalizedStringByToken(qualityToken)
-						?? throw new InvalidOperationException(
-							$"Couldn't find ItemQualities description token: '{qualityToken}' for item: '{strippedItemToken}', quality: '{qualityTierName}'");
+					string qualityDescription = SaveOrRestoreVanillaDescription(qualityToken);
 
 #if DEBUG
 					UnityEngine.Debug.Log($"qualityDescription = {qualityDescription}", Plugin.Instance);
@@ -78,15 +78,12 @@ namespace StackFix.Compat {
 				for(QualityTier qualityTier = 0; qualityTier < QualityTier.Count; qualityTier++) {
 					string qualityTierName = qualityTier.ToString().ToUpper();
 					string qualityToken = $"ITEM_{strippedItemToken}_{qualityTierName}_DESC";
-
-					string qualityDescription = Language.english.GetLocalizedStringByToken(qualityToken)
-						?? throw new InvalidOperationException(
-							$"Couldn't find ItemQualities description token: '{qualityToken}' for item: '{strippedItemToken}', quality: '{qualityTierName}'");
+					string qualityDescription = SaveOrRestoreVanillaDescription(qualityToken);
 
 					if(!qualityDescription.Contains("{0}"))
 						throw new InvalidOperationException(
 							$"Cannot replace zeroth format replacement indicator (\"{{0}}\") for ItemQualities description token: '{qualityToken}' " +
-							$"for item: '{strippedItemToken}', quality: '{qualityTierName}'");
+							$"for item: '{strippedItemToken}', quality: '{qualityTierName}'\nDescription was:\n\"{qualityDescription}\"");
 
 					string finalDescription = string.Format(qualityDescription, zeroFormatReplacementDescription);
 
@@ -143,7 +140,7 @@ namespace StackFix.Compat {
 				lastReplacementEndIndex = match.Index + match.Length;
 
 #if DEBUG
-				UnityEngine.Debug.Log($"Matched {pattern} and appended to final string:\n'{previous}'\n'{replacement}'", Plugin.Instance);
+				UnityEngine.Debug.Log($"Matched {pattern} and appended to final string:\n\"{previous}\"\n\"{replacement}\"", Plugin.Instance);
 #endif
 			}
 
@@ -153,6 +150,31 @@ namespace StackFix.Compat {
 			}
 
 			return finalDescriptionBuilder.ToString();
+		}
+
+		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+		private static string SaveOrRestoreVanillaDescription(string qualityToken) {
+			bool descriptionExists = vanillaDescriptions.TryGetValue(qualityToken, out string restoredDescription);
+
+			if(descriptionExists) {
+#if DEBUG
+				UnityEngine.Debug.Log($"Restored original ItemQualities description for token: {qualityToken}", Plugin.Instance);
+#endif
+
+				return restoredDescription;
+			}
+
+			string vanillaDescription = Language.english.GetLocalizedStringByToken(qualityToken)
+				?? throw new InvalidOperationException(
+					$"Couldn't get original ItemQualities description for token: '{qualityToken}'");
+
+			vanillaDescriptions.Add(qualityToken, vanillaDescription);
+
+#if DEBUG
+			UnityEngine.Debug.Log($"Stored original ItemQualities description for token: '{qualityToken}'", Plugin.Instance);
+#endif
+
+			return vanillaDescription;
 		}
 	}
 }
