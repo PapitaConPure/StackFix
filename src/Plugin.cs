@@ -9,7 +9,6 @@ using StackFix.Items.Impl;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace StackFix {
