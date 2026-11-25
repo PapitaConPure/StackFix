@@ -14,13 +14,13 @@ This is a summary of how the mod affects items with default settings.
 * **Eclipse Lite**: Lesser change. Reduced initial barrier gain (configurable), but increased barrier gain per stack (configurable).
 * **Warped Echo**: Substantial change. Reduced initial damage absorption (configurable) and removed damage spread count stacking (configurable). Damage absorption and cooldown reduction now scale per stack (fully configurable).
 * **Box of Dynamite**: Stacking buff. Stacks cooldown reduction instead of damage (configurable).
+* **Breaching Fin**: Lesser initial nerf, stacking buff. Reduced airborne re-launches from 2 to 1. Can now stack damage per launch and grounded launch cooldown reduction.
 * **Chance Doll**: Nerf. Reduced initial improved reward chance (configurable). Increased additional chance per stack value but it now scales hyperbolically (configurable).
 * **Faraday Spur**: Great initial nerf, great stacking buff, additional tweaks. Dramatically reduced initial movement speed and jump height gains (configurable), as well as initial discharge damage (configurable). Movement speed and jump height gains now scale linearly per stack (configurable). Discharge damage doesn't increase per stack (configurable), but discharge radius does (configurable). Moved from the 'Damage' category to the 'Utility' category (configurable), which better matches this stacking behavior.
 * **Luminous Shot**: Great initial nerf, stacking buff. Dramatically reduced initial damage and max charges (configurable), but increased damage per stack (configurable). Cooldown reduction is half that of vanilla, but was made configurable and it may also be configured to stack.
 * **Prayer Beads**: Initial nerf, stacking buff. Reduced initial bonus stats (configurable), but increased bonus stats per stack (configurable).
 * **Networked Suffering**: Initial nerf, stacking buff. Reduced initial maximum spread count and damage (configurable). Percentage of damage sent to the global pool now scales linearly a bit per stack (configurable).
 * **Sonorous Whispers**: Initial nerf, lesser stacking buff. Nullified initial elite item drop chance (configurable). Now increases said chance by +2.5% per stack instead of +1% (configurable).
-* There's more planned, but that's it for now...
 
 ## Configuration
 There's a section for each item fix. I invite you to carefully inspect the differences between the default and vanilla values for each fix, as it'll give you a good insight on what to change whenever you feel something's off. If you completely disagree with one or more fixes, you can turn them off individually.
@@ -32,22 +32,24 @@ Some settings determine which formula is used to control how a particular effect
 * **Exponential**: effect compounds by a constant factor per stack.
 
 ### General
-| Name                    | Type   | Default | Vanilla | Description |
-|-------------------------|--------|---------|---------|-------------|
-| Enable Mod              | Toggle | On      | Off     | Turn this whole thing on or off (or maybe). |
-| Fix Bolstering Lantern  | Toggle | On      | Off     | Enable Bolstering Lantern fixes. |
-| Fix Chronic Expansion   | Toggle | On      | Off     | Enable Chronic Expansion fixes. |
-| Fix Eclipse Lite        | Toggle | On      | Off     | Enable Eclipse Lite fixes. |
-| Fix Warped Echo         | Toggle | On      | Off     | Enable Warped Echo fixes. |
-| Fix Box of Dynamite     | Toggle | On      | Off     | Enable Box of Dynamite fixes. |
-| Fix Chance Doll         | Toggle | On      | Off     | Enable Chance Doll fixes. |
-| Fix Faraday Spur        | Toggle | On      | Off     | Enable Faraday Spur fixes. |
-| Fix Luminous Shot       | Toggle | On      | Off     | Enable Luminous Shot fixes. |
-| Fix Prayer Beads        | Toggle | On      | Off     | Enable Prayer Beads fixes. |
-| Fix Networked Suffering | Toggle | On      | Off     | Enable Networked Suffering fixes. |
-| Fix Sonorous Whispers   | Toggle | On      | Off     | Enable Sonorous Whispers fixes. |
+| Name                                | Type   | Default | Vanilla | Description |
+|-------------------------------------|--------|---------|---------|-------------|
+| Enable Mod                          | Toggle | On      | Off     | Turn this whole thing on or off (or maybe). |
+| Display Non-Vanilla Stacking Types  | Toggle | On      | Off     | Display the configured stacking type for any setting with a configurable stacking formula when it differs from vanilla. |
+| Fix Bolstering Lantern              | Toggle | On      | Off     | Enable Bolstering Lantern fixes. |
+| Fix Chronic Expansion               | Toggle | On      | Off     | Enable Chronic Expansion fixes. |
+| Fix Eclipse Lite                    | Toggle | On      | Off     | Enable Eclipse Lite fixes. |
+| Fix Warped Echo                     | Toggle | On      | Off     | Enable Warped Echo fixes. |
+| Fix Box of Dynamite                 | Toggle | On      | Off     | Enable Box of Dynamite fixes. |
+| Fix Breaching Fin                   | Toggle | On      | Off     | Enable Breaching Fin fixes. |
+| Fix Chance Doll                     | Toggle | On      | Off     | Enable Chance Doll fixes. |
+| Fix Faraday Spur                    | Toggle | On      | Off     | Enable Faraday Spur fixes. |
+| Fix Luminous Shot                   | Toggle | On      | Off     | Enable Luminous Shot fixes. |
+| Fix Prayer Beads                    | Toggle | On      | Off     | Enable Prayer Beads fixes. |
+| Fix Networked Suffering             | Toggle | On      | Off     | Enable Networked Suffering fixes. |
+| Fix Sonorous Whispers               | Toggle | On      | Off     | Enable Sonorous Whispers fixes. |
 
-General settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
+Most general settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
 
 ### Item: Bolstering Lantern
 | Name                          | Type    | Default | Vanilla | Description |
@@ -102,9 +104,23 @@ With default settings, Warped Echo starts with a bit less damage absorption than
 | Base Cooldown                    | Seconds | `10s`       | `10s`   | Initial cooldown between a drone's dynamites. |
 | Cooldown Reduction per Stack     | Percent | `+10%`      | `+0%`   | Drone dynamite cooldown reduction per stack (*configurable formula*). |
 | Cooldown Reduction Stacking Type | Choice  | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
-| Minimum Cooldown                 | Seconds | `0.25s`     | N/A     | Minimum cooldown between a drone's dynamites. |
+| Minimum Cooldown                 | Seconds | `0.25s`     | N/A     | Minimum cooldown between a drone's dynamites. Thought for performance. |
 
 With default settings, Box of Dynamite just stacks better. No initial nerf.
+
+### Item: Breaching Fin
+| Name                             | Type    | Default     | Vanilla | Description |
+|----------------------------------|---------|-------------|---------|-------------|
+| Base Airborne Launches           | Integer | `1`         | `2`     | Initial number of airborne enemy launches. |
+| Airborne Launches per Stack      | Integer | `+1`        | `+1`    | Number of airborne enemy launches per stack (*linear*). |
+| Base Damage                      | Percent | `10%`      | `10%`  | Initial increased damage percentage per launch. |
+| Damage per Stack                 | Percent | `+2%`       | `+0%`  | Additional increased damage damage percentage per launch per stack (*linear*). |
+| Base Cooldown                    | Seconds | `15s`       | `15s`   | Initial cooldown between grounded enemy launches. |
+| Cooldown Reduction per Stack     | Percent | `+1%`       | `+0%`   | Grounded enemy launch cooldown reduction per stack (*configurable formula*). |
+| Cooldown Reduction Stacking Type | Choice  | Exponential | N/A     | Determines how "Cooldown Reduction per Stack" scales with each additional stack. |
+| Minimum Cooldown                 | Seconds | `5s`        | N/A     | Minimum cooldown between grounded enemy launches. |
+
+With default settings, Breaching Fin just relaunches airborne enemies once initially, instead of twice as in vanilla. It also gains the ability to stack a bit of damage per launch and cooldown reduction, so its stacking is significantly more powerful now.
 
 ### Item: Chance Doll
 | Name                 | Type    | Default    | Vanilla | Description |
@@ -194,6 +210,13 @@ I played one long run with this mod and some QoL mods in multiplayer and everyth
 If any single item breaks because of another mod or something, you can disable the individual fix. If that doesn't work either, please do let me know.
 
 If you suspect there's a problem with this mod but you're playing with AI-generated mods, try disabling those first to see if the issue goes away, as AI-generated mods don't usually consider compatibility.
+
+### ItemQualities
+From what I've tested, the effects of this mod get applied to `Goorakh-Quality`'s quality item variants. I went ahead and applied this mod's modified vanilla descriptions to every quality variant of items that this mod has tweaked to reflect this.
+
+As of now, there's a single conflict that you should be aware of:
+* **Breaching Fin**: base damage and stack damage.
+* I'll report more conflicts as they appear.
 
 ### Nerd
 I've never really worked with IL Hooks nor overriden any item behavior before. I mess with as small a portion of IL code as possible, so I don't think networking/compat should be much of an issue, but I did make it so that everyone must have the mod with the same version just in case. You never know.
