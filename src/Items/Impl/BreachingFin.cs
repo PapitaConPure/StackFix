@@ -1,8 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using R2API;
 using RoR2;
 using StackFix.Compat;
+using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
@@ -24,13 +27,14 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<ModSettings.BreachingFinCooldownStacking> cooldownStackType;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled = ModSettings.BreachingFinFixEnabled.RegisterFor(plugin);
-			this.airLaunchesBase = ModSettings.BreachingFinAirLaunchesBase.RegisterFor(plugin);
-			this.airLaunchesStack = ModSettings.BreachingFinAirLaunchesStack.RegisterFor(plugin);
-			this.damageBase = ModSettings.BreachingFinDamageBase.RegisterFor(plugin);
-			this.damageStack = ModSettings.BreachingFinDamageStack.RegisterFor(plugin);
-			this.cooldownBase = ModSettings.BreachingFinCooldownBase.RegisterFor(plugin);
-			this.cooldownStack = ModSettings.BreachingFinCooldownStack.RegisterFor(plugin);
+			this.fixEnabled        = ModSettings.BreachingFinFixEnabled.RegisterFor(plugin);
+			this.airLaunchesBase   = ModSettings.BreachingFinAirLaunchesBase.RegisterFor(plugin);
+			this.airLaunchesStack  = ModSettings.BreachingFinAirLaunchesStack.RegisterFor(plugin);
+			this.damageBase        = ModSettings.BreachingFinDamageBase.RegisterFor(plugin);
+			this.damageStack       = ModSettings.BreachingFinDamageStack.RegisterFor(plugin);
+			this.cooldownBase      = ModSettings.BreachingFinCooldownBase.RegisterFor(plugin);
+			this.cooldownStack     = ModSettings.BreachingFinCooldownStack.RegisterFor(plugin);
+			this.cooldownStackType = ModSettings.BreachingFinCooldownStackType.RegisterFor(plugin);
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
@@ -85,12 +89,12 @@ namespace StackFix.Items.Impl {
 
 		protected override void ApplyDescription() {
 			bool enabled = this.Enabled;
-			int airLaunchesBase = enabled ? this.airLaunchesBase.Value : VANILLA_AIRBORNE_LAUNCHES_BASE;
-			int airLaunchesStack = enabled ? this.airLaunchesStack.Value : VANILLA_AIRBORNE_LAUNCHES_STACK;
-			float damageBase = enabled ? this.damageBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
-			float damageStack = enabled ? this.damageStack.Value : 0f;
-			float cooldownBase = enabled ? this.cooldownBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
-			float cooldownStack = enabled ? this.cooldownStack.Value : 0f;
+			int airLaunchesBase                 = enabled ? this.airLaunchesBase.Value : VANILLA_AIRBORNE_LAUNCHES_BASE;
+			int airLaunchesStack                = enabled ? this.airLaunchesStack.Value : VANILLA_AIRBORNE_LAUNCHES_STACK;
+			float damageBase                    = enabled ? this.damageBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
+			float damageStack                   = enabled ? this.damageStack.Value : 0f;
+			float cooldownBase                  = enabled ? this.cooldownBase.Value : VANILLA_DAMAGE_BASE_PERCENT;
+			float cooldownStack                 = enabled ? this.cooldownStack.Value : 0f;
 			ItemStacking.Type cooldownStackType = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
 
 			string description =
@@ -106,8 +110,105 @@ namespace StackFix.Items.Impl {
 		}
 
 		protected override void ApplyHooks() {
-			//TODO: hook and impl
+			IL.RoR2.HealthComponent.TakeDamageProcess += this.HealthComponent_TakeDamageProcess;
+			IL.RoR2.KnockbackFinUtil.ModifyDamageInfo += this.KnockbackFinUtil_ModifyDamageInfo;
+			IL.RoR2.KnockbackFinUtil.GetCooldown += this.KnockbackFinUtil_GetCooldown;
 		}
 
+		private void HealthComponent_TakeDamageProcess(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.baseJuggles))))
+				throw new ILSeekException(il, "base juggles", nameof(HealthComponent.TakeDamageProcess));
+
+			Instruction baseJugglesInstr = cursor.Prev;
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.jugglesPerStackBeyond1))))
+				throw new ILSeekException(il, "stack juggles", nameof(HealthComponent.TakeDamageProcess));
+
+			cursor.EmitDelegate(this.ModifyStackJuggles);
+
+			cursor.Goto(baseJugglesInstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyBaseJuggles);
+		}
+
+		private int ModifyBaseJuggles(int baseJuggles) {
+			if(!this.Enabled)
+				return baseJuggles;
+
+			return this.airLaunchesBase.Value;
+		}
+
+		private int ModifyStackJuggles(int stackJuggles) {
+			if(!this.Enabled)
+				return stackJuggles;
+
+			return this.airLaunchesStack.Value;
+		}
+
+		private void KnockbackFinUtil_ModifyDamageInfo(ILContext il) {
+			ILCursor cursor = new(il);
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.damageAddPerJuggle))))
+				throw new ILSeekException(il, "damageAddPerJuggle", nameof(KnockbackFinUtil.ModifyDamageInfo));
+
+			cursor.Emit(OpCodes.Ldarg_1);
+			cursor.EmitDelegate(this.ModifyDamage);
+		}
+
+		private float ModifyDamage(float baseDamage, CharacterBody attacker) {
+			if(!this.Enabled)
+				return baseDamage;
+
+			float initial = this.damageBase.Value * 0.01f;
+			float perStack = this.damageStack.Value * 0.01f;
+			int itemCount = attacker.inventory.GetItemCountEffective(DLC2Content.Items.KnockBackHitEnemies);
+
+			return ItemStacking.Linear(initial, perStack, itemCount);
+		}
+
+		private void KnockbackFinUtil_GetCooldown(ILContext il) {
+			ILCursor cursor = new(il);
+
+			//minCooldown and maxCooldown have the same value (15f) lerped w/hyperbolic 0.3 scaling for some reason.
+			//It's probably a vestige of a previous tentative vanilla stacking.
+			//Could probably remove the entire function but let's play it safer and just pass the two read-sites here through delegates.
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.minCooldown))))
+				throw new ILSeekException(il, "minCooldown", nameof(KnockbackFinUtil.GetCooldown));
+
+			Instruction minCooldownIstr = cursor.Prev;
+
+			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.maxCooldown))))
+				throw new ILSeekException(il, "maxCooldown", nameof(KnockbackFinUtil.GetCooldown));
+
+			cursor.EmitDelegate(this.ModifyCooldown);
+
+			cursor.Goto(minCooldownIstr, MoveType.After);
+			cursor.EmitDelegate(this.ModifyCooldown);
+		}
+
+		private float ModifyCooldown(float cooldown, int itemCount) {
+			if(!this.Enabled || itemCount <= 0)
+				return cooldown;
+
+			float baseValue = this.cooldownBase.Value;
+			float perStack = this.cooldownStack.Value * 0.01f;
+
+			float factor = this.cooldownStackType.Value switch {
+				ModSettings.BreachingFinCooldownStacking.Linear
+					=> ItemStacking.Linear(1f, -perStack, itemCount),
+
+				ModSettings.BreachingFinCooldownStacking.Reciprocal
+					=> ItemStacking.Reciprocal(0f, perStack, itemCount),
+
+				ModSettings.BreachingFinCooldownStacking.Exponential
+					=> ItemStacking.Exponential(1f - perStack, itemCount - 1),
+
+				_ => 1f,
+			};
+
+			return MathF.Max(0.1f, baseValue * factor);
+		}
 	}
 }
