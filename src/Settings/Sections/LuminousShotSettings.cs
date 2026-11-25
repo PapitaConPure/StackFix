@@ -20,7 +20,7 @@ namespace StackFix.Settings {
 				"",
 				"Vanilla value: 175"),
 			defaultValue: 140f,
-			constraint: new(Min: 80, Max: 190f));
+			constraint: new(Min: 80f, Max: 190f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> LuminousShotDamageStack = new(
 			section: "Item: Luminous Shot",
@@ -71,6 +71,7 @@ namespace StackFix.Settings {
 				"Vanilla value: 0"),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 5f));
+
 		public enum LuminousShotCooldownReductionStacking {
 			Linear,
 			Reciprocal,
