@@ -32,6 +32,7 @@ namespace StackFix {
 			new WarpedEcho(),
 			//Green
 			new BoxOfDynamite(),
+			new BreachingFin(),
 			new ChanceDoll(),
 			new FaradaySpur(),
 			new LuminousShot(),
