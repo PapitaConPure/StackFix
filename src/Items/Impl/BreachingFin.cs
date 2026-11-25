@@ -9,6 +9,7 @@ using StackFix.Exceptions;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
+using System.Text.RegularExpressions;
 
 namespace StackFix.Items.Impl {
 	internal class BreachingFin: ItemFix {
@@ -101,16 +102,27 @@ namespace StackFix.Items.Impl {
 			float cooldownStack                 = enabled ? this.cooldownStack.Value : 0f;
 			ItemStacking.Type cooldownStackType = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
 
-			string description =
+			LanguageAPI.AddOverlay("ITEM_KNOCKBACKHITENEMIES_DESC",
 				$"Grounded enemies hit with any {ItD.Utility("skill")} are {ItD.Utility("launched")} and {ItD.Utility("stunned")}. " +
 				$"Enemies hit while airborne are {ItD.Utility("launched")} again up to {ItD.Utility($"{airLaunchesBase} times")}" +
 				$"{ItD.Stack(airLaunchesStack)}. Launched enemies take increased damage by {ItD.Damage($"{damageBase}%")}{ItD.Stack(damageStack)} " +
-				$"from all sources per launch. Recharges after {ItD.Utility($"{cooldownBase}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")}.";
-
-			LanguageAPI.AddOverlay("ITEM_KNOCKBACKHITENEMIES_DESC", description);
+				$"from all sources per launch. Recharges after {ItD.Utility($"{cooldownBase}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")}.");
 
 			if(ItemQualitiesCompat.Installed)
-				ItemQualitiesCompat.ApplyQualityDescriptions("KNOCKBACKHITENEMIES", description);
+				ItemQualitiesCompat.ApplyQualityDescriptions("KNOCKBACKHITENEMIES", [
+					new($"{ItD.Utility("2 times")} {ItD.Stack("(+1 per stack)")}",
+						"{0}{1}",
+						ItD.Utility($"{ItD.V(airLaunchesBase)} times"),
+						ItD.Stack(airLaunchesStack)),
+					new(new Regex(@"<style=cIsDamage>(?:\d{1,6})%</style> <style=cStack>\(\+(?:\d{1,6})% per stack\)</style>"),
+						"{0}{1}",
+						ItD.Damage($"{ItD.V(damageBase)}%"),
+						ItD.Stack(damageStack, "+{0:0.##}%")),
+					new(ItD.Utility("15 seconds"),
+						ItD.Utility("{0} seconds"),
+						ItD.V(cooldownBase),
+						ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")),
+				]);
 		}
 
 		protected override void ApplyHooks() {
