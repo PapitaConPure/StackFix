@@ -182,9 +182,11 @@ namespace StackFix.Items.Impl {
 			if(!cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld(typeof(KnockbackFinUtil), nameof(KnockbackFinUtil.maxCooldown))))
 				throw new ILSeekException(il, "maxCooldown", nameof(KnockbackFinUtil.GetCooldown));
 
+			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyCooldown);
 
 			cursor.Goto(minCooldownIstr, MoveType.After);
+			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate(this.ModifyCooldown);
 		}
 
