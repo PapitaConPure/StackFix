@@ -25,6 +25,7 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<float> cooldownBase;
 		private ConfigEntry<float> cooldownStack;
 		private ConfigEntry<ModSettings.BreachingFinCooldownStacking> cooldownStackType;
+		private ConfigEntry<float> cooldownCap;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
 			this.fixEnabled        = ModSettings.BreachingFinFixEnabled.RegisterFor(plugin);
@@ -35,6 +36,7 @@ namespace StackFix.Items.Impl {
 			this.cooldownBase      = ModSettings.BreachingFinCooldownBase.RegisterFor(plugin);
 			this.cooldownStack     = ModSettings.BreachingFinCooldownStack.RegisterFor(plugin);
 			this.cooldownStackType = ModSettings.BreachingFinCooldownStackType.RegisterFor(plugin);
+			this.cooldownCap       = this.RegisterSetting(plugin, ModSettings.BreachingFinCooldownCap);
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
@@ -46,6 +48,7 @@ namespace StackFix.Items.Impl {
 			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
 			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
 			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
+			RiskOfOptionsCompat.AddSliderOption(this.cooldownCap, new(Suffix: "s"));
 		}
 
 		public override void RegisterLookingGlassStats() {
@@ -56,23 +59,24 @@ namespace StackFix.Items.Impl {
 			float damageStack() => this.Enabled ? this.damageStack.Value * 0.01f : 0f;
 
 			float cooldownBase() => this.Enabled ? this.cooldownBase.Value : VANILLA_COOLDOWN_BASE;
+			float cooldownCap() => this.Enabled ? this.cooldownCap.Value : 0f;
 			float cooldownStack() => this.Enabled ? this.cooldownStack.Value * 0.01f : 0f;
 			ModSettings.BreachingFinCooldownStacking cooldownStackType()
 				=> this.Enabled ? this.cooldownStackType.Value : ModSettings.BreachingFinCooldownStacking.Linear;
 
 			LookingGlassCompat.AddItem(DLC2Content.Items.KnockBackHitEnemies, [
-				new("Airborne launches",
+				new("Airborne Launches",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Number,
 					itemCount => ItemStacking.Linear(airLaunchesBase(), airLaunchesStack(), itemCount)),
-				new("Damage",
+				new("Bonus Damage per Launch",
 					LookingGlassCompat.StatType.Damage,
 					LookingGlassCompat.StatUnits.Percentage,
 					itemCount => ItemStacking.Linear(damageBase(), damageStack(), itemCount)),
 				new("Cooldown",
 					LookingGlassCompat.StatType.Utility,
 					LookingGlassCompat.StatUnits.Seconds,
-					itemCount => cooldownBase() * cooldownStackType() switch {
+					itemCount => MathF.Max(cooldownCap(), cooldownBase() * cooldownStackType() switch {
 						ModSettings.BreachingFinCooldownStacking.Linear
 							=> ItemStacking.Linear(1f, -cooldownStack(), itemCount),
 
@@ -83,7 +87,7 @@ namespace StackFix.Items.Impl {
 							=> ItemStacking.Exponential(1f - cooldownStack(), itemCount - 1),
 
 						_ => 1f,
-					}),
+					})),
 			]);
 		}
 
@@ -157,8 +161,24 @@ namespace StackFix.Items.Impl {
 		}
 
 		private float ModifyDamage(float baseDamage, CharacterBody attacker) {
-			if(!this.Enabled)
+			if(!this.Enabled || attacker?.inventory == null)
 				return baseDamage;
+
+			if(attacker == null) {
+#if DEBUG
+				UnityEngine.Debug.LogWarning("Attacker was null when trying to modify damage.");
+#endif
+
+				return baseDamage;
+			}
+
+			if(attacker.inventory == null) {
+#if DEBUG
+				UnityEngine.Debug.LogWarning("Attacker inventory was null when trying to modify damage.");
+#endif
+
+				return baseDamage;
+			}
 
 			float initial = this.damageBase.Value * 0.01f;
 			float perStack = this.damageStack.Value * 0.01f;
@@ -196,6 +216,7 @@ namespace StackFix.Items.Impl {
 
 			float baseValue = this.cooldownBase.Value;
 			float perStack = this.cooldownStack.Value * 0.01f;
+			float minValue = this.cooldownCap.Value * 0.01f;
 
 			float factor = this.cooldownStackType.Value switch {
 				ModSettings.BreachingFinCooldownStacking.Linear
@@ -210,7 +231,7 @@ namespace StackFix.Items.Impl {
 				_ => 1f,
 			};
 
-			return MathF.Max(0.1f, baseValue * factor);
+			return MathF.Max(minValue, baseValue * factor);
 		}
 	}
 }
