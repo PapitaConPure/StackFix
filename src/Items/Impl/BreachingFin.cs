@@ -98,7 +98,7 @@ namespace StackFix.Items.Impl {
 			ItemStacking.Type cooldownStackType = enabled ? ItemStacking.FromEnum(this.cooldownStackType.Value) : ItemStacking.Type.Linear;
 
 			string description =
-				$"Grounded enemies hit with any {ItD.Utility("skill")} are {ItD.Utility("launched")} and {ItD.Utility("stunned<")}. " +
+				$"Grounded enemies hit with any {ItD.Utility("skill")} are {ItD.Utility("launched")} and {ItD.Utility("stunned")}. " +
 				$"Enemies hit while airborne are {ItD.Utility("launched")} again up to {ItD.Utility($"{airLaunchesBase} times")}" +
 				$"{ItD.Stack(airLaunchesStack)}. Launched enemies take increased damage by {ItD.Damage($"{damageBase}%")}{ItD.Stack(damageStack)} " +
 				$"from all sources per launch. Recharges after {ItD.Utility($"{cooldownBase}s")}{ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")}.";
