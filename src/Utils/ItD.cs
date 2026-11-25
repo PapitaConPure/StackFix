@@ -35,7 +35,7 @@ namespace StackFix.Utils {
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
 				: $" <style=cStack>({FormatValue(format, (type == ItemStacking.Type.Reciprocal) ? -MathF.Abs(value) : value)} per stack" +
-				  $"{(IsVanillaType(type, vanillaType) ? "" : $", {type.ToString().ToLower()}")}" +
+				  $"{(ShouldDisplayConfiguredType(type, vanillaType) ? $", {type.ToString().ToLower()}" : "")}" +
 				  $")</style>";
 
 		public static string Stack(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
@@ -48,23 +48,18 @@ namespace StackFix.Utils {
 		public static string Stack(float value, ItemStacking.Type type, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
 			=> Stack<ItemStacking.Type>(value, type, vanillaType, hideThreshold);
 
-		private static bool IsVanillaType<TVanilla>(ItemStacking.Type type, TVanilla? vanillaType) where TVanilla: struct, Enum {
+		private static bool ShouldDisplayConfiguredType<TVanilla>(ItemStacking.Type type, TVanilla? vanillaType) where TVanilla: struct, Enum {
+			if(Plugin.ShowStackingType != null && !Plugin.ShowStackingType.Value)
+				return false;
+
 			if(vanillaType is ItemStacking.Type itemStackingVanillaType)
-				return type == itemStackingVanillaType;
+				return type != itemStackingVanillaType;
 
 			if(vanillaType is TVanilla vt)
-				return type == ItemStacking.FromEnum(vt);
+				return type != ItemStacking.FromEnum(vt);
 
-			return false;
+			return true;
 		}
-
-		public static string StackingType(ItemStacking.Type type)
-			=> $"<style={type switch {
-				ItemStacking.Type.Hyperbolic => "cIsHealing",
-				ItemStacking.Type.Reciprocal => "cIsVoid",
-				ItemStacking.Type.Exponential => "cIsHealth",
-				_ => "cSub",
-			}}>[{type}]</style>";
 
 		public static string Mono(object desc)
 			=> $"<style=cMono>{desc}</style>";

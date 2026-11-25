@@ -20,6 +20,7 @@ namespace StackFix {
 	[BepInDependency(ItemQualitiesCompat.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 	public sealed class Plugin: BaseUnityPlugin {
 		internal static ConfigEntry<bool> Enabled;
+		internal static ConfigEntry<bool> ShowStackingType;
 		internal static ConfigEntry<bool> Megumin;
 
 		private static Plugin instance;
@@ -69,6 +70,7 @@ namespace StackFix {
 
 		private void RegisterSettings() {
 			Enabled = ModSettings.Enabled.RegisterFor(this);
+			ShowStackingType = ModSettings.ShowStackingType.RegisterFor(this);
 
 			foreach(IItemFix itemFix in this.ItemFixes)
 				itemFix.RegisterSettings(this);
@@ -103,6 +105,7 @@ namespace StackFix {
 				RiskOfOptionsCompat.SetModIcon(ModIcon.Load());
 
 				RiskOfOptionsCompat.AddCheckboxOption(Enabled);
+				RiskOfOptionsCompat.AddCheckboxOption(ShowStackingType);
 
 				foreach(IItemFix itemFix in this.ItemFixes)
 					if(itemFix.Applied)
