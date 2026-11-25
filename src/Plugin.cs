@@ -9,6 +9,7 @@ using StackFix.Items.Impl;
 using StackFix.Settings;
 using StackFix.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace StackFix {
@@ -46,11 +47,12 @@ namespace StackFix {
 			SingletonHelper.Assign(ref instance, this);
 
 			Stopwatch stopwatch = Stopwatch.StartNew();
-			this.RegisterSettings();
-			this.TryApplyItemFixes();
-			this.TryRegisterRiskOfOptions();
-			this.TryRegisterLookingGlass();
-			this.ListenToExtraEvents();
+
+			this.MeasureAction(nameof(this.RegisterSettings),         this.RegisterSettings);
+			this.MeasureAction(nameof(this.TryApplyItemFixes),        this.TryApplyItemFixes);
+			this.MeasureAction(nameof(this.TryRegisterRiskOfOptions), this.TryRegisterRiskOfOptions);
+			this.MeasureAction(nameof(this.TryRegisterLookingGlass),  this.TryRegisterLookingGlass);
+			this.MeasureAction(nameof(this.ListenToExtraEvents),      this.ListenToExtraEvents);
 
 			stopwatch.Stop();
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded in {stopwatch.ElapsedMilliseconds}ms.");
@@ -149,6 +151,18 @@ namespace StackFix {
 		private void Enabled_SettingChanged(object sender, EventArgs e) {
 			if(Run.instance)
 				PickupDropTable.RegenerateAll(Run.instance);
+		}
+
+		private void MeasureAction(string name, Action action) {
+#if DEBUG
+			Stopwatch actionTime = Stopwatch.StartNew();
+			action();
+			actionTime.Stop();
+
+			this.Logger.LogInfo($"Completed action: '{name}', in {actionTime.ElapsedMilliseconds}ms.");
+#else
+			action();
+#endif
 		}
 	}
 }
