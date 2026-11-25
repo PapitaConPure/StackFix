@@ -1,3 +1,7 @@
+### v2.5.0
+* Added Breaching Fin item fix.
+* Added "Display Non-Vanilla Stacking Types" setting to "General" section.
+
 ### v2.4.0
 * Added Luminous Shot item fix.
 * Fixed Quality Mod descriptions not updating when changing settings in-game.
