@@ -86,5 +86,15 @@ namespace StackFix.Settings {
 				"Not recommended: Linear"),
 			defaultValue: BreachingFinCooldownStacking.Exponential,
 			constraint: new(typeof(BreachingFinCooldownStacking)));
+
+		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> BreachingFinCooldownCap = new(
+			section: "Item: Breaching Fin",
+			name: "Minimum Cooldown",
+			description: Paragraph(
+				"Absolute minimum seconds of cooldown.",
+				"",
+				"Vanilla value: N/A"),
+			defaultValue: 5f,
+			constraint: new(Min: 0.5f, Max: 10f));
 	}
 }
