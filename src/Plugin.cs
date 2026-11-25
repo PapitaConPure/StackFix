@@ -48,11 +48,12 @@ namespace StackFix {
 
 			Stopwatch stopwatch = Stopwatch.StartNew();
 
-			this.MeasureAction(nameof(this.RegisterSettings),         this.RegisterSettings);
-			this.MeasureAction(nameof(this.TryApplyItemFixes),        this.TryApplyItemFixes);
-			this.MeasureAction(nameof(this.TryRegisterRiskOfOptions), this.TryRegisterRiskOfOptions);
-			this.MeasureAction(nameof(this.TryRegisterLookingGlass),  this.TryRegisterLookingGlass);
-			this.MeasureAction(nameof(this.ListenToExtraEvents),      this.ListenToExtraEvents);
+			this.MeasureAction("Register Settings", this.RegisterSettings);
+			this.MeasureAction("Apply Item Fixes", this.TryApplyItemFixes);
+			this.ListenToExtraEvents();
+
+			this.TryRegisterRiskOfOptions();
+			this.TryRegisterLookingGlass();
 
 			stopwatch.Stop();
 			this.Logger.LogInfo($"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} loaded in {stopwatch.ElapsedMilliseconds}ms.");
