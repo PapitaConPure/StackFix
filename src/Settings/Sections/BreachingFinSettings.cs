@@ -18,9 +18,9 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Maximum number of airborne launches for the first stack.",
 				"",
-				"Vanilla value: 5"),
-			defaultValue: 3,
-			constraint: new(Min: 3, Max: 6));
+				"Vanilla value: 2"),
+			defaultValue: 1,
+			constraint: new(Min: 0, Max: 2));
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> BreachingFinAirLaunchesStack = new(
 			section: "Item: Breaching Fin",
@@ -36,17 +36,17 @@ namespace StackFix.Settings {
 			section: "Item: Breaching Fin",
 			name: "Base Damage",
 			description: Paragraph(
-				"Percentage of airborne increased damage for the first stack.",
+				"Percentage of airborne increased damage per launch for the first stack.",
 				"",
 				"Vanilla value: 10"),
-			defaultValue: 6f,
-			constraint: new(Min: 0f, Max: 10f));
+			defaultValue: 10f,
+			constraint: new(Min: 2f, Max: 20f));
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> BreachingFinDamageStack = new(
 			section: "Item: Breaching Fin",
 			name: "Damage per Stack",
 			description: Paragraph(
-				"Additional percentage of airborne increased damage for every subsequent stack.",
+				"Additional percentage of airborne increased damage per launch for every subsequent stack.",
 				"",
 				"Vanilla value: 0"),
 			defaultValue: 2f,
