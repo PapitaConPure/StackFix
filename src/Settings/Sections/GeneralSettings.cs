@@ -14,9 +14,9 @@ namespace StackFix.Settings {
 
 		public static readonly ConfigEntryExt<bool> ShowStackingType = new(
 			section: "General",
-			name: "Display Stacking Type",
+			name: "Display Non-Vanilla Stacking Types",
 			description: Paragraph(
-				"Determines whether to display the stacking type when it differs from the vanilla stacking type.",
+				"Determines whether to display the configured stacking type for any setting with a configurable stacking formula when it differs from vanilla.",
 				"",
 				"Vanilla value: Off"),
 			defaultValue: true);
