@@ -46,7 +46,8 @@ namespace StackFix.Items {
 #if DEBUG
 			UnityEngine.Debug.Log($"Registering fix #{fixCount} config entries...");
 #endif
-			Plugin.Enabled.SettingChanged += this.ConfigEntry_SettingChanged;
+			Plugin.Enabled.SettingChanged          += this.ConfigEntry_SettingChanged;
+			Plugin.ShowStackingType.SettingChanged += this.ConfigEntry_SettingChanged;
 
 			foreach(IConfigEntryChangeObserver configEntry in this.itemFixConfigEntries)
 				configEntry.ObserveConfigEntryChanged(this.ConfigEntry_SettingChanged);
