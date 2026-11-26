@@ -79,7 +79,7 @@ namespace StackFix.Settings {
 		}
 		public static readonly ConstrainedConfigEntry<BreachingFinCooldownStacking, ListEntryConstraint<BreachingFinCooldownStacking>> BreachingFinCooldownStackType = new(
 			section: "Item: Breaching Fin",
-			name: "Cooldown Stacking Type",
+			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<BreachingFinCooldownStacking>(),
 				"Vanilla value: N/A",

@@ -94,7 +94,7 @@ namespace StackFix.Settings {
 		}
 		public static readonly ConstrainedConfigEntry<WarpedEchoCooldownStacking, ListEntryConstraint<WarpedEchoCooldownStacking>> WarpedEchoCooldownStackType = new(
 			section: "Item: Warped Echo",
-			name: "Cooldown Stacking Type",
+			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<WarpedEchoCooldownStacking>(),
 				"Vanilla value: N/A",
