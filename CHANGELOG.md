@@ -1,3 +1,6 @@
+### v2.5.2
+* Fixed an ItemQualities description replacement pattern for Breaching Fin.
+
 ### v2.5.1
 * Renamed all "Cooldown Stacking Type" settings to "Cooldown Reduction Stacking Type" for consistency. If you've changed these before, you'll need to change them again. Sorry!
 * Added some null checks to avoid NREs.
