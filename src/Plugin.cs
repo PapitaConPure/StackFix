@@ -23,7 +23,7 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Megumin;
 
 		private static Plugin instance;
-		public static Plugin Instance { get; private set; }
+		public static Plugin Instance => instance;
 
 		internal static BepInEx.Logging.ManualLogSource Logging => Instance.Logger;
 
