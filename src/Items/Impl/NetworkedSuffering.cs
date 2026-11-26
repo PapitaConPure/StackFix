@@ -122,6 +122,7 @@ namespace StackFix.Items.Impl {
 				x => x.MatchMul()))
 				throw new ILSeekException(il, "damageSentToPool", nameof(SharedSufferingManager.SendToDamagePool));
 
+			//TODO: try not to use remove here
 			cursor.RemoveRange(3);
 
 			cursor.Emit(OpCodes.Ldarg_0);
