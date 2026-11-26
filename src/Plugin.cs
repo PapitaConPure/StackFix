@@ -25,6 +25,8 @@ namespace StackFix {
 		private static Plugin instance;
 		public static Plugin Instance { get; private set; }
 
+		internal static BepInEx.Logging.ManualLogSource Logging => Instance.Logger;
+
 		private readonly IItemFix[] ItemFixes = [
 			//White
 			new BolsteringLantern(),
