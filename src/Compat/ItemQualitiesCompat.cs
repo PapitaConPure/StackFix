@@ -33,7 +33,7 @@ namespace StackFix.Compat {
 			void apply() {
 
 #if DEBUG
-				UnityEngine.Debug.Log($"Applying pattern-based ItemQualities descriptions for item: {itemToken}", Plugin.Instance);
+				Plugin.Logging.LogDebug($"Applying pattern-based ItemQualities descriptions for item: {itemToken}");
 #endif
 
 				string strippedItemToken = StripItemToken(itemToken);
@@ -44,13 +44,13 @@ namespace StackFix.Compat {
 					string qualityDescription = SaveOrRestoreVanillaDescription(qualityToken);
 
 #if DEBUG
-					UnityEngine.Debug.Log($"qualityDescription = {qualityDescription}", Plugin.Instance);
+					Plugin.Logging.LogDebug($"qualityDescription = {qualityDescription}");
 #endif
 
 					string finalDescription = ApplyReplacementPatterns(qualityDescription, patterns);
 
 #if DEBUG
-					UnityEngine.Debug.Log($"finalDescription = {finalDescription}", Plugin.Instance);
+					Plugin.Logging.LogDebug($"finalDescription = {finalDescription}");
 #endif
 
 					LanguageAPI.AddOverlay(qualityToken, finalDescription);
@@ -115,7 +115,7 @@ namespace StackFix.Compat {
 			int lastReplacementEndIndex = 0;
 			foreach(ReplacementPattern replacementPattern in patterns) {
 				if(lastReplacementEndIndex >= qualityDescription.Length) {
-					UnityEngine.Debug.LogWarning("Couldn't apply all StackFix pattern replacements before reaching the end of the quality-tiered item description.", Plugin.Instance);
+					Plugin.Logging.LogWarning("Couldn't apply all StackFix pattern replacements before reaching the end of the quality-tiered item description.");
 					break;
 				}
 
@@ -127,7 +127,7 @@ namespace StackFix.Compat {
 				MatchResult match = pattern.Match(qualityDescription, lastReplacementEndIndex);
 
 				if(!match.Success) {
-					UnityEngine.Debug.LogWarning($"Couldn't match {pattern} from string index {lastReplacementEndIndex}, to apply StackFix replacement.", Plugin.Instance);
+					Plugin.Logging.LogWarning($"Couldn't match {pattern} from string index {lastReplacementEndIndex}, to apply StackFix replacement.");
 					continue;
 				}
 
@@ -140,7 +140,7 @@ namespace StackFix.Compat {
 				lastReplacementEndIndex = match.Index + match.Length;
 
 #if DEBUG
-				UnityEngine.Debug.Log($"Matched {pattern} and appended to final string:\n\"{previous}\"\n\"{replacement}\"", Plugin.Instance);
+				Plugin.Logging.LogDebug($"Matched {pattern} and appended to final string:\n\"{previous}\"\n\"{replacement}\"");
 #endif
 			}
 
@@ -158,7 +158,7 @@ namespace StackFix.Compat {
 
 			if(descriptionExists) {
 #if DEBUG
-				UnityEngine.Debug.Log($"Restored original ItemQualities description for token: {qualityToken}", Plugin.Instance);
+				Plugin.Logging.LogDebug($"Restored original ItemQualities description for token: {qualityToken}");
 #endif
 
 				return restoredDescription;
@@ -171,7 +171,7 @@ namespace StackFix.Compat {
 			vanillaDescriptions.Add(qualityToken, vanillaDescription);
 
 #if DEBUG
-			UnityEngine.Debug.Log($"Stored original ItemQualities description for token: '{qualityToken}'", Plugin.Instance);
+			Plugin.Logging.LogDebug($"Stored original ItemQualities description for token: '{qualityToken}'");
 #endif
 
 			return vanillaDescription;

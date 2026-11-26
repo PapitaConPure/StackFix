@@ -178,7 +178,7 @@ namespace StackFix.Items.Impl {
 
 			if(attacker == null) {
 #if DEBUG
-				UnityEngine.Debug.LogWarning("Attacker was null when trying to modify damage.");
+				Plugin.Logging.LogWarning("Attacker was null when trying to modify damage.");
 #endif
 
 				return baseDamage;
@@ -186,7 +186,7 @@ namespace StackFix.Items.Impl {
 
 			if(attacker.inventory == null) {
 #if DEBUG
-				UnityEngine.Debug.LogWarning("Attacker inventory was null when trying to modify damage.");
+				Plugin.Logging.LogWarning("Attacker inventory was null when trying to modify damage.");
 #endif
 
 				return baseDamage;

@@ -29,22 +29,22 @@ namespace StackFix.Items {
 		public void ApplyFix() {
 #if DEBUG
 			fixCount++;
-			UnityEngine.Debug.Log($"Applying fix #{fixCount} hooks...");
+			Plugin.Logging.LogDebug($"Applying fix #{fixCount} hooks...");
 #endif
 			this.ApplyHooks();
 
 #if DEBUG
-			UnityEngine.Debug.Log($"Applying fix #{fixCount} description...");
+			Plugin.Logging.LogDebug($"Applying fix #{fixCount} description...");
 #endif
 			this.ApplyDescription();
 
 #if DEBUG
-			UnityEngine.Debug.Log($"Applying fix #{fixCount} extras...");
+			Plugin.Logging.LogDebug($"Applying fix #{fixCount} extras...");
 #endif
 			this.ApplyExtras();
 
 #if DEBUG
-			UnityEngine.Debug.Log($"Registering fix #{fixCount} config entries...");
+			Plugin.Logging.LogDebug($"Registering fix #{fixCount} config entries...");
 #endif
 			Plugin.Enabled.SettingChanged          += this.ConfigEntry_SettingChanged;
 			Plugin.ShowStackingType.SettingChanged += this.ConfigEntry_SettingChanged;
@@ -55,7 +55,7 @@ namespace StackFix.Items {
 			this.itemFixConfigEntries.Clear();
 
 #if DEBUG
-			UnityEngine.Debug.Log($"Fix #{fixCount} has been applied.");
+			Plugin.Logging.LogDebug($"Fix #{fixCount} has been applied.");
 #endif
 			this.Applied = true;
 		}
