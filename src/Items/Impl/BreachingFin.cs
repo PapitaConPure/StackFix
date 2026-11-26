@@ -118,8 +118,8 @@ namespace StackFix.Items.Impl {
 						"{0}{1}",
 						ItD.Damage($"{ItD.V(damageBase)}%"),
 						ItD.Stack(damageStack, "+{0:0.##}%")),
-					new(ItD.Utility("15 seconds"),
-						ItD.Utility("{0} seconds"),
+					new(ItD.Utility("15s"),
+						ItD.Utility("{0}s"),
 						ItD.V(cooldownBase),
 						ItD.Stack(cooldownStack, cooldownStackType, "{0:-0.##;-0.##}%")),
 				]);
