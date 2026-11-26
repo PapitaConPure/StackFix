@@ -224,15 +224,8 @@ namespace StackFix.Items.Impl {
 				return cooldown;
 			}
 
-			if(body.inventory == null) {
-#if DEBUG
-				Plugin.Logging.LogWarning("CharacterBody inventory was null when trying to modify Warped Echo cooldown.");
-#endif
-
-				return cooldown;
-			}
-
-			int itemCount = body.inventory.GetItemCountEffective(DLC2Content.Items.DelayedDamage);
+			//inventory may be null (this is expected as per the original code)
+			int itemCount = body.inventory?.GetItemCountEffective(DLC2Content.Items.DelayedDamage) ?? 0;
 
 			if(itemCount <= 0)
 				return cooldown;
