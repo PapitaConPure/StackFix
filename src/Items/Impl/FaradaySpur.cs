@@ -216,7 +216,23 @@ namespace StackFix.Items.Impl {
 			if(!this.Enabled)
 				return moveSpeedPerCharge;
 
-			int itemCount = body.inventory?.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike) ?? 0;
+			if(body == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody was null when trying to modify Faraday Spur movement speed per charge.");
+#endif
+
+				return moveSpeedPerCharge;
+			}
+
+			if(body.inventory == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody inventory was null when trying to modify Faraday Spur movement speed per charge.");
+#endif
+
+				return moveSpeedPerCharge;
+			}
+
+			int itemCount = body.inventory.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike);
 
 			if(itemCount <= 0)
 				return moveSpeedPerCharge;
@@ -232,7 +248,23 @@ namespace StackFix.Items.Impl {
 			if(!this.Enabled)
 				return jumpHeightPerCharge;
 
-			int itemCount = body.inventory?.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike) ?? 0;
+			if(body == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody was null when trying to modify Faraday Spur jump height per charge.");
+#endif
+
+				return jumpHeightPerCharge;
+			}
+
+			if(body.inventory == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody inventory was null when trying to modify Faraday Spur jump height per charge.");
+#endif
+
+				return jumpHeightPerCharge;
+			}
+
+			int itemCount = body.inventory.GetItemCountEffective(DLC3Content.Items.JumpDamageStrike);
 
 			if(itemCount <= 0)
 				return jumpHeightPerCharge;

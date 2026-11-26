@@ -104,7 +104,7 @@ namespace StackFix.Items.Impl {
 		}
 
 		private float ModifyJackpotChancePercent(float jackpotChancePercent, int itemCount) {
-			if(!this.Enabled)
+			if(!this.Enabled || itemCount <= 0)
 				return jackpotChancePercent;
 
 			float initialPercent = this.chanceBase.Value;

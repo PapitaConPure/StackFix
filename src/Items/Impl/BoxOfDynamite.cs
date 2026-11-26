@@ -154,6 +154,14 @@ namespace StackFix.Items.Impl {
 			if(!this.Enabled)
 				return cooldown;
 
+			if(behavior == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("DroneDynamiteBehaviour was null when trying to modify Box of Dynamite cooldown.");
+#endif
+
+				return cooldown;
+			}
+
 			int itemCount = behavior.stack;
 
 			if(itemCount <= 0)

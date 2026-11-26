@@ -217,7 +217,7 @@ namespace StackFix.Items.Impl {
 		}
 
 		private float ModifyCooldownFactor(float vanillaFactor, int itemCount) {
-			if(!this.Enabled)
+			if(!this.Enabled || itemCount <= 0)
 				return vanillaFactor;
 
 			float initial = this.cooldownReductionBase.Value * 0.01f;

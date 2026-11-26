@@ -118,7 +118,7 @@ namespace StackFix.Items.Impl {
 		}
 
 		private float ModifyEliteDropChancePercent(float baseEliteDropChancePercent, int itemCount) {
-			if(!this.Enabled)
+			if(!this.Enabled || itemCount <= 0)
 				return baseEliteDropChancePercent;
 
 			float initialPercent = this.chanceBase.Value;

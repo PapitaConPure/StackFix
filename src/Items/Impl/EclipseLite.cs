@@ -103,7 +103,23 @@ namespace StackFix.Items.Impl {
 			if(!this.Enabled)
 				return baseBarrierFactor;
 
-			int itemCount = body.inventory?.GetItemCountEffective(DLC3Content.Items.BarrierOnCooldown) ?? 0;
+			if(body == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody was null when trying to modify Eclipse Lite initial barrier factor.");
+#endif
+
+				return baseBarrierFactor;
+			}
+
+			if(body.inventory == null) {
+#if DEBUG
+				Plugin.Logging.LogWarning("CharacterBody inventory was null when trying to modify Eclipse Lite initial barrier factor.");
+#endif
+
+				return baseBarrierFactor;
+			}
+
+			int itemCount = body.inventory.GetItemCountEffective(DLC3Content.Items.BarrierOnCooldown);
 
 			if(itemCount <= 0)
 				return baseBarrierFactor;
