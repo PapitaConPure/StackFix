@@ -48,6 +48,7 @@ namespace StackFix.Items {
 #endif
 			Plugin.Enabled.SettingChanged          += this.ConfigEntry_SettingChanged;
 			Plugin.ShowStackingType.SettingChanged += this.ConfigEntry_SettingChanged;
+			Plugin.StackingFormat.SettingChanged   += this.ConfigEntry_SettingChanged;
 
 			foreach(IConfigEntryChangeObserver configEntry in this.itemFixConfigEntries)
 				configEntry.ObserveConfigEntryChanged(this.ConfigEntry_SettingChanged);

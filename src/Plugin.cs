@@ -20,12 +20,13 @@ namespace StackFix {
 	public sealed class Plugin: BaseUnityPlugin {
 		internal static ConfigEntry<bool> Enabled;
 		internal static ConfigEntry<bool> ShowStackingType;
-		internal static ConfigEntry<bool> Megumin;
+		internal static ConfigEntry<string> StackingFormat;
+		internal static ConfigEntry<ModSettings.Meguminn> Megumin;
 
 		private static Plugin instance;
 		public static Plugin Instance => instance;
 
-		internal static BepInEx.Logging.ManualLogSource Logging => Instance.Logger;
+		internal static BepInEx.Logging.ManualLogSource Logging => instance.Logger;
 
 		private readonly IItemFix[] ItemFixes = [
 			//White
@@ -70,8 +71,9 @@ namespace StackFix {
 		}
 
 		private void RegisterSettings() {
-			Enabled = ModSettings.Enabled.RegisterFor(this);
+			Enabled          = ModSettings.Enabled.RegisterFor(this);
 			ShowStackingType = ModSettings.ShowStackingType.RegisterFor(this);
+			StackingFormat   = ModSettings.StackingFormat.RegisterFor(this);
 
 			foreach(IItemFix itemFix in this.ItemFixes)
 				itemFix.RegisterSettings(this);
@@ -107,12 +109,13 @@ namespace StackFix {
 
 				RiskOfOptionsCompat.AddCheckboxOption(Enabled);
 				RiskOfOptionsCompat.AddCheckboxOption(ShowStackingType);
+				RiskOfOptionsCompat.AddTextInputOption(StackingFormat);
 
 				foreach(IItemFix itemFix in this.ItemFixes)
 					if(itemFix.Applied)
 						itemFix.RegisterRiskOfOptionsSettings();
 
-				RiskOfOptionsCompat.AddCheckboxOption(Megumin);
+				RiskOfOptionsCompat.AddChoiceOption(Megumin);
 
 #if DEBUG
 				this.Logger.LogDebug("Risk Of Options support initialized!");

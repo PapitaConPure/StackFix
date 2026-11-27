@@ -21,10 +21,27 @@ namespace StackFix.Settings {
 				"Vanilla value: Off"),
 			defaultValue: true);
 
-		public static readonly ConfigEntryExt<bool> Megumin = new(
+		public static readonly ConfigEntryExt<string> StackingFormat = new(
+			section: "General",
+			name: "Stacking Type Display Format",
+			description: Paragraph(
+				"Template used to display non-vanilla stacking types.",
+				"",
+				"* {NUMBER}: the number that scales per stack, e.g. \"+20%\", \"+2\", \"-50%\"",
+				"* {TYPE_LOWER}: the stacking type in lowercase, e.g. \"linear\", \"reciprocal\"",
+				"* {TYPE_UPPER}: the stacking type in uppercase, e.g. \"HYPERBOLIC\"",
+				"* {TYPE_CAP}: the stacking type w/ first letter capitalized, e.g. \"Exponential\"",
+				"",
+				"Vanilla value: \"({NUMBER} per stack)\""),
+			defaultValue: "({NUMBER} per stack, {TYPE_LOWER})");
+
+		public enum Meguminn {
+			Megumin,
+		};
+		public static readonly ConfigEntryExt<Meguminn> Megumin = new(
 			section: "Megumin",
 			name: "Megumin",
 			description: "Megumin",
-			defaultValue: true);
+			defaultValue: Meguminn.Megumin);
 	}
 }
