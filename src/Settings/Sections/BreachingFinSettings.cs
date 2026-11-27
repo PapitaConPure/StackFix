@@ -1,5 +1,6 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
+using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static partial class ModSettings {
@@ -8,8 +9,7 @@ namespace StackFix.Settings {
 			name: "Fix Breaching Fin",
 			description: Paragraph(
 				"Enables Breaching Fin tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> BreachingFinAirLaunchesBase = new(
@@ -17,8 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Airborne Launches",
 			description: Paragraph(
 				"Maximum number of airborne launches for the first stack.",
-				"",
-				"Vanilla value: 2"),
+				Vanilla(2)),
 			defaultValue: 1,
 			constraint: new(Min: 0, Max: 2));
 
@@ -27,8 +26,7 @@ namespace StackFix.Settings {
 			name: "Airborne Launches per Stack",
 			description: Paragraph(
 				"Increased maximum number of airborne launches for every subsequent stack.",
-				"",
-				"Vanilla value: 1"),
+				Vanilla(1)),
 			defaultValue: 1,
 			constraint: new(Min: 0, Max: 2));
 
@@ -37,8 +35,8 @@ namespace StackFix.Settings {
 			name: "Base Damage",
 			description: Paragraph(
 				"Percentage of airborne increased damage per launch for the first stack.",
-				"",
-				"Vanilla value: 10"),
+				Vanilla(10f),
+				Note("If playing with Quality Mod, this setting may override or be overriden by Quality variants of the item.")),
 			defaultValue: 10f,
 			constraint: new(Min: 2f, Max: 20f));
 
@@ -47,8 +45,8 @@ namespace StackFix.Settings {
 			name: "Damage per Stack",
 			description: Paragraph(
 				"Additional percentage of airborne increased damage per launch for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f),
+				Note("If playing with Quality Mod, this setting may override or be overriden by Quality variants of the item.")),
 			defaultValue: 2f,
 			constraint: new(Min: 0f, Max: 10f));
 
@@ -57,8 +55,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown",
 			description: Paragraph(
 				"Base cooldown in seconds.",
-				"",
-				"Vanilla value: 15"),
+				Vanilla(15f)),
 			defaultValue: 15f,
 			constraint: new(Min: 10f, Max: 20f));
 
@@ -67,8 +64,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 1f,
 			constraint: new(Min: 0f, Max: 10f));
 
@@ -82,8 +78,8 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<BreachingFinCooldownStacking>(),
-				"Vanilla value: N/A",
-				"Not recommended: Linear"),
+				NoVanilla(),
+				ItD.Danger("Not recommended: Linear")),
 			defaultValue: BreachingFinCooldownStacking.Exponential,
 			constraint: new(typeof(BreachingFinCooldownStacking)));
 
@@ -92,8 +88,7 @@ namespace StackFix.Settings {
 			name: "Minimum Cooldown",
 			description: Paragraph(
 				"Absolute minimum seconds of cooldown.",
-				"",
-				"Vanilla value: N/A"),
+				NoVanilla()),
 			defaultValue: 5f,
 			constraint: new(Min: 0.5f, Max: 10f));
 	}

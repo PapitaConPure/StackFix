@@ -8,8 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Networked Suffering",
 			description: Paragraph(
 				"Enables Networked Suffering tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<int, RangeEntryConstraint<int>> NetworkedSufferingSpreadBase = new(
@@ -17,8 +16,7 @@ namespace StackFix.Settings {
 			name: "Base Virus Spread",
 			description: Paragraph(
 				"Maximum number of infected enemies for the first stack.",
-				"",
-				"Vanilla value: 4"),
+				Vanilla(4)),
 			defaultValue: 3,
 			constraint: new(Min: 2, Max: 8));
 
@@ -27,8 +25,7 @@ namespace StackFix.Settings {
 			name: "Virus Spread per Stack",
 			description: Paragraph(
 				"Increased maximum number of infected enemies for every subsequent stack.",
-				"",
-				"Vanilla value: 2"),
+				Vanilla(2)),
 			defaultValue: 2,
 			constraint: new(Min: 0, Max: 4));
 
@@ -37,8 +34,7 @@ namespace StackFix.Settings {
 			name: "Base Damage",
 			description: Paragraph(
 				"Virus damage percentage for the first stack.",
-				"",
-				"Vanilla value: 45"),
+				Vanilla(45f)),
 			defaultValue: 35f,
 			constraint: new(Min: 5f, Max: 50f));
 
@@ -47,8 +43,7 @@ namespace StackFix.Settings {
 			name: "Damage per Stack",
 			description: Paragraph(
 				"Increased virus damage percentage for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 1f,
 			constraint: new(Min: 0f, Max: 10f));
 	}

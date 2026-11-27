@@ -1,5 +1,6 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
+using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static partial class ModSettings {
@@ -8,8 +9,7 @@ namespace StackFix.Settings {
 			name: "Fix Warped Echo",
 			description: Paragraph(
 				"Enables Warped Echo tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> WarpedEchoDamageReductionBase = new(
@@ -17,8 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Damage Reduction",
 			description: Paragraph(
 				"Percentage of damage reduction for the first stack.",
-				"",
-				"Vanilla value: 10"),
+				Vanilla(10f)),
 			defaultValue: 5f,
 			constraint: new(Min: 1f, Max: 10f));
 
@@ -27,8 +26,7 @@ namespace StackFix.Settings {
 			name: "Damage Reduction per Stack",
 			description: Paragraph(
 				"Additional percentage of damage reduction for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 5f,
 			constraint: new(Min: 0f, Max: 8f));
 
@@ -42,8 +40,8 @@ namespace StackFix.Settings {
 			name: "Damage Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<WarpedEchoDamageReductionStacking>(),
-				"Vanilla value: N/A",
-				"Not recommended: Linear, Exponential"),
+				NoVanilla(),
+				ItD.Danger("Not recommended: Linear, Exponential")),
 			defaultValue: WarpedEchoDamageReductionStacking.Hyperbolic,
 			constraint: new(typeof(WarpedEchoDamageReductionStacking)));
 
@@ -52,8 +50,7 @@ namespace StackFix.Settings {
 			name: "Base Damage Spread",
 			description: Paragraph(
 				"Damage spread instances for the first stack.",
-				"",
-				"Vanilla value: 3"),
+				Vanilla(3)),
 			defaultValue: 3,
 			constraint: new(Min: 2, Max: 6));
 
@@ -62,8 +59,7 @@ namespace StackFix.Settings {
 			name: "Damage Spread per Stack",
 			description: Paragraph(
 				"Additional damage spread instances for every subsequent stack.",
-				"",
-				"Vanilla value: 1"),
+				Vanilla(1)),
 			defaultValue: 0,
 			constraint: new(Min: 0, Max: 2));
 
@@ -72,8 +68,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown",
 			description: Paragraph(
 				"Base cooldown in seconds.",
-				"",
-				"Vanilla value: 15"),
+				Vanilla(15f)),
 			defaultValue: 15f,
 			constraint: new(Min: 10f, Max: 20f));
 
@@ -82,8 +77,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 2.5f,
 			constraint: new(Min: 0f, Max: 10f));
 
@@ -97,8 +91,8 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<WarpedEchoCooldownStacking>(),
-				"Vanilla value: N/A",
-				"Not recommended: Linear"),
+				NoVanilla(),
+				ItD.Danger("Not recommended: Linear")),
 			defaultValue: WarpedEchoCooldownStacking.Exponential,
 			constraint: new(typeof(WarpedEchoCooldownStacking)));
 	}

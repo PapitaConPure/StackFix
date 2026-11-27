@@ -1,5 +1,5 @@
 ﻿using ConfigEntryExt;
-using ConfigEntryExt.Constraints;
+using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static partial class ModSettings {
@@ -8,8 +8,7 @@ namespace StackFix.Settings {
 			name: "Enable Mod",
 			description: Paragraph(
 				"Enables the mod.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConfigEntryExt<bool> ShowStackingType = new(
@@ -17,8 +16,7 @@ namespace StackFix.Settings {
 			name: "Display Non-Vanilla Stacking Types",
 			description: Paragraph(
 				"Determines whether to display the configured stacking type for any setting with a configurable stacking formula when it differs from vanilla.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConfigEntryExt<string> StackingFormat = new(
@@ -27,21 +25,20 @@ namespace StackFix.Settings {
 			description: Paragraph(
 				"Template used to display non-vanilla stacking types.",
 				"",
-				"* {NUMBER}: the number that scales per stack, e.g. \"+20%\", \"+2\", \"-50%\"",
-				"* {TYPE_LOWER}: the stacking type in lowercase, e.g. \"linear\", \"reciprocal\"",
-				"* {TYPE_UPPER}: the stacking type in uppercase, e.g. \"HYPERBOLIC\"",
-				"* {TYPE_CAP}: the stacking type w/ first letter capitalized, e.g. \"Exponential\"",
-				"",
-				"Vanilla value: \"({NUMBER} per stack)\""),
-			defaultValue: "({NUMBER} per stack, {TYPE_LOWER})");
+				$"* {ItD.Utility("{N}")}: the number that scales per stack, e.g. \"+20%\", \"+2\", \"-44.5%\"",
+				$"* {ItD.Utility("{TL}")}: the stacking type in lowercase, e.g. \"linear\", \"reciprocal\"",
+				$"* {ItD.Utility("{TU}")}: the stacking type in uppercase, e.g. \"HYPERBOLIC\"",
+				$"* {ItD.Utility("{TC}")}: the stacking type w/ first letter capitalized, e.g. \"Exponential\"",
+				Vanilla($"({ItD.Utility("{N}")} per stack)")),
+			defaultValue: "({N} per stack, {TL})");
 
-		public enum Meguminn {
+		public enum Megu {
 			Megumin,
 		};
-		public static readonly ConfigEntryExt<Meguminn> Megumin = new(
+		public static readonly ConfigEntryExt<Megu> Megumin = new(
 			section: "Megumin",
 			name: "Megumin",
 			description: "Megumin",
-			defaultValue: Meguminn.Megumin);
+			defaultValue: Megu.Megumin);
 	}
 }

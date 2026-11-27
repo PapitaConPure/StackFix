@@ -8,8 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Box of Dynamite",
 			description: Paragraph(
 				"Enables Box of Dynamite tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> BoxOfDynamiteDamageBase = new(
@@ -17,8 +16,7 @@ namespace StackFix.Settings {
 			name: "Base Damage",
 			description: Paragraph(
 				"Percentage of dynamite damage for the first stack.",
-				"",
-				"Vanilla value: 240"),
+				Vanilla(240f)),
 			defaultValue: 240f,
 			constraint: new(Min: 160f, Max: 300f));
 
@@ -27,8 +25,7 @@ namespace StackFix.Settings {
 			name: "Damage per Stack",
 			description: Paragraph(
 				"Additional percentage of dynamite damage for every subsequent stack.",
-				"",
-				"Vanilla value: 85"),
+				Vanilla(85f)),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 120f));
 
@@ -37,8 +34,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown",
 			description: Paragraph(
 				"Seconds of cooldown for the first stack.",
-				"",
-				"Vanilla value: 10"),
+				Vanilla(10f)),
 			defaultValue: 10f,
 			constraint: new(Min: 8f, Max: 12f));
 
@@ -47,8 +43,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of cooldown reduction for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 10f,
 			constraint: new(Min: 0f, Max: 15f));
 
@@ -62,7 +57,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<BoxOfDynamiteCooldownStacking>(),
-				"Vanilla value: N/A"),
+				NoVanilla()),
 			defaultValue: BoxOfDynamiteCooldownStacking.Exponential,
 			constraint: new(typeof(BoxOfDynamiteCooldownStacking)));
 
@@ -74,8 +69,7 @@ namespace StackFix.Settings {
 				"",
 				"This setting is intended for performance, not balancing.",
 				"Increase this to improve CPU performance at higher drone and stack counts.",
-				"",
-				"Vanilla value: N/A"),
+				NoVanilla()),
 			defaultValue: 0.25f,
 			constraint: new(Min: 0.25f, Max: 2.5f));
 	}

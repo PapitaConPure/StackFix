@@ -26,8 +26,28 @@ namespace StackFix.Settings {
 				string.Join("\n",
 					types
 						.Where(t => Enum.IsDefined(choiceEnumType, t.ToString()))
-						.Select(t => $"* {t}: {(descs.TryGetValue(t, out string d) ? d : "description not available")}.")),
-				"");
+						.Select(t => $"* {ItD.UserSetting(t)}: {(descs.TryGetValue(t, out string d) ? d : ItD.Sub("description not available"))}.")));
 		}
+
+		private static string NoVanilla()
+			=> BasicVanillaFormat(ItD.Danger("N/A"));
+
+		private static string Vanilla(bool value)
+			=> BasicVanillaFormat(value ? "On" : "Off");
+
+		private static string Vanilla(string value)
+			=> BasicVanillaFormat($"{ItD.Sub("\"")}{value}{ItD.Sub("\"")}");
+
+		private static string Vanilla(float value, string format = null)
+			=> BasicVanillaFormat(ItD.V(value, format));
+
+		private static string Vanilla<TEnum>(TEnum value) where TEnum : struct, Enum
+			=> BasicVanillaFormat(value);
+
+		private static string BasicVanillaFormat(object value)
+			=> "\n" + ItD.UserSetting($"Vanilla value: {value}");
+
+		private static string Note(string note)
+			=> "\n" + ItD.Sub($"< ! > {note}");
 	}
 }

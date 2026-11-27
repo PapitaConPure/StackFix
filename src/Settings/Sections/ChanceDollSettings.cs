@@ -8,8 +8,7 @@ namespace StackFix.Settings {
 			name: "Fix Chance Doll",
 			description: Paragraph(
 				"Enables Chance Doll tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> ChanceDollChanceBase = new(
@@ -17,8 +16,7 @@ namespace StackFix.Settings {
 			name: "Base Chance",
 			description: Paragraph(
 				"Improved reward chance percentage for the first stack.",
-				"",
-				"Vanilla value: 40"),
+				Vanilla(40f)),
 			defaultValue: 25f,
 			constraint: new(Min: 10f, Max: 40f));
 
@@ -27,8 +25,7 @@ namespace StackFix.Settings {
 			name: "Chance per Stack",
 			description: Paragraph(
 				"Improved reward additional chance percentage for every subsequent stack.",
-				"",
-				"Vanilla value: 10"),
+				Vanilla(10f)),
 			defaultValue: 25f,
 			constraint: new(Min: 5f, Max: 40f));
 
@@ -41,7 +38,7 @@ namespace StackFix.Settings {
 			name: "Chance Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<ChanceDollChanceStacking>(),
-				"Vanilla value: Linear"),
+				Vanilla(ChanceDollChanceStacking.Linear)),
 			defaultValue: ChanceDollChanceStacking.Hyperbolic,
 			constraint: new(typeof(ChanceDollChanceStacking)));
 	}

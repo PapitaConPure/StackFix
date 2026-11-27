@@ -1,5 +1,6 @@
 ﻿using ConfigEntryExt;
 using ConfigEntryExt.Constraints;
+using StackFix.Utils;
 
 namespace StackFix.Settings {
 	internal static partial class ModSettings {
@@ -8,8 +9,7 @@ namespace StackFix.Settings {
 			name: "Fix Luminous Shot",
 			description: Paragraph(
 				"Enables Luminous Shot tweaks.",
-				"",
-				"Vanilla value: Off"),
+				Vanilla(false)),
 			defaultValue: true);
 
 		public static readonly ConstrainedConfigEntry<float, RangeEntryConstraint<float>> LuminousShotDamageBase = new(
@@ -17,8 +17,7 @@ namespace StackFix.Settings {
 			name: "Base Damage",
 			description: Paragraph(
 				"Percentage of lightning strike TOTAL damage for the first stack.",
-				"",
-				"Vanilla value: 175"),
+				Vanilla(175f)),
 			defaultValue: 140f,
 			constraint: new(Min: 80f, Max: 190f));
 
@@ -27,8 +26,7 @@ namespace StackFix.Settings {
 			name: "Damage per Stack",
 			description: Paragraph(
 				"Additional percentage of lightning strike TOTAL damage for every subsequent stack.",
-				"",
-				"Vanilla value: 50"),
+				Vanilla(50f)),
 			defaultValue: 60f,
 			constraint: new(Min: 0f, Max: 80f));
 
@@ -37,8 +35,7 @@ namespace StackFix.Settings {
 			name: "Base Max Charges",
 			description: Paragraph(
 				"Maximum number of charges for the first stack.",
-				"",
-				"Vanilla value: 5"),
+				Vanilla(5)),
 			defaultValue: 3,
 			constraint: new(Min: 3, Max: 6));
 
@@ -47,8 +44,7 @@ namespace StackFix.Settings {
 			name: "Max Charges per Stack",
 			description: Paragraph(
 				"Increased maximum number of charges for every subsequent stack.",
-				"",
-				"Vanilla value: 1"),
+				Vanilla(1)),
 			defaultValue: 1,
 			constraint: new(Min: 0, Max: 2));
 
@@ -57,8 +53,7 @@ namespace StackFix.Settings {
 			name: "Base Cooldown Reduction",
 			description: Paragraph(
 				"Percentage of Secondary skill cooldown reduction for the first stack.",
-				"",
-				"Vanilla value: 20"),
+				Vanilla(20f)),
 			defaultValue: 10f,
 			constraint: new(Min: 0f, Max: 30f));
 
@@ -67,8 +62,7 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction per Stack",
 			description: Paragraph(
 				"Percentage of Secondary skill cooldown reduction for every subsequent stack.",
-				"",
-				"Vanilla value: 0"),
+				Vanilla(0f)),
 			defaultValue: 0f,
 			constraint: new(Min: 0f, Max: 5f));
 
@@ -82,8 +76,8 @@ namespace StackFix.Settings {
 			name: "Cooldown Reduction Stacking Type",
 			description: Paragraph(
 				StackTypeDescription<LuminousShotCooldownReductionStacking>(),
-				"Vanilla value: N/A",
-				"Not recommended: Linear"),
+				NoVanilla(),
+				ItD.Danger("Not recommended: Linear")),
 			defaultValue: LuminousShotCooldownReductionStacking.Reciprocal,
 			constraint: new(typeof(LuminousShotCooldownReductionStacking)));
 	}

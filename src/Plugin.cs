@@ -21,7 +21,7 @@ namespace StackFix {
 		internal static ConfigEntry<bool> Enabled;
 		internal static ConfigEntry<bool> ShowStackingType;
 		internal static ConfigEntry<string> StackingFormat;
-		internal static ConfigEntry<ModSettings.Meguminn> Megumin;
+		internal static ConfigEntry<ModSettings.Megu> Megumin;
 
 		private static Plugin instance;
 		public static Plugin Instance => instance;
