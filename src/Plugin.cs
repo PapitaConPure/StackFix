@@ -67,10 +67,14 @@ namespace StackFix {
 				if(itemFix is IDisposable toBeDisposed)
 					toBeDisposed.Dispose();
 
+			ModSettings.OnDestroy();
+
 			SingletonHelper.Unassign(ref instance, this);
 		}
 
 		private void RegisterSettings() {
+			ModSettings.Awake();
+
 			Enabled          = ModSettings.Enabled.RegisterFor(this);
 			ShowStackingType = ModSettings.ShowStackingType.RegisterFor(this);
 			StackingFormat   = ModSettings.StackingFormat.RegisterFor(this);
@@ -107,15 +111,15 @@ namespace StackFix {
 					"Balances the initial effect and stacking of a few items to reduce upfront power spikes and incentivize stacking.");
 				RiskOfOptionsCompat.SetModIcon(ModIcon.Load());
 
-				RiskOfOptionsCompat.AddCheckboxOption(Enabled);
-				RiskOfOptionsCompat.AddCheckboxOption(ShowStackingType);
-				RiskOfOptionsCompat.AddTextInputOption(StackingFormat);
+				RiskOfOptionsCompat.AddCheckboxOption(ModSettings.Enabled);
+				RiskOfOptionsCompat.AddCheckboxOption(ModSettings.ShowStackingType);
+				RiskOfOptionsCompat.AddTextInputOption(ModSettings.StackingFormat);
 
 				foreach(IItemFix itemFix in this.ItemFixes)
 					if(itemFix.Applied)
 						itemFix.RegisterRiskOfOptionsSettings();
 
-				RiskOfOptionsCompat.AddChoiceOption(Megumin);
+				RiskOfOptionsCompat.AddChoiceOption(ModSettings.Megumin);
 
 #if DEBUG
 				this.Logger.LogDebug("Risk Of Options support initialized!");

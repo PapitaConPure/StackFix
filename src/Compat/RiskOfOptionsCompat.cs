@@ -4,6 +4,7 @@ using System;
 using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
+using ConfigEntryExt;
 
 namespace StackFix.Compat {
 	internal static class RiskOfOptionsCompat {
@@ -24,11 +25,12 @@ namespace StackFix.Compat {
 		public record AddCheckboxOptionConfig(bool RestartRequired = false);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-		public static void AddCheckboxOption(ConfigEntry<bool> entry, AddCheckboxOptionConfig config = null) {
+		public static void AddCheckboxOption(ConfigEntryExt<bool> entry, AddCheckboxOptionConfig config = null) {
 			ModSettingsManager.AddOption(new CheckBoxOption(
-				entry,
+				entry.ConfigEntry,
 				new CheckBoxConfig() {
 					restartRequired = config?.RestartRequired ?? false,
+					description = entry.Description,
 				}));
 		}
 
@@ -43,11 +45,12 @@ namespace StackFix.Compat {
 			TextInputOptionLineType LineType = TextInputOptionLineType.Single);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-		public static void AddTextInputOption(ConfigEntry<string> entry, AddTextInputOptionConfig config = null) {
+		public static void AddTextInputOption(ConfigEntryExt<string> entry, AddTextInputOptionConfig config = null) {
 			ModSettingsManager.AddOption(new StringInputFieldOption(
-				entry,
+				entry.ConfigEntry,
 				new InputFieldConfig() {
 					restartRequired = config?.RestartRequired ?? false,
+					description = entry.Description,
 					richText = config?.RichText ?? false,
 					lineType = (config?.LineType) switch {
 						TextInputOptionLineType.MultiSubmit => TMPro.TMP_InputField.LineType.MultiLineSubmit,
@@ -61,16 +64,17 @@ namespace StackFix.Compat {
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddSliderOption(
-			ConfigEntry<int> entry,
+			ConfigEntryExt<int> entry,
 			AddIntSliderOptionConfig config = null) {
 			GetRangeFromEntry(entry, out int min, out int max);
 
 			ModSettingsManager.AddOption(new IntSliderOption(
-				entry,
+				entry.ConfigEntry,
 				new IntSliderConfig {
 					min = min,
 					max = max,
 					restartRequired = config?.RestartRequired ?? false,
+					description = entry.Description,
 					formatString = $"{config?.Prefix}{config?.FormatString ?? "{0}"}{config?.Suffix}",
 				}));
 		}
@@ -79,23 +83,24 @@ namespace StackFix.Compat {
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public static void AddSliderOption(
-			ConfigEntry<float> entry,
+			ConfigEntryExt<float> entry,
 			AddFloatSliderOptionConfig config = null) {
 			GetRangeFromEntry(entry, out float min, out float max);
 
 			if(config != null && config.Step > 0)
 				ModSettingsManager.AddOption(new StepSliderOption(
-				entry,
+				entry.ConfigEntry,
 				new StepSliderConfig {
 					min = min,
 					max = max,
 					restartRequired = config.RestartRequired,
+					description = entry.Description,
 					FormatString = $"{config.Prefix}{config.FormatString ?? "{0:0.##}"}{config.Suffix}",
 					increment = config.Step,
 				}));
 			else
 				ModSettingsManager.AddOption(new SliderOption(
-					entry,
+					entry.ConfigEntry,
 					new SliderConfig {
 						min = min,
 						max = max,
@@ -106,16 +111,17 @@ namespace StackFix.Compat {
 
 		public record AddChoiceOptionConfig(bool RestartRequired = false);
 
-		public static void AddChoiceOption<TEnum>(ConfigEntry<TEnum> entry, AddChoiceOptionConfig config = null) where TEnum : struct, Enum {
+		public static void AddChoiceOption<TEnum>(ConfigEntryExt<TEnum> entry, AddChoiceOptionConfig config = null) where TEnum : struct, Enum {
 			ModSettingsManager.AddOption(new ChoiceOption(
-				entry,
+				entry.ConfigEntry,
 				new ChoiceConfig {
 					restartRequired = config?.RestartRequired ?? false,
+					description = entry.Description,
 				}));
 		}
 
-		private static void GetRangeFromEntry(ConfigEntry<int> entry, out int min, out int max) {
-			if(entry.Description?.AcceptableValues is AcceptableValueRange<int> range) {
+		private static void GetRangeFromEntry(ConfigEntryExt<int> entry, out int min, out int max) {
+			if(entry.ConfigEntry.Description?.AcceptableValues is AcceptableValueRange<int> range) {
 				min = range.MinValue;
 				max = range.MaxValue;
 			} else {
@@ -124,8 +130,8 @@ namespace StackFix.Compat {
 			}
 		}
 
-		private static void GetRangeFromEntry(ConfigEntry<float> entry, out float min, out float max) {
-			if(entry.Description?.AcceptableValues is AcceptableValueRange<float> range) {
+		private static void GetRangeFromEntry(ConfigEntryExt<float> entry, out float min, out float max) {
+			if(entry.ConfigEntry.Description?.AcceptableValues is AcceptableValueRange<float> range) {
 				min = range.MinValue;
 				max = range.MaxValue;
 			} else {

@@ -41,14 +41,14 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.chargesMaxBase);
-			RiskOfOptionsCompat.AddSliderOption(this.chargesMaxStack, new(Prefix: "+"));
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownReductionBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownReductionStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.cooldownReductionStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.LuminousShotFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotChargesMaxBase);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotChargesMaxStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotCooldownReductionBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.LuminousShotCooldownReductionStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.LuminousShotCooldownReductionStackType);
 		}
 
 		public override void RegisterLookingGlassStats() {

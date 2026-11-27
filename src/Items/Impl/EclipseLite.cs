@@ -26,10 +26,10 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.barrierBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.barrierStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.barrierStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.EclipseLiteFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.EclipseLiteBarrierBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.EclipseLiteBarrierStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.EclipseLiteBarrierStackType);
 		}
 
 		public override void RegisterLookingGlassStats() {

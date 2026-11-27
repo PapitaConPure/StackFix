@@ -37,13 +37,13 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownCap, new(Suffix: "s"));
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.BoxOfDynamiteFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BoxOfDynamiteDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BoxOfDynamiteDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BoxOfDynamiteCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BoxOfDynamiteCooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.BoxOfDynamiteCooldownStackType);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BoxOfDynamiteCooldownCap, new(Suffix: "s"));
 		}
 
 		public override void RegisterLookingGlassStats() {

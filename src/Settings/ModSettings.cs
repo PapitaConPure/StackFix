@@ -1,10 +1,22 @@
-﻿using StackFix.Utils;
+﻿using ConfigEntryExt;
+using StackFix.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace StackFix.Settings {
 	internal static partial class ModSettings {
+		private static readonly Regex descModifierRegex = new(@"</?style(?:=[^>]*)?>", RegexOptions.Compiled);
+
+		internal static void Awake() {
+			DescriptionModifiers.Register(description => descModifierRegex.Replace(description, ""));
+		}
+
+		internal static void OnDestroy() {
+			DescriptionModifiers.Clear();
+		}
+
 		private static string Paragraph(params string[] lines)
 			=> string.Join("\n", lines);
 

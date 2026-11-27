@@ -86,16 +86,16 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.moveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.moveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.jumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.distanceBase, new(Suffix: "m"));
-			RiskOfOptionsCompat.AddSliderOption(this.distanceStack, new(Prefix: "+", Suffix: "m"));
-			RiskOfOptionsCompat.AddChoiceOption(this.category);
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.FaradaySpurFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurMoveSpeedBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurMoveSpeedStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurJumpHeightBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurJumpHeightStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurDamageStack, new(FormatString: "+{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurDistanceBase, new(Suffix: "m"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.FaradaySpurDistanceStack, new(Prefix: "+", Suffix: "m"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.FaradaySpurSelectedCategory);
 		}
 
 		public override void RegisterLookingGlassStats() {

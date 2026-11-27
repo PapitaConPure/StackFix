@@ -29,27 +29,27 @@ namespace StackFix.Items.Impl {
 		private ConfigEntry<float> cooldownCap;
 
 		public override void RegisterSettings(BaseUnityPlugin plugin) {
-			this.fixEnabled        = ModSettings.BreachingFinFixEnabled.RegisterFor(plugin);
-			this.airLaunchesBase   = ModSettings.BreachingFinAirLaunchesBase.RegisterFor(plugin);
-			this.airLaunchesStack  = ModSettings.BreachingFinAirLaunchesStack.RegisterFor(plugin);
-			this.damageBase        = ModSettings.BreachingFinDamageBase.RegisterFor(plugin);
-			this.damageStack       = ModSettings.BreachingFinDamageStack.RegisterFor(plugin);
-			this.cooldownBase      = ModSettings.BreachingFinCooldownBase.RegisterFor(plugin);
-			this.cooldownStack     = ModSettings.BreachingFinCooldownStack.RegisterFor(plugin);
-			this.cooldownStackType = ModSettings.BreachingFinCooldownStackType.RegisterFor(plugin);
+			this.fixEnabled        = this.RegisterSetting(plugin, ModSettings.BreachingFinFixEnabled);
+			this.airLaunchesBase   = this.RegisterSetting(plugin, ModSettings.BreachingFinAirLaunchesBase);
+			this.airLaunchesStack  = this.RegisterSetting(plugin, ModSettings.BreachingFinAirLaunchesStack);
+			this.damageBase        = this.RegisterSetting(plugin, ModSettings.BreachingFinDamageBase);
+			this.damageStack       = this.RegisterSetting(plugin, ModSettings.BreachingFinDamageStack);
+			this.cooldownBase      = this.RegisterSetting(plugin, ModSettings.BreachingFinCooldownBase);
+			this.cooldownStack     = this.RegisterSetting(plugin, ModSettings.BreachingFinCooldownStack);
+			this.cooldownStackType = this.RegisterSetting(plugin, ModSettings.BreachingFinCooldownStackType);
 			this.cooldownCap       = this.RegisterSetting(plugin, ModSettings.BreachingFinCooldownCap);
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.airLaunchesBase);
-			RiskOfOptionsCompat.AddSliderOption(this.airLaunchesStack);
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownCap, new(Suffix: "s"));
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.BreachingFinFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinAirLaunchesBase);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinAirLaunchesStack);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinDamageBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinDamageStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinCooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.BreachingFinCooldownStackType);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.BreachingFinCooldownCap, new(Suffix: "s"));
 		}
 
 		public override void RegisterLookingGlassStats() {

@@ -32,10 +32,10 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.chanceBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.chanceStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.chanceStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.SonorousWhispersFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.SonorousWhispersChanceBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.SonorousWhispersChanceStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.SonorousWhispersChanceStackType);
 		}
 
 		public override void RegisterLookingGlassStats() {

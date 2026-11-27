@@ -33,9 +33,9 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.statsBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.statsStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.PrayerBeadsFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.PrayerBeadsStatsBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.PrayerBeadsStatsStack, new(Prefix: "+", Suffix: "%"));
 		}
 
 		public override void RegisterLookingGlassStats() {

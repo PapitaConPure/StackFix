@@ -40,15 +40,15 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.damageReductionBase, new(Suffix: "%"));
-			RiskOfOptionsCompat.AddSliderOption(this.damageReductionStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.damageReductionStackType);
-			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadBase);
-			RiskOfOptionsCompat.AddSliderOption(this.damageSpreadStack, new(Prefix: "+"));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
-			RiskOfOptionsCompat.AddSliderOption(this.cooldownStack, new(Prefix: "+", Suffix: "%"));
-			RiskOfOptionsCompat.AddChoiceOption(this.cooldownStackType);
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.WarpedEchoFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoDamageReductionBase, new(Suffix: "%"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoDamageReductionStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.WarpedEchoDamageReductionStackType);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoDamageSpreadBase);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoDamageSpreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoCooldownBase, new(FormatString: "{0:0.#}s", Step: 0.1f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.WarpedEchoCooldownStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddChoiceOption(ModSettings.WarpedEchoCooldownStackType);
 		}
 
 		public override void RegisterLookingGlassStats() {

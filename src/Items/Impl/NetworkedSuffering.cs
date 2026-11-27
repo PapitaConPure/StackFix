@@ -35,11 +35,11 @@ namespace StackFix.Items.Impl {
 		}
 
 		public override void RegisterRiskOfOptionsSettings() {
-			RiskOfOptionsCompat.AddCheckboxOption(this.fixEnabled);
-			RiskOfOptionsCompat.AddSliderOption(this.spreadBase);
-			RiskOfOptionsCompat.AddSliderOption(this.spreadStack, new(Prefix: "+"));
-			RiskOfOptionsCompat.AddSliderOption(this.damageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
-			RiskOfOptionsCompat.AddSliderOption(this.damageStack, new(Prefix: "+", Suffix: "%"));
+			RiskOfOptionsCompat.AddCheckboxOption(ModSettings.NetworkedSufferingFixEnabled);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.NetworkedSufferingSpreadBase);
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.NetworkedSufferingSpreadStack, new(Prefix: "+"));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.NetworkedSufferingDamageBase, new(FormatString: "{0:0.#}%", Step: 0.5f));
+			RiskOfOptionsCompat.AddSliderOption(ModSettings.NetworkedSufferingDamageStack, new(Prefix: "+", Suffix: "%"));
 		}
 
 		public override void RegisterLookingGlassStats() {
