@@ -32,6 +32,31 @@ namespace StackFix.Compat {
 				}));
 		}
 
+		public enum TextInputOptionLineType {
+			Single,
+			MultiSubmit,
+			MultiNewline,
+		}
+		public record AddTextInputOptionConfig(
+			bool RestartRequired = false,
+			bool RichText = false,
+			TextInputOptionLineType LineType = TextInputOptionLineType.Single);
+
+		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+		public static void AddTextInputOption(ConfigEntry<string> entry, AddTextInputOptionConfig config = null) {
+			ModSettingsManager.AddOption(new StringInputFieldOption(
+				entry,
+				new InputFieldConfig() {
+					restartRequired = config?.RestartRequired ?? false,
+					richText = config?.RichText ?? false,
+					lineType = (config?.LineType) switch {
+						TextInputOptionLineType.MultiSubmit => TMPro.TMP_InputField.LineType.MultiLineSubmit,
+						TextInputOptionLineType.MultiNewline => TMPro.TMP_InputField.LineType.MultiLineNewline,
+						_ => TMPro.TMP_InputField.LineType.SingleLine,
+					},
+				}));
+		}
+
 		public record AddIntSliderOptionConfig(bool RestartRequired = false, string FormatString = "{0}", string Prefix = "", string Suffix = "");
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
