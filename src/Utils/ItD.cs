@@ -28,16 +28,16 @@ namespace StackFix.Utils {
 		public static string Stack(float value, string format = FORMAT_NUMBER_INCR_DEFAULT, float hideThreshold = 0.1f)
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: $" <style=cStack>({FormatValue(format, value)} per stack)</style>";
+				: $" <style=cStack>({FormatValue(format ?? FORMAT_NUMBER_INCR_DEFAULT, value)} per stack)</style>";
 
 		public static string Stack<TVanilla>(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, TVanilla? vanillaType = null, float hideThreshold = 0.1f)
 			where TVanilla : struct, Enum
 			=> value.AboutEquals(0f, hideThreshold)
 				? ""
-				: FormatStack(value, format, type, vanillaType);
+				: FormatStack(value, format ?? FORMAT_NUMBER_INCR_DEFAULT, type, vanillaType);
 
 		public static string Stack(float value, ItemStacking.Type type, string format = FORMAT_NUMBER_INCR_DEFAULT, ItemStacking.Type? vanillaType = null, float hideThreshold = 0.1f)
-			=> Stack<ItemStacking.Type>(value, type, format, vanillaType, hideThreshold);
+			=> Stack<ItemStacking.Type>(value, type, format ?? FORMAT_NUMBER_INCR_DEFAULT, vanillaType, hideThreshold);
 
 		public static string Stack<TVanilla>(float value, ItemStacking.Type type, TVanilla? vanillaType = null, float hideThreshold = 0.1f)
 			where TVanilla : struct, Enum
@@ -54,10 +54,10 @@ namespace StackFix.Utils {
 
 			string typeString = type.ToString();
 			string formattedStack = Plugin.StackingFormat.Value
-				.Replace("{NUMBER}", formattedValue)
-				.Replace("{TYPE_LOWER}", typeString.ToLower())
-				.Replace("{TYPE_UPPER}", typeString.ToUpper())
-				.Replace("{TYPE_CAP}", typeString.ToCapitalized());
+				.Replace("{N}",  formattedValue,         StringComparison.OrdinalIgnoreCase)
+				.Replace("{TL}", typeString.ToLower(),   StringComparison.OrdinalIgnoreCase)
+				.Replace("{TU}", typeString.ToUpper(),   StringComparison.OrdinalIgnoreCase)
+				.Replace("{TC}", typeString.ToCapital(), StringComparison.OrdinalIgnoreCase);
 
 			return $" <style=cStack>{formattedStack}</style>";
 		}
@@ -114,7 +114,7 @@ namespace StackFix.Utils {
 			=> $"<style=cIsVoid>{desc}</style>";
 
 		public static string V<T>(T value, string format = FORMAT_NUMBER_DEFAULT) where T : IComparable
-			=> FormatValue(format, value);
+			=> FormatValue(format ?? FORMAT_NUMBER_DEFAULT, value);
 
 		private static string FormatValue(string format, object value)
 			=> string.Format(CultureInfo.InvariantCulture, format, value);
@@ -131,6 +131,6 @@ namespace StackFix.Utils {
 		private static IEnumerable<string> FilterAndFormatValues(float[] values, string format, float hideThreshold)
 			=> values
 				.Where(value => !value.AboutEquals(0f, hideThreshold))
-				.Select(value => string.Format(format, value));
+				.Select(value => string.Format(format ?? FORMAT_NUMBER_DEFAULT, value));
 	}
 }
