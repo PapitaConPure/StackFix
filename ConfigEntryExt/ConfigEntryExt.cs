@@ -16,6 +16,8 @@ namespace ConfigEntryExt {
 
 		public string Description { get; } = description;
 
+		public string ModifiedDescription { get; } = DescriptionModifiers.Apply(description);
+
 		public TValue Default { get; } = defaultValue;
 
 		public ConfigEntry<TValue> ConfigEntry { get; private set; }
@@ -28,7 +30,7 @@ namespace ConfigEntryExt {
 		protected virtual ConfigEntry<TValue> MaterializeAndBind(BaseUnityPlugin plugin)
 			=> plugin.Config.Bind(
 				this.Section, this.Name, this.Default,
-				new ConfigDescription(this.Description, null));
+				new ConfigDescription(this.ModifiedDescription, null));
 
 		public void ObserveConfigEntryChanged(EventHandler handler) {
 			this.ConfigEntry.SettingChanged += handler;

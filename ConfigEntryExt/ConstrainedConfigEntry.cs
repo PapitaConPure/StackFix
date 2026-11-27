@@ -17,6 +17,6 @@ namespace ConfigEntryExt {
 		protected override ConfigEntry<TValue> MaterializeAndBind(BaseUnityPlugin plugin)
 			=> plugin.Config.Bind(
 				this.Section, this.Name, this.Default,
-				new ConfigDescription(this.Description, this.Constraint.AcceptableValue));
+				new ConfigDescription(this.ModifiedDescription, this.Constraint.AcceptableValue));
 	}
 }
