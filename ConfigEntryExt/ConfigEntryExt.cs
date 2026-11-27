@@ -16,7 +16,7 @@ namespace ConfigEntryExt {
 
 		public string Description { get; } = description;
 
-		public string ModifiedDescription { get; } = DescriptionModifiers.Apply(description);
+		public string ModifiedDescription => DescriptionModifiers.Apply(this.Description);
 
 		public TValue Default { get; } = defaultValue;
 
