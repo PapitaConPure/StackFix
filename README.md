@@ -32,24 +32,34 @@ Some settings determine which formula is used to control how a particular effect
 * **Exponential**: effect compounds by a constant factor per stack.
 
 ### General
-| Name                                | Type   | Default | Vanilla | Description |
-|-------------------------------------|--------|---------|---------|-------------|
-| Enable Mod                          | Toggle | On      | Off     | Turn this whole thing on or off (or maybe). |
-| Display Non-Vanilla Stacking Types  | Toggle | On      | Off     | Display the configured stacking type for any setting with a configurable stacking formula when it differs from vanilla. |
-| Fix Bolstering Lantern              | Toggle | On      | Off     | Enable Bolstering Lantern fixes. |
-| Fix Chronic Expansion               | Toggle | On      | Off     | Enable Chronic Expansion fixes. |
-| Fix Eclipse Lite                    | Toggle | On      | Off     | Enable Eclipse Lite fixes. |
-| Fix Warped Echo                     | Toggle | On      | Off     | Enable Warped Echo fixes. |
-| Fix Box of Dynamite                 | Toggle | On      | Off     | Enable Box of Dynamite fixes. |
-| Fix Breaching Fin                   | Toggle | On      | Off     | Enable Breaching Fin fixes. |
-| Fix Chance Doll                     | Toggle | On      | Off     | Enable Chance Doll fixes. |
-| Fix Faraday Spur                    | Toggle | On      | Off     | Enable Faraday Spur fixes. |
-| Fix Luminous Shot                   | Toggle | On      | Off     | Enable Luminous Shot fixes. |
-| Fix Prayer Beads                    | Toggle | On      | Off     | Enable Prayer Beads fixes. |
-| Fix Networked Suffering             | Toggle | On      | Off     | Enable Networked Suffering fixes. |
-| Fix Sonorous Whispers               | Toggle | On      | Off     | Enable Sonorous Whispers fixes. |
+| Name                                | Type   | Default                   | Vanilla | Description |
+|-------------------------------------|--------|---------------------------|---------|-------------|
+| Enable Mod                          | Toggle | On                        | Off     | Turn this whole thing on or off (or maybe). |
+| Display Non-Vanilla Stacking Types  | Toggle | On                        | Off     | Display the configured stacking type for any setting with a configurable stacking formula when it differs from vanilla. |
+| Stacking Type Display Format        | Text   | `"({N} per stack, {TL})"` | Off     | Template used to display non-vanilla stacking types. See the explanation below. |
+| Fix Bolstering Lantern              | Toggle | On                        | Off     | Enable Bolstering Lantern fixes. |
+| Fix Chronic Expansion               | Toggle | On                        | Off     | Enable Chronic Expansion fixes. |
+| Fix Eclipse Lite                    | Toggle | On                        | Off     | Enable Eclipse Lite fixes. |
+| Fix Warped Echo                     | Toggle | On                        | Off     | Enable Warped Echo fixes. |
+| Fix Box of Dynamite                 | Toggle | On                        | Off     | Enable Box of Dynamite fixes. |
+| Fix Breaching Fin                   | Toggle | On                        | Off     | Enable Breaching Fin fixes. |
+| Fix Chance Doll                     | Toggle | On                        | Off     | Enable Chance Doll fixes. |
+| Fix Faraday Spur                    | Toggle | On                        | Off     | Enable Faraday Spur fixes. |
+| Fix Luminous Shot                   | Toggle | On                        | Off     | Enable Luminous Shot fixes. |
+| Fix Prayer Beads                    | Toggle | On                        | Off     | Enable Prayer Beads fixes. |
+| Fix Networked Suffering             | Toggle | On                        | Off     | Enable Networked Suffering fixes. |
+| Fix Sonorous Whispers               | Toggle | On                        | Off     | Enable Sonorous Whispers fixes. |
 
 Most general settings act as umbrella toggles for their respective features. Turn off whatever you don't want.
+
+#### Stacking Type Display Format
+You can control exactly how non-vanilla stacking types are displayed. There are a few context variables that get replaced per item:
+* `"{N}"`: the value that scales per stack, e.g. `"+20%"`, `"+1"`, `"-44.5%"`
+* `"{TL}"`: the stacking type in lowercase, e.g. `"linear"`, `"reciprocal"`
+* `"{TU}"`: the stacking type in uppercase, e.g. `"HYPERBOLIC"`
+* `"{TC}"`: the stacking type with the first letter capitalized, e.g. `"Exponential"`
+
+For example, the default `"({N} per stack, {TL})"` could display `"(+10% per stack, hyperbolic)"`, `"(-50% per stack, exponential)"`, etc.
 
 ### Item: Bolstering Lantern
 | Name                          | Type    | Default | Vanilla | Description |
