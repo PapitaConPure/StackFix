@@ -92,8 +92,8 @@ namespace StackFix.Settings {
 			name: "Category",
 			description: Paragraph(
 				"Determines which kind of category chest can contain this item.",
-				"This setting will take effect next stage if changed during a run.",
-				Vanilla(FaradaySpurCategory.Damage)),
+				Vanilla(FaradaySpurCategory.Damage),
+				Note("This setting will take effect next stage if changed during a run.")),
 			defaultValue: FaradaySpurCategory.Utility,
 			constraint: new(typeof(FaradaySpurCategory)));
 	}
