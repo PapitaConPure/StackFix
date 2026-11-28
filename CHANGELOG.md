@@ -1,3 +1,8 @@
+### v2.6.0
+* Added "Stacking Type Display Format" setting to "General" section.
+* Improved Risk of Options descriptions.
+* Fixed Breaching Fin setting changes not updating descriptions in real time.
+
 ### v2.5.2
 * Fixed an ItemQualities description replacement pattern for Breaching Fin.
 
